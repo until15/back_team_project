@@ -105,23 +105,23 @@
 		</dependency> 
 
 		<!-- jwt -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-		</dependency>  -->
+		</dependency>
 		
 		<!-- json web token -->
-		<!-- <dependency>
+		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt</artifactId>
 		    <version>0.9.1</version>
-		</dependency> -->
+		</dependency>
 
 		<!-- security -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>  -->
+		</dependency>
 
         <!-- redis 세션저장 -->
 		<!-- <dependency>
