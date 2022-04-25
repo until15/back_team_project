@@ -16,9 +16,10 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
-<dependencies>
 
-		<!-- 자동생성 -->
+	<dependencies>
+
+		<!--자동생성-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -95,7 +96,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency> 
+		</dependency>
 
 		<!-- hibernate -->
 		<dependency>
@@ -108,7 +109,7 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-		</dependency>
+		</dependency> 
 		
 		<!-- json web token -->
 		<dependency>
@@ -121,7 +122,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+		</dependency> 
 
         <!-- redis 세션저장 -->
 		<!-- <dependency>
