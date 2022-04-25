@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.MemberCHG;
-import com.example.repository.MemberProRepository;
 import com.example.repository.MemberRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberCHG> MemberSelectList(Pageable page, String memail) {
         try {
-            List<MemberCHG> list = mRepository.findByMemailContainingOrderByMemailDesc(memail, page);
+            List<MemberCHG> list = mRepository.findByMemailContainingOrderByNoDesc(memail, page);
             return list;
 
         } catch (Exception e) {
