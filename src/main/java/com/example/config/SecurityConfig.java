@@ -42,18 +42,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 			.antMatchers("/admin","/admin/**")
 				.hasAuthority("ADMIN")
-			// .antMatchers("/seller","/seller/**")
-			// 	.hasAnyAuthority("ADMIN", "SELLER")
-			// .antMatchers("/customer","/customer/**")
-			// 	.hasAuthority("CUSTOMER")
+			//  .antMatchers("/seller","/seller/**")
+			//  	.hasAnyAuthority("ADMIN", "SELLER")
+			//  .antMatchers("/member","/member/**")
+			//  	.hasAuthority("MEMBER")
 			.anyRequest().permitAll();	
 		
 		// 로그인 페이지 설정, 단 POST는 직접 만들지 않음
 		http.formLogin()
 			.loginPage("/member/login")
 			.loginProcessingUrl("/member/loginaction")
-			.usernameParameter("uemail")
-			.passwordParameter("upw")
+			.usernameParameter("memail")
+			.passwordParameter("mpw")
 			.defaultSuccessUrl("/home")
 			.permitAll();
 		
