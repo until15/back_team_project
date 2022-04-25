@@ -2,6 +2,9 @@ package com.example.back_team_project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 
@@ -21,9 +24,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 })
 
 // 저장소(jpa) 
-@EnableJpaRepositories(basePackages = {
-	"com.example.repository"
-})
+// @EnableJpaRepositories(basePackages = {
+// 	"com.example.repository"
+// })
 
 // filter
 @ServletComponentScan(basePackages = {
