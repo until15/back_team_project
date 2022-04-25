@@ -14,7 +14,7 @@ public interface ChallengeService {
     public int insertChallengeOne(ChallengeCHG challenge);
 
     // 챌린지 1개 조회
-    public ChallengeCHG RoutineSelectOne(long challenge);
+    public ChallengeCHG RoutineSelectOne(Long chgno);
 
     // 챌린지 목록 (페이지 1 2 3)
     public List<ChallengeCHG> MemberSelectList(Pageable page, String challenge);
@@ -23,7 +23,7 @@ public interface ChallengeService {
     public int challengeUpdateOne(ChallengeCHG challenge);
 
     // 챌린지 삭제
-    public ChallengeCHG deleteChallenge(long challenge);
+    public int deleteChallenge(ChallengeCHG challenge);
 
     // 챌린지 시작
     public int challengeStart(ChallengeCHG challenge);
