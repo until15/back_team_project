@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
     List<MemberCHG> findByMemailContainingOrderByMemailDesc(String Memail, Pageable page);
 
+    1
+
 }
