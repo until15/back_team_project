@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 
@@ -24,9 +25,9 @@ import org.springframework.context.annotation.ComponentScan;
 })
 
 // 저장소(jpa) 
-// @EnableJpaRepositories(basePackages = {
-// 	"com.example.repository"
-// })
+@EnableJpaRepositories(basePackages = {
+ 	"com.example.repository"
+})
 
 // filter
 @ServletComponentScan(basePackages = {
