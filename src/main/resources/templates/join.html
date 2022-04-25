@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+<body>
+    <div style="padding:20px">
+        <h3>회원가입</h3>
+        <hr />
+        
+        <form th:action = "@{/member/joinaction}" method="post" enctype="multipart/form-data">
+            <input type="text" placeholder="이메일" name="memail"/><br />
+            <input type="text" placeholder="닉네임" name="mid"/><br />
+            <input type="password" placeholder="비밀번호"name="mpw"/><br />
+            <input type="password" placeholder="비밀번호 재확인"/><br />
+            <input type="text" placeholder="이름" name="mname"/><br />
+            <input type="text" placeholder="생년월일" name="mbirth"><br />
+
+            <select name="mgender">
+                <option value="1">남</option>
+                <option value="2">여</option>
+            </select><br />
+
+            <input type="number" placeholder="키" name="mheight" />cm<br/>
+            <input type="number" placeholder="몸무게" name="mweight" />kg<br/>
+            <input type="text" placeholder="연락처" name="mphone"/><br />
+
+            <select name="mrole">
+                <option value="admin">관리자</option>
+                <option value="member">회원</option>
+            </select><br />
+
+            <input type="file" name="mimage" /><br />
+
+            <input type="submit" value="등록" /><br />
+            <a th:href="@{/home}">홈으로</a>
+            <a th:href="@{/member/login}">로그인</a>
+        </form>
+        
+    </div>
+</body>
+</html>

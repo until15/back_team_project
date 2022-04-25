@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>홈</title>
 </head>
+
 <body>
-    <div>
-        <h3>Home.html</h3>
-    </div>
+	<div style="padding:10px">
+		<h3>홈화면</h3>
+		<hr />
+        <a th:href="@{/member/join}">회원가입</a>
+        <a th:href="@{/member/login}">로그인</a>
+	</div>
+    
 </body>
 </html>
