@@ -11,9 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
-    @Autowired MemberRepository mRepository;
+    @Autowired
+    MemberRepository mRepository;
 
     // 회원 가입
     @Override
@@ -33,7 +34,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             MemberCHG member = mRepository.findById(memail).orElse(null);
             return member;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -53,13 +54,13 @@ public class MemberServiceImpl implements MemberService{
         return null;
     }
 
-    // 회원 정보 수정 
+    // 회원 정보 수정
     @Override
     public int MemberUpdate(MemberCHG member) {
         try {
             mRepository.save(member);
             return 1;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -84,7 +85,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             mRepository.save(member);
             return 1;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -97,7 +98,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             long count = mRepository.countByMemailContaining(memail);
             return count;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -110,7 +111,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             MemberCHG member = mRepository.findById(memail).orElse(null);
             return member;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -124,11 +125,11 @@ public class MemberServiceImpl implements MemberService{
         try {
             mRepository.save(member);
             return 1;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
     }
-    
+
 }
