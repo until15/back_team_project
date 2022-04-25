@@ -16,6 +16,6 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
-    List<MemberCHG> findByMemailContainingOrderByNoDesc(String Memail, Pageable page);
+    List<MemberCHG> findByMemailContainingOrderByMemailDesc(String Memail, Pageable page);
 
 }

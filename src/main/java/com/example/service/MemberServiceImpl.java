@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberCHG> MemberSelectList(Pageable page, String memail) {
         try {
-            List<MemberCHG> list = mRepository.findByMemailContainingOrderByNoDesc(memail, page);
+            List<MemberCHG> list = mRepository.findByMemailContainingOrderByMemailDesc(memail, page);
             return list;
 
         } catch (Exception e) {
