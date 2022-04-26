@@ -22,7 +22,7 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     List<ChallengeCHG> findByChgnoContainingOrderByChgnoDesc(long chgno,
             Pageable page);
 
-    // 모집중인 첼린지 조회
+
     
     
     // 첼린지 인기 조회
