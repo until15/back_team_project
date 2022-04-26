@@ -44,11 +44,11 @@ public class CommunityCHG {
     @Column(name = "BREGDATE")
     private Date bregdate;
 
-    // // 회원테이블
-    // @ManyToOne
-    // @JoinColumn(name = "memail")
-    // private Memberchg memberchg;
-    // // 자유게시판 이미지 테이블
+    // 회원테이블
+    @ManyToOne
+    @JoinColumn(name = "memail")
+    private MemberCHG memberchg;
+    // 자유게시판 이미지 테이블
     // @OneToMany(mappedBy = "communitychg")
     // private List<BimgChg> bimgChgList = new ArrayList<>();
     // // 댓글 테이블
