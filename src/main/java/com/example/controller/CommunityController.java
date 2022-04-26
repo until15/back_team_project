@@ -1,6 +1,8 @@
 package com.example.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.entity.CommunityCHG;
 import com.example.repository.CommunityRepository;
@@ -8,15 +10,19 @@ import com.example.service.CommuniryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping(value = "/community")
 public class CommunityController {
 
@@ -48,12 +54,20 @@ public class CommunityController {
         return "board";
     }
 
-    @PostMapping(value = "/insert")
-    public String insertPOST(@ModelAttribute CommunityCHG community) {
+    @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> boardInsertPOST(@RequestBody CommunityCHG community) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("status", 0);
+
         int ret = cService.boardInsertOne(community);
+
         if (ret == 1) {
-            return "redirect:/community/board";
+
+            map.put("status", 200);
         }
-        return "redirect:/community/board";
+        return map;
+
     }
 }
