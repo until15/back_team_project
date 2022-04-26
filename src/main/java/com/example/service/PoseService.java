@@ -27,7 +27,7 @@ public interface PoseService {
     public long poseCountSelect(String title);
 
     // 자세 목록
-    public List<PoseCHG> poseSelectList(Pageable page, String title);
+    public List<PoseCHG> poseSelectList(int step, Pageable page, String title);
 
     // 자세 동영상 등록
     public int poseVideoInsert(VideoCHG video);
