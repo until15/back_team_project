@@ -38,4 +38,42 @@ public class CommunityServiceImpl implements CommuniryService {
         return null;
     }
 
+    @Override
+    public CommunityCHG boardSelectOne(long bno) {
+        try {
+            CommunityCHG community = cRepository.findById(bno).orElse(null);
+
+            return community;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    @Override
+    public int boardUpdateOne(CommunityCHG community) {
+        try {
+            cRepository.save(community);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public int boarddeleteOne(long bno) {
+        try {
+            cRepository.deleteById(bno);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 }

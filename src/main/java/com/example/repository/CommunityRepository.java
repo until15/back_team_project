@@ -13,6 +13,8 @@ public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
 
     long countByBtitleContaining(String btitle);
 
+    CommunityCHG findByBno(Long bno);
+
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'

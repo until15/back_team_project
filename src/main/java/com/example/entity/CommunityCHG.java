@@ -37,9 +37,8 @@ public class CommunityCHG {
     private String bcontent;
     // 조회수
     private Long bhit = 1L;
-    // 등록일
 
-    
+    // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
     @Column(name = "BREGDATE")
@@ -49,9 +48,11 @@ public class CommunityCHG {
     @ManyToOne
     @JoinColumn(name = "memail")
     private MemberCHG memberchg;
+
     // 자유게시판 이미지 테이블
     // @OneToMany(mappedBy = "communitychg")
-    // private List<BimgChg> bimgChgList = new ArrayList<>();
+    // private List<BimgCHG> bimgChgList = new ArrayList<>();
+
     // // 댓글 테이블
     // @OneToMany(mappedBy = "communitychg")
     // private List<Commentchg> commentchgList = new ArrayList<>();
