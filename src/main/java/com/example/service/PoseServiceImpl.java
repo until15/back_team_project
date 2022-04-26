@@ -72,9 +72,9 @@ public class PoseServiceImpl implements PoseService{
 
     // 자세목록 (페이지네이션, 검색)
     @Override
-    public List<PoseCHG> poseSelectList(Pageable page, String title) {
+    public List<PoseCHG> poseSelectList(int step, Pageable page, String title) {
         try {
-            List<PoseCHG> list = pRepository.findByPnameContainingOrderByPnoDesc(title, page);
+            List<PoseCHG> list = pRepository.findByPstepEqualsAndPnameContainingOrderByPnoDesc(step, title, page);
             return list;
             
         } catch (Exception e) {
