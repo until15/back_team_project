@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+</head>
+
+<body>
+	<div style="padding:10px">
+		<h3>게시판</h3>
+        <a th:href="@{/community/insert}">돌아가기</a>
+		<hr />
+
+        <form th:action="@{/community/board}" method="get">
+            <input type="hidden" value="1" name="page" />
+            <input type="text" name="btitle" placeholder="검색어" />
+            <input type="submit" value="검색" />
+        </form>
+
+        <table border="1">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>조회수</th>
+                <th>등록일</th>
+            </tr>
+            <tr th:each="tmp : ${list}" style="text-align: center;">
+                <td th:text="${tmp.bno}"></td>
+                <td><a href="#" th:onclick="|javascript:updateHit('${tmp.bno}')|" th:text="${tmp.btitle}"></a></td>
+                <td th:text="${tmp.bhit}"></td>
+                <td th:text="${tmp.bregdate}"></td>
+            </tr>
+            </table>
+
+            <th:block th:each="i : ${#numbers.sequence(1, pages)}">
+                <a th:href="@{/community/board(page= ${i}, txt=${param.txt})}" th:text="${i}"></a>
+            </th:block>
+        
+
+	</div>
+    
+</body>
+</html>
