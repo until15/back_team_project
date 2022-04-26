@@ -39,6 +39,7 @@ public class CommunityCHG {
     private Long bhit = 1L;
     // 등록일
 
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
     @Column(name = "BREGDATE")
