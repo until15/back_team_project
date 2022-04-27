@@ -30,7 +30,13 @@ public interface PoseService {
     public List<PoseCHG> poseSelectList(int step, Pageable page, String title);
 
     // 자세 동영상 등록
-    public int poseVideoInsert(VideoCHG video);
+    public long poseVideoInsert(VideoCHG video);
+
+    // 자세 동영상 수정
+    public long poseVideoUpdate(VideoCHG video);
+
+    // 자세 동영상 삭제
+    public int poseVideoDelete(long vno);
 
     // 자세 동영상 불러오기
     public VideoCHG poseVideoSelectOne(long vno);

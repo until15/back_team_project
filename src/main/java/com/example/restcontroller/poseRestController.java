@@ -1,5 +1,6 @@
 package com.example.restcontroller;
 
+import java.net.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,19 +16,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/pose")
 public class poseRestController {
 
     @Autowired PoseService pService;
-    @Autowired PoseRepository pRepository;
 
     // 자세 등록
     // 127.0.0.1:9090/ROOT/api/pose/insert.json
@@ -109,7 +113,7 @@ public class poseRestController {
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectlistGET(
         @RequestParam(name="step546821#232", defaultValue = "1") int step,
-        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "page", defaultValue = "1") int page,
         @RequestParam(name="title", defaultValue = "") String title
     ){  
         Map<String, Object> map = new HashMap<>();
@@ -155,18 +159,55 @@ public class poseRestController {
         return map;
     }
 
-    // 자세 동영상 등록 완성 X
+    // 자세 동영상 등록
     // 127.0.0.1:9090/ROOT/api/pose/insertvideo.json
     @RequestMapping(value="/insertvideo.json", method = {RequestMethod.POST},
-    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseVideoInsertPOST(
-        @RequestBody VideoCHG video
+        @RequestParam(name="pvideo") MultipartFile file,
+        @RequestParam(name="pno") long pno,
+        @ModelAttribute VideoCHG video,
+        @ModelAttribute PoseCHG pose
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
-            int ret = pService.poseVideoInsert(video);
+            if(!file.isEmpty()){
+                PoseCHG poseCHG = new PoseCHG();
+                poseCHG.setPno(pno);
+                video.setPosechg(poseCHG);
+                video.setVtype(file.getContentType());
+                video.setVname(file.getOriginalFilename());
+                video.setVsize(file.getSize());
+                video.setVvideo(file.getBytes());
+            }
+            long ret = pService.poseVideoInsert(video);
             if(ret == 1){
                 map.put("status", 200);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 자세 동영상 조회
+    // 127.0.0.1:9090/ROOT/api/pose/selectvideo.json?vno=
+    @RequestMapping(value="/selectvideo.json", method = {RequestMethod.GET},
+    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> selectvideoGET(
+        @RequestParam(name="vno") long vno
+    ){  
+        Map<String, Object> map = new HashMap<>();
+        try {
+            VideoCHG videoCHG = pService.poseVideoSelectOne(vno);
+            if(videoCHG.getVsize() > 0){
+                
+            }
+            if(videoCHG != null){
+                map.put("status", 200);
+                map.put("result", videoCHG);
             }
             
         } catch (Exception e) {

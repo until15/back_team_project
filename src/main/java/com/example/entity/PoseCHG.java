@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,7 +61,7 @@ public class PoseCHG {
     private Date pregdate;
     
     // 자세 영상 테이블
-    @OneToOne(mappedBy = "posechg")
+    @OneToOne(mappedBy = "posechg", cascade = CascadeType.ALL)
     private VideoCHG videochg;
     
     // 회원테이블
