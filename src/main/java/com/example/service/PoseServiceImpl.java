@@ -97,7 +97,7 @@ public class PoseServiceImpl implements PoseService{
 
     // 자세 비디오 등록
     @Override
-    public int poseVideoInsert(VideoCHG video) {
+    public long poseVideoInsert(VideoCHG video) {
         try {
             vRepository.save(video);
             return 1;
@@ -119,6 +119,20 @@ public class PoseServiceImpl implements PoseService{
             e.printStackTrace();
             return null;
         }
+    }
+
+    // 자세 비디오 수정
+    @Override
+    public long poseVideoUpdate(VideoCHG video) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    // 자세 비디오 삭제
+    @Override
+    public int poseVideoDelete(long vno) {
+        // TODO Auto-generated method stub
+        return 0;
     }
     
 }
