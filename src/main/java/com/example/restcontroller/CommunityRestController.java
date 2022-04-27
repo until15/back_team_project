@@ -9,6 +9,7 @@ import com.example.repository.CommunityRepository;
 import com.example.service.CommuniryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,14 +50,17 @@ public class CommunityRestController {
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> boardSelectListGET(@RequestParam(name = "page", defaultValue = "") Pageable page,
-            @RequestParam(name = "btitle") String btitle) {
+    public Map<String, Object> boardSelectListGET(@RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "btitle", defaultValue = "") String btitle) {
         Map<String, Object> map = new HashMap<>();
         try {
-            List<CommunityCHG> list = cService.selectBoardList(page, btitle);
-            System.out.println(list.toString());
-            map.put("result", list);
-            map.put("status", 200);
+
+            Pageable pageable = PageRequest.of(page - 1, 10);
+            List<CommunityCHG> list = cService.selectBoardList(pageable, btitle);
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
