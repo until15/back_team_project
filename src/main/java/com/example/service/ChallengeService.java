@@ -14,16 +14,16 @@ public interface ChallengeService {
     public int insertChallengeOne(ChallengeCHG challenge);
 
     // 챌린지 1개 조회
-    public ChallengeCHG RoutineSelectOne(Long chgno);
+    public ChallengeCHG challengeSelectOne(long chgno);
 
     // 챌린지 목록 (페이지 1 2 3)
-    public List<ChallengeCHG> MemberSelectList(Pageable page, String challenge);
+    public List<ChallengeCHG> challengeSelectList(Pageable page, String challenge);
 
     // 챌린지 수정
     public int challengeUpdateOne(ChallengeCHG challenge);
 
     // 챌린지 삭제
-    public int deleteChallenge(ChallengeCHG challenge);
+    public int deleteChallenge(long chgno);
 
     // 챌린지 시작
     public int challengeStart(ChallengeCHG challenge);
