@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.JoinCHG;
+import com.example.entity.JoinProjection;
 import com.example.repository.JoinRepository;
 
 @Service
@@ -27,6 +28,19 @@ public class JoinServiceImpl implements JoinService{
 	}
 
 	
+	// 첼린지 1개 조회
+	@Override
+	public JoinProjection selectOneCHG(Long jno) {
+		try {
+			return jRepository.findByJno(jno);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+
 	// 첼린지 포기
 	@Override
 	public int challengeGiveUp(Long jno) {

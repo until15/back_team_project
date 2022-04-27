@@ -5,9 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.JoinCHG;
+import com.example.entity.JoinProjection;
 
 @Service
 public interface JoinService {
+	
+	// 첼린지 1개 조회
+	public JoinProjection selectOneCHG(Long jno);
 	
     // 챌린지 참가
     public int challengeJoin(JoinCHG join);

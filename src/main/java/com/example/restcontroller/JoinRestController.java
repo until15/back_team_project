@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
-import com.example.repository.JoinRepository;
+import com.example.jwt.JwtUtil;
 import com.example.service.JoinService;
 
 @RestController
@@ -21,7 +23,8 @@ import com.example.service.JoinService;
 public class JoinRestController {
 
 	@Autowired JoinService jService;
-	@Autowired JoinRepository jRepos;
+	
+	@Autowired JwtUtil jwtUtil;
 	
 	// 참가하기
 	// 127.0.0.1:9090/ROOT/api/join/insert
@@ -35,6 +38,7 @@ public class JoinRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
+			System.out.println(jwtUtil);
 			System.out.println(join.toString()); 	// 넘어오는 join
 			
 			int ret = jService.challengeJoin(join);
@@ -55,9 +59,9 @@ public class JoinRestController {
 	// 포기하기
 	
 	
-	// 참여 중인 첼린지 조회
-	// 127.0.0.1:9090/ROOT/api/join/selectjoin?jno=9
-	@RequestMapping(value="/selectjoin", 
+	// 참여 번호로 참가한 첼린지 1개 조회(테스트용)
+	// 127.0.0.1:9090/ROOT/api/join/selectone?jno=9
+	@RequestMapping(value="/selectone", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -68,10 +72,10 @@ public class JoinRestController {
 			
 			System.out.println(jno);
 			
-			JoinProjection join1 = jRepos.findByJno(jno);
-			System.out.println(join1.toString());
-
-			map.put("result", join1);
+			JoinProjection join = jService.selectOneCHG(jno);
+			System.out.println(join.toString());
+			
+			map.put("result", join);
 			map.put("status", 200);
 			
 		} catch (Exception e) {
@@ -81,6 +85,9 @@ public class JoinRestController {
 		
 		return map;
 	}
+	
+	// 현재 참여중인 첼린지 조회
+	
 	
 	// 참여했던 첼린지 전체 조회
 	
