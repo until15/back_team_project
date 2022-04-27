@@ -16,6 +16,9 @@ public interface JoinService {
     // 챌린지 참가
     public int challengeJoin(JoinCHG join);
 
+    // 중복 참여 확인
+    public JoinCHG duplicateJoin(Long no, String em);
+    
     // 챌린지 포기
     public int challengeGiveUp(Long jno);
 	

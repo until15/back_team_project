@@ -28,6 +28,19 @@ public class JoinServiceImpl implements JoinService{
 	}
 
 	
+	// 중복 참여
+	@Override
+	public JoinCHG duplicateJoin(Long no, String em) {
+		try {
+			
+			return jRepository.findByChallengechg_chgnoAndMemberchg_memail(no, em);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
 	// 첼린지 1개 조회
 	@Override
 	public JoinProjection selectOneCHG(Long jno) {
