@@ -19,30 +19,25 @@ import lombok.Data;
 
 @Data
 @Entity
-@SequenceGenerator(name = "SEQ_Bimage", sequenceName = "SEQ_Bimage_BIMGNO", allocationSize = 1, initialValue = 1)
-public class BimgCHG {
-    // 이미지 번호
+@SequenceGenerator(name = "SEQ_COMMENT", sequenceName = "SEQ_COMMENT_CMTNO", allocationSize = 1, initialValue = 1)
+public class CommentCHG {
+    // 댓글 번호
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_Bimage") // 시퀀스 적용
-    private Long bimgno;
-    // 이미지
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_COMMENT") // 시퀀스 적용
+    private Long cmtno;
+    // 댓글 내용
     @Lob
-    private byte[] bimage;
-    // 이미지 사이즈
-    private Long bimgsize = 0L;
-    // 이미지 타입
-    private String bimgtype;
-    // 이미지 이름
-    private String bimgname;
-
+    private String cmtcontent;
+    // 좋아요 갯수 저장
+    private Long cmtlike;
     // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
-    @Column(name = "BIMGREGDATE")
-    private Date bimgregdate;
+    @Column(name = "CMTREGDATE")
+    private Date cmtregdate;
 
     // 자유게시판 테이블
     @ManyToOne
     @JoinColumn(name = "bno")
-    private CommunityCHG community;
+    private CommunityCHG communitychg;
 }
