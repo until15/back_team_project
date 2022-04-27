@@ -35,11 +35,13 @@ public class BimgRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            if (!file.isEmpty()) {
-                bimg.setBimage(bimg.getBimage());
-                bimg.setBimgname(bimg.getBimgname());
-                bimg.setBimgsize(bimg.getBimgsize());
-                bimg.setBimgtype(bimg.getBimgtype());
+            if (file != null) {
+                if (!file.isEmpty()) {
+                    bimg.setBimage(file.getBytes());
+                    bimg.setBimgname(file.getOriginalFilename());
+                    bimg.setBimgsize(file.getSize());
+                    bimg.setBimgtype(file.getContentType());
+                }
             }
 
             int ret = bService.insertBimg(bimg);
@@ -51,6 +53,24 @@ public class BimgRestController {
         } catch (Exception e) {
             e.printStackTrace();
             map.put(("status"), 0);
+        }
+        return map;
+    }
+
+    // 127.0.0.1:9090/ROOT/api/bimg/selectimg?bimgno=4
+    @RequestMapping(value = "/selectimg", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectImgGET(@RequestParam(name = "bimgno") long bimgno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            BimgCHG bimg = bService.selectOneimage(bimgno);
+            map.put("result", bimg);
+            map.put("status", 200);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
         }
         return map;
     }

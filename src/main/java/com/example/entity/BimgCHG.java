@@ -27,6 +27,7 @@ public class BimgCHG {
     private Long bimgno;
     // 이미지
     @Lob
+    @Column(nullable = true)
     private byte[] bimage;
     // 이미지 사이즈
     private Long bimgsize = 0L;
