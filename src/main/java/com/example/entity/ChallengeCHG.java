@@ -58,6 +58,9 @@ public class ChallengeCHG {
 	// 모집 마감
 	@Column(nullable = false)
 	private Timestamp recruitend;
+	
+	// 모집 상태
+	private String recstate;
 	  
 	// 인원수
 	private Long chgcnt;

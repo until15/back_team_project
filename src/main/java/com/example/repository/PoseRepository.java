@@ -16,5 +16,8 @@ public interface PoseRepository extends JpaRepository<PoseCHG, Long>{
 
     // 검색어 + 페이지네이션
     List<PoseCHG> findByPnameContainingOrderByPnoDesc(String title, Pageable page);
+
+    // 검색어 + 페이지네이션 (step 1인 것만)
+    List<PoseCHG> findByPstepEqualsAndPnameContainingOrderByPnoDesc(int step, String title, Pageable page);
     
 }
