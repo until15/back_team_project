@@ -60,7 +60,7 @@ public class ChallengeCHG {
 	private Timestamp recruitend;
 	
 	// 모집 상태
-	private String recstate;
+	private int recstate = 1;
 	  
 	// 인원수
 	private Long chgcnt;
@@ -75,7 +75,7 @@ public class ChallengeCHG {
 	private Date chgregdate;
 	  
 	// 좋아요개수저장
-	private Long chglike;
+	private Long chglike = 0L;
 	  
 	// 난이도
 	private Long chglevel = 1L;

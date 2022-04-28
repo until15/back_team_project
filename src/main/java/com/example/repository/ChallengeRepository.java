@@ -19,8 +19,8 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
-    List<ChallengeCHG> findByChgnoContainingOrderByChgnoDesc(String challenge, Pageable page);
-
+    List<ChallengeCHG> findByChgtitleContainingOrderByChgnoDesc(String challenge, Pageable page);
+    // 오류 도와준 다희씨 고마워요 . . . 2022/04/28
 
     
     

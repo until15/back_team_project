@@ -68,7 +68,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public List<ChallengeCHG> challengeSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChgnoContainingOrderByChgnoDesc(challenge, page);
+            List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChgnoDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
