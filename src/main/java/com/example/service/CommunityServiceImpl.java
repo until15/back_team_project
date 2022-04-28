@@ -76,4 +76,17 @@ public class CommunityServiceImpl implements CommuniryService {
         }
     }
 
+    @Override
+    public int boardUpdateHit(long bno) {
+        try {
+            cRepository.updateBoardHitOne(bno);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
 }
