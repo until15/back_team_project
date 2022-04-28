@@ -250,9 +250,57 @@ public class poseRestController {
         }
     }
 
-    
+    // 자세 동영상 수정
+    // 127.0.0.1:9090/ROOT/api/pose/updatevideo.json
+    @RequestMapping(value="/updatevideo.json", method = {RequestMethod.PUT},
+    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> poseVideoUpdatePOST(
+        @RequestParam(name="pvideo") MultipartFile file,
+        @RequestParam(name="vno") long vno,
+        @ModelAttribute VideoCHG video
+    ){  
+        Map<String, Object> map = new HashMap<>();
+        try {
+            if(!file.isEmpty()){
+                VideoCHG videoCHG = pService.poseVideoSelectOne(video.getVno());
+                videoCHG.setVtype(file.getContentType());
+                videoCHG.setVname(file.getOriginalFilename());
+                videoCHG.setVsize(file.getSize());
+                videoCHG.setVvideo(file.getBytes());
 
+                long ret = pService.poseVideoUpdate(videoCHG);
+                if(ret == 1){
+                    map.put("status", 200);
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
 
-
+    // 자세 동영상 삭제
+    // 127.0.0.1:9090/ROOT/api/pose/deletevideo.json?no=
+    @RequestMapping(value="/deletevideo.json", method = {RequestMethod.DELETE},
+    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> poseVideoDeleteDELETE(
+        @RequestParam(name="no") long vno
+    ){  
+        Map<String, Object> map = new HashMap<>();
+        try {
+            
+            int ret = pService.poseVideoDelete(vno);
+            if(ret == 1){
+                map.put("status", 200);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
 
 }
