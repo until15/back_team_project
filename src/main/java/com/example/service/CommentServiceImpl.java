@@ -58,8 +58,17 @@ public class CommentServiceImpl implements CommentService {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
-        return 0;
+    }
+
+    @Override
+    public CommentCHG likeOne(long cmtno) {
+
+        CommentCHG comment = coRepository.findById(cmtno).orElse(null);
+        comment.setCmtno(comment.getCmtno());
+        coRepository.save(comment);
+        return comment;
     }
 
 }
