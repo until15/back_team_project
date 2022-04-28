@@ -63,7 +63,7 @@ public class PoseCHG {
     
     // 자세 영상 테이블
     @JsonManagedReference
-    @OneToOne(mappedBy = "posechg", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "posechg")
     private VideoCHG videochg;
     
     // 회원테이블
