@@ -13,10 +13,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -51,6 +54,8 @@ public class VideoCHG {
     private Date vregdate;
 
     // 자세 테이블
+    @JsonBackReference
+    @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "pno")
     private PoseCHG posechg;

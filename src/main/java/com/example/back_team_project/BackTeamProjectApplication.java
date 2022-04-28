@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 
 // 정의 변수 설정
-// @PropertySource("classpath:global.properties")
+@PropertySource("classpath:global.properties")
 
 // 컨트롤러, 환경설정파일, 서비스
 @ComponentScan(basePackages = {
