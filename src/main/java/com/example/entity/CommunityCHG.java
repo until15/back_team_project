@@ -49,11 +49,11 @@ public class CommunityCHG {
     @JoinColumn(name = "memail")
     private MemberCHG memberchg;
 
-    // 자유게시판 이미지 테이블
-    // @OneToMany(mappedBy = "communitychg")
-    // private List<BimgCHG> bimgChgList = new ArrayList<>();
+    // // 자유게시판 이미지 테이블
+    @OneToMany(mappedBy = "communitychg")
+    private List<BimgCHG> bimgchgList = new ArrayList<>();
 
     // // 댓글 테이블
-    // @OneToMany(mappedBy = "communitychg")
-    // private List<Commentchg> commentchgList = new ArrayList<>();
+    @OneToMany(mappedBy = "communitychg")
+    private List<CommentCHG> commentchgList = new ArrayList<>();
 }

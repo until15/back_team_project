@@ -1,6 +1,8 @@
 package com.example.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,7 +32,7 @@ public class CommentCHG {
     @Lob
     private String cmtcontent;
     // 좋아요 갯수 저장
-    private Long cmtlike;
+    private Long cmtlike = 0L;
     // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
@@ -40,4 +43,9 @@ public class CommentCHG {
     @ManyToOne
     @JoinColumn(name = "bno")
     private CommunityCHG communitychg;
+
+    @ManyToOne
+    @JoinColumn(name = "memail")
+    private MemberCHG memberchg;
+
 }

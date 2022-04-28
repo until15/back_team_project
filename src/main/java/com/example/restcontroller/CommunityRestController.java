@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.CommunityCHG;
+import com.example.entity.MemberCHG;
+import com.example.jwt.JwtUtil;
 import com.example.repository.CommunityRepository;
 import com.example.service.CommuniryService;
 
@@ -13,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,13 +31,26 @@ public class CommunityRestController {
     @Autowired
     CommunityRepository cRepository;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
     // 127.0.0.1:9090/ROOT/api/community/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> boardInsertPOST(@RequestBody CommunityCHG community) {
+    public Map<String, Object> boardInsertPOST(@RequestBody CommunityCHG community,
+            @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("status", 0);
+
+            // 토큰에서 이메일 추출
+            String memail = jwtUtil.extractUsername(token);
+
+            // 회원엔티티 객체 생성 및 이메일 추가
+            MemberCHG member = new MemberCHG();
+            member.setMemail(memail);
+            // 게시판 엔티티에 추가
+            community.setMemberchg(member);
+
             int ret = cService.boardInsertOne(community);
             if (ret == 1) {
                 map.put("status", 200);
@@ -42,6 +58,7 @@ public class CommunityRestController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            map.put("status", 0);
         }
         return map;
     }

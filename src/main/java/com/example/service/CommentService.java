@@ -17,4 +17,6 @@ public interface CommentService {
 
     public int deleteComment(long cmtno);
 
+    public CommentCHG likeOne(long cmtno);
+
 }

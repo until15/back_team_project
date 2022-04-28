@@ -45,5 +45,5 @@ public class BimgCHG {
     // 자유게시판 테이블
     @ManyToOne
     @JoinColumn(name = "bno")
-    private CommunityCHG community;
+    private CommunityCHG communitychg;
 }
