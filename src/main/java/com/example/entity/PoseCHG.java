@@ -22,6 +22,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -61,6 +62,7 @@ public class PoseCHG {
     private Date pregdate;
     
     // 자세 영상 테이블
+    @JsonManagedReference
     @OneToOne(mappedBy = "posechg", cascade = CascadeType.ALL)
     private VideoCHG videochg;
     

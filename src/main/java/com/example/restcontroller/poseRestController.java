@@ -1,6 +1,7 @@
 package com.example.restcontroller;
 
-import java.net.http.HttpHeaders;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +12,17 @@ import com.example.repository.PoseRepository;
 import com.example.service.PoseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +36,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/pose")
 public class poseRestController {
 
+    @Autowired ResourceLoader resLoader;
     @Autowired PoseService pService;
+
+    @Value("${default.image}") String DEFAULT_IMAGE;
 
     // 자세 등록
     // 127.0.0.1:9090/ROOT/api/pose/insert.json
@@ -193,27 +201,58 @@ public class poseRestController {
     }
 
     // 자세 동영상 조회
-    // 127.0.0.1:9090/ROOT/api/pose/selectvideo.json?vno=
-    @RequestMapping(value="/selectvideo.json", method = {RequestMethod.GET},
+    // 127.0.0.1:9090/ROOT/api/pose/video?no=
+    @RequestMapping(value="/video", method = {RequestMethod.GET},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> selectvideoGET(
-        @RequestParam(name="vno") long vno
-    ){  
-        Map<String, Object> map = new HashMap<>();
+    public ResponseEntity<byte[]> selectvideoGET(
+        @RequestParam(name="no") long vno
+    )throws IOException{  
+        System.out.println("자세 동영상 조회 번호 : " + vno);
         try {
             VideoCHG videoCHG = pService.poseVideoSelectOne(vno);
+            System.out.println(videoCHG.getVtype());
+            System.out.println(videoCHG.getVvideo().length);
+
             if(videoCHG.getVsize() > 0){
-                
+                HttpHeaders header = new HttpHeaders();
+                if(videoCHG.getVtype().equals("video/mp4")){
+                    header.setContentType(MediaType.parseMediaType("video/mp4"));
+                }
+                else if(videoCHG.getVtype().equals("video/ogg")){
+                    header.setContentType(MediaType.parseMediaType("video/ogg"));
+                }
+                else if(videoCHG.getVtype().equals("video/webm")){
+                    header.setContentType(MediaType.parseMediaType("video/webm"));
+                }
+                else if(videoCHG.getVtype().equals("image/jpeg")){
+                    header.setContentType(MediaType.IMAGE_JPEG);
+                }
+                else if(videoCHG.getVtype().equals("image/png")){
+                    header.setContentType(MediaType.IMAGE_PNG);
+                }
+                else if(videoCHG.getVtype().equals("image/gif")){
+                    header.setContentType(MediaType.IMAGE_GIF);
+                }
+                ResponseEntity<byte[]> response = new ResponseEntity<>(videoCHG.getVvideo(), header, HttpStatus.OK);
+                return response;
             }
-            if(videoCHG != null){
-                map.put("status", 200);
-                map.put("result", videoCHG);
+            else{
+                InputStream is = resLoader.getResource(DEFAULT_IMAGE).getInputStream();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                ResponseEntity<byte[]> response = new ResponseEntity<>(is.readAllBytes(), headers, HttpStatus.OK);
+                return response;
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status", 0);
+            return null;
         }
-        return map;
     }
+
+    
+
+
+
+
 }
