@@ -56,25 +56,40 @@ public class JoinServiceImpl implements JoinService{
 
 	// 첼린지 포기
 	@Override
-	public int challengeGiveUp(Long jno) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int challengeGiveUp(JoinCHG join) {
+		try {
+			jRepository.save(join);
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	
 	// 현재 참여중인 첼린지 조회
 	@Override
-	public List<JoinCHG> joinChallengeList(String memail) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<JoinProjection> joinChallengeList(String memail, int state) {
+		try {
+			
+			return jRepository.findByMemberchg_memailAndChgstate(memail, state);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	
 	// 참여했던 모든 첼린지 조회
 	@Override
-	public List<JoinCHG> joinedChallengeAllList(String memail) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<JoinProjection> joinedChallengeAllList(String memail) {
+		try {
+			
+			return jRepository.findByMemberchg_memail(memail);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	

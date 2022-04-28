@@ -32,7 +32,9 @@ public class JoinCHG {
     private Long jno;
     
     // 참가 상태
-    private int chgstate;
+    // 1 => 참가
+    // 2 => 포기
+    private int chgstate = 1;
     
 	// 생성일자
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")

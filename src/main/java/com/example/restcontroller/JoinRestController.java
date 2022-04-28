@@ -1,6 +1,7 @@
 package com.example.restcontroller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +29,20 @@ public class JoinRestController {
 	@Autowired JwtUtil jwtUtil;
 	
 	// 참가하기
-	// 127.0.0.1:9090/ROOT/api/join/insert
-	// {"chgstate":1, "challengechg":{"chgno":1} }
+	// 127.0.0.1:9090/ROOT/api/join/insert?chgno=
 	// Headers : token
 	@RequestMapping(value="/insert", 
 			method = {RequestMethod.POST},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> insertJoinPOST(
-			@RequestBody JoinCHG join,
-			@RequestHeader(name="token") String token){
+			@RequestHeader(name="token") String token,
+			@RequestParam(name = "chgno") long chgno){
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
 			System.out.println("토큰 발급 : " + token);	// 토큰 발급
-			System.out.println(join.toString()); 	// 넘어오는 join
+			System.out.println(chgno); 	// 넘어오는 join
 			
 			// 토큰에서 아이디 추출
 			String username = jwtUtil.extractUsername(token);
@@ -54,84 +54,84 @@ public class JoinRestController {
 			
 			System.out.println("아이디 : " + email);
 			
-			// 참가 엔티티에 아이디 담기
-			join.setMemberchg(email);
-			
+			// challenge 엔티티에 첼린지 번호 담기
 			ChallengeCHG challenge = new ChallengeCHG();
-			challenge.setChgno(null);
+			challenge.setChgno(chgno);
 			
-			jService.duplicateJoin(null, username);
-			
-			int ret = jService.challengeJoin(join);
-			
-
-			map.put("status", 200);
-					
-		} catch (Exception e) {
-			e.printStackTrace();
-			map.put("status", 0);
-		}
-		
-		return map;
-		
-	}
-	
-	
-	// 테스트용
-	// 127.0.0.1:9090/ROOT/api/join/test
-	// {"chgstate":1, "chgno":1 }
-	@RequestMapping(value="/test", 
-			method = {RequestMethod.POST},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
-			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public Map<String, Object> insertJoinPOST(
-			@RequestBody Map<String, Object> join,
-			@RequestHeader(name="token") String token) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			
-			System.out.println(join);
-			
-			JoinCHG join1 = new JoinCHG();
-			join1.setChgstate(((Integer)join.get("chgstate")));
-			
-			System.out.println(join1);
-			
-			ChallengeCHG challenge = new ChallengeCHG();
-			challenge.setChgno(((Integer)join.get("chgno")).longValue());
 			System.out.println(challenge);
 			
-			join1.setChallengechg(challenge);
+			// 참가 엔티티에 아이디와 첼린지 번호 담기
+			JoinCHG join = new JoinCHG();
+			join.setMemberchg(email);
+			join.setChallengechg(challenge);
 			
-			String username = jwtUtil.extractUsername(token);
-			System.out.println(username);
+			System.out.println(join);	// join엔티티에 담겨있는 값 확인
 			
-			MemberCHG member = new MemberCHG();
-			member.setMemail(username);
-			System.out.println(member);
+			// 아이디와 첼린지 번호 동시에 일치하는 지 확인
+			JoinCHG duplicate = jService.duplicateJoin(chgno, username);
+			System.out.println(duplicate);
 			
-			join1.setMemberchg(member);
-			
-			System.out.println(join1.toString());
-			
-			
-			JoinCHG test1 = jService.duplicateJoin(challenge.getChgno(), username);
-			System.out.println(test1.toString());
-			
-			if(test1 != null) {
-				map.put("status", 200);
+			if(duplicate == null) {
+				int ret = jService.challengeJoin(join);
+				if (ret == 1) {
+					// 새로 참가하기는 200
+					map.put("status", 200);
+					
+				}
+			}else {
+				// 이미 참여했으면 0
+				map.put("status", 0);
 			}
 	
 		} catch (Exception e) {
 			e.printStackTrace();
-			map.put("status", 0);
+			map.put("status", -1);
+		}
+		
+		return map;
+		
+	}
+	
+	
+	// 포기하기 (chgstate 가 1이면 참여중 2면 포기)
+	// 127.0.0.1:9090/ROOT/api/join/giveup?chgno=
+	// Headers : token
+	@RequestMapping(value="/giveup", 
+			method = {RequestMethod.PUT},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> giveupCHG(
+			@RequestHeader(name="token") String token,
+			@RequestParam(name = "chgno") long chgno){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println("토큰 발급 : " + token);	// 토큰 발급
+			System.out.println(chgno); 	// 넘어오는 join
+			
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+
+			JoinCHG join = jService.duplicateJoin(chgno, username);
+			
+			join.setChgstate(2);
+
+			int ret = jService.challengeGiveUp(join);
+			if (ret == 1) {
+				
+				map.put("status", 200);
+			}
+			else {
+				map.put("status", 0);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
 		}
 		
 		return map;
 	}
-	
-	
-	// 포기하기
 	
 	
 	// 참여 번호로 참가한 첼린지 1개 조회(테스트용)
@@ -161,10 +161,43 @@ public class JoinRestController {
 		return map;
 	}
 	
-	// 현재 참여중인 첼린지 조회
+	
+	// 진행 중인 내 첼린지 전체 조회
+
+	
+	// 내가 참여한 첼린지 1개 조회
 	
 	
-	// 참여했던 첼린지 전체 조회
+	// 내가 참여했던 첼린지 전체 조회
+	// 127.0.0.1:9090/ROOT/api/join/selectlist
+	@RequestMapping(value="/selectlist", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectlistGET(
+			@RequestHeader(name="token") String token){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(token);
+			
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+			
+			List<JoinProjection> list = jService.joinedChallengeAllList(username);
+			System.out.println(list);
+			
+			map.put("status", 200);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+		
+		return map;
+	}
+	
+	// 
 	
 	
 	
