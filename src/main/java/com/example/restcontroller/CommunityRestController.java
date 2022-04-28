@@ -149,4 +149,22 @@ public class CommunityRestController {
         return map;
     }
 
+    // 127.0.0.1:9090/ROOT/api/community/updatehit1
+    @RequestMapping(value = "/updatehit1", method = { RequestMethod.PUT }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> updateHit1PUT(@RequestParam(name = "bno") long bno) {
+        System.out.println(bno);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            CommunityCHG community = cService.boardUpdateHit1(bno);
+            map.put("srult", community);
+            map.put("status", 200);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
 }

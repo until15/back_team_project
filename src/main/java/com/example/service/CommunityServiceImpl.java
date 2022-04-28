@@ -89,4 +89,18 @@ public class CommunityServiceImpl implements CommuniryService {
 
     }
 
+    @Override
+    public CommunityCHG boardUpdateHit1(long bno) {
+        try {
+            CommunityCHG community = cRepository.findById(bno).orElse(null);
+            community.setBhit(community.getBhit() + 1L);
+            cRepository.save(community);
+            return community;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

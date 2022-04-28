@@ -27,4 +27,7 @@ public interface CommuniryService {
 
     // 게시물 조회수 증가
     public int boardUpdateHit(long bno);
+
+    // 게시물 조회수 증가2
+    public CommunityCHG boardUpdateHit1(long bno);
 }
