@@ -134,27 +134,29 @@ public class MemberRestController {
 		return map;
 	}
 
-	// // 127.0.0.1:9090/ROOT/api/customer/updatepw
-	// // 암호변경 (토큰, 현재암호, 변경암호)
+	// 127.0.0.1:9090/ROOT/api/customer/updatepw
+	// 암호변경 (토큰, 현재암호, 변경암호)
 	// @RequestMapping(value = "/updatepw", method = { RequestMethod.PUT }, consumes
-	// = {
-	// MediaType.ALL_VALUE }, produces = {
-	// MediaType.APPLICATION_JSON_VALUE })
+	// = {MediaType.ALL_VALUE }, produces = {MediaType.APPLICATION_JSON_VALUE })
 	// public Map<String, Object> customerupdatepwPUT(@RequestHeader(name = "token")
 	// String token,
-	// @RequestBody MemberDTO member) {
+	// @RequestBody MemberCHG member) {
 	// Map<String, Object> map = new HashMap<>();
-	// map.put("status", 0); // 정상적이지 않을 때
-
+	// try {
 	// String username = jwtUtil.extractUsername(token);
-	// UserDetails user = userDetailsService.loadUserByUsername(member.getUemail());
+	// UserDetails user = userDetailsService.loadUserByUsername(member.getMemail());
 	// BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 	// // 함호화 되지 않는 것과 암호화 된것 비교하기
-	// if (bcpe.matches(member.getUpw(), user.getPassword())) {
-	// mMapper.updateMemberPw(username, bcpe.encode(member.getUpw1()));
+	// if (bcpe.matches(member.getMpw(), user.getPassword()))
+	// {mService.MemberUpdatePw(username, bcpe.encode(member.getMpw1()))
 
-	// map.put("status", 200); // 0 -> 20
+	// map.put("status", 200);
+
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// map.put("status", 0); // 정상적이지 않을 때
 	// }
+
 	// return map;
 	// }
 
