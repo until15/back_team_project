@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
+import com.example.entity.JoinSelectOne;
 import com.example.repository.JoinRepository;
 
 @Service
@@ -28,7 +29,7 @@ public class JoinServiceImpl implements JoinService{
 	}
 
 	
-	// 중복 참여
+	// 아이디와 첼린지 번호 동시에 일치하는 참가
 	@Override
 	public JoinCHG duplicateJoin(Long no, String em) {
 		try {
@@ -43,9 +44,10 @@ public class JoinServiceImpl implements JoinService{
 
 	// 첼린지 1개 조회
 	@Override
-	public JoinProjection selectOneCHG(Long jno) {
+	public JoinSelectOne selectOneCHG(String em, long no) {
 		try {
-			return jRepository.findByJno(jno);
+			
+			return jRepository.findByMemberchg_memailAndJno(em, no);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -67,12 +69,13 @@ public class JoinServiceImpl implements JoinService{
 	}
 
 	
-	// 현재 참여중인 첼린지 조회
+	// 현재 진행 중인 첼린지 조회
 	@Override
 	public List<JoinProjection> joinChallengeList(String memail, int state) {
 		try {
 			
 			return jRepository.findByMemberchg_memailAndChgstate(memail, state);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

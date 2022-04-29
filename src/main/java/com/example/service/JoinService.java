@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
+import com.example.entity.JoinSelectOne;
 
 @Service
 public interface JoinService {
 	
-	// 첼린지 1개 조회
-	public JoinProjection selectOneCHG(Long jno);
+	// 첼린지 1개 상세 조회
+	public JoinSelectOne selectOneCHG(String em, long no);
 	
     // 챌린지 참가
     public int challengeJoin(JoinCHG join);
@@ -22,9 +23,11 @@ public interface JoinService {
     // 챌린지 포기
     public int challengeGiveUp(JoinCHG join);
 	
-	// 참여중인 첼린지 조회
+    // 참여했던 첼린지 전체 조회
+    public List<JoinProjection> joinedChallengeAllList(String memail);
+	
+	// 진행 중인 첼린지 조회
 	public List<JoinProjection> joinChallengeList(String memail, int state);
 	
-	// 참여했던 첼린지 전체 조회
-	public List<JoinProjection> joinedChallengeAllList(String memail);
+	
 }
