@@ -61,10 +61,10 @@ public class PoseCHG {
     @Column(name = "PREGDATE")
     private Date pregdate;
     
-    // 자세 영상 테이블
-    @JsonManagedReference
-    @OneToOne(mappedBy = "posechg")
-    private VideoCHG videochg;
+    //자세 영상 테이블
+    // @JsonManagedReference
+    // @OneToOne(mappedBy = "posechg")
+    // private VideoProjection videochg;
     
     // 회원테이블
     @ManyToOne
