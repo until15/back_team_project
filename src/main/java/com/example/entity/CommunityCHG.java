@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,6 +58,6 @@ public class CommunityCHG {
 
     // // 댓글 테이블
     @JsonBackReference
-    @OneToMany(mappedBy = "communitychg")
+    @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
     private List<CommentCHG> commentchgList = new ArrayList<>();
 }

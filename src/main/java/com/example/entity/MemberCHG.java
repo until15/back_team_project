@@ -59,20 +59,20 @@ public class MemberCHG {
 
 	// 등급
 	private Long mrank = 1L;
-	
+
 	// 프로필 사진
 	@Lob
 	private byte[] mprofile;
-	  
+
 	// 프사 사이즈
 	private Long mpsize = 0L;
-	  
+
 	// 프사 타입
 	private String mptype;
-	  
+
 	// 프사 이름
 	private String mpname;
-	
+
 	// 탈퇴 유무
 	private int mstep;
 
@@ -81,5 +81,8 @@ public class MemberCHG {
 	@CreationTimestamp // CURRENT_DATE
 	@Column(name = "MREGDATE")
 	private Date mregdate;
-	
+
+	// 임시 암호
+	private String mpw1;
+
 }

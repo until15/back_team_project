@@ -90,9 +90,14 @@ public class CommentRestController {
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> deleteOne(@RequestParam(name = "cmtno") long cmtno) {
+    public Map<String, Object> deleteOne(@RequestParam(name = "cmtno") long cmtno,
+            @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
+
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
+
             int ret = cService.deleteComment(cmtno);
             if (ret == 1) {
                 map.put("status", 200);

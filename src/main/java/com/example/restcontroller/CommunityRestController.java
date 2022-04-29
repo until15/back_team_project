@@ -8,6 +8,7 @@ import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.CommunityRepository;
+import com.example.service.CommentService;
 import com.example.service.CommuniryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class CommunityRestController {
     CommunityRepository cRepository;
 
     @Autowired
+    CommentService coService;
+
+    @Autowired
     JwtUtil jwtUtil;
 
     // 게시글 등록
@@ -45,7 +49,7 @@ public class CommunityRestController {
 
             // 토큰에서 이메일 추출
             String memail = jwtUtil.extractUsername(token);
-
+            System.out.println(memail);
             // 회원엔티티 객체 생성 및 이메일 추가
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
@@ -111,13 +115,17 @@ public class CommunityRestController {
 
     // 게시글 삭제
     // 127.0.0.1:9090/ROOT/api/community/delete?bno=1
-    @RequestMapping(value = "/delete", method = { RequestMethod.GET }, consumes = {
+    @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> deleteGET(@RequestParam(name = "bno") long bno) {
+    public Map<String, Object> boardDELETE(@RequestParam(name = "bno") long bno,
+            @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            int ret = cService.boarddeleteOne(bno);
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
+
+            int ret = cService.boardDeleteOne(bno);
             if (ret == 1) {
                 map.put("status", 200);
             }
@@ -127,17 +135,21 @@ public class CommunityRestController {
             map.put("status", 0);
         }
         return map;
-
     }
 
     // 게시글 수정
     // 127.0.0.1:9090/ROOT/api/community/update?bno=1
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> updatePUT(@RequestBody CommunityCHG community) {
+    public Map<String, Object> updatePUT(@RequestBody CommunityCHG community,
+            @RequestHeader(name = "token") String token, @RequestParam(name = "bno") long bno) {
         Map<String, Object> map = new HashMap<>();
         try {
-            CommunityCHG community1 = cService.boardSelectOne(community.getBno());
+
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
+
+            CommunityCHG community1 = cService.boardSelectOne(bno);
             community1.setBtitle(community.getBtitle());
             community1.setBcontent(community.getBcontent());
 

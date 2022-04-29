@@ -65,7 +65,7 @@ public class CommunityServiceImpl implements CommuniryService {
     }
 
     @Override
-    public int boarddeleteOne(long bno) {
+    public int boardDeleteOne(long bno) {
         try {
             cRepository.deleteById(bno);
             return 1;
