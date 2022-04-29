@@ -23,9 +23,6 @@ public interface PoseService {
     // 자세 삭제 (삭제 아닌 수정 pstep)
     public int poseDelete(PoseCHG pose);
 
-    // 자세 검색어 개수
-    public long poseCountSelect(String title);
-
     // 자세 목록
     public List<PoseCHG> poseSelectList(int step, Pageable page, String title);
 

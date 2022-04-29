@@ -8,24 +8,21 @@ import java.util.Map;
 
 import com.example.entity.PoseCHG;
 import com.example.entity.VideoCHG;
-import com.example.repository.PoseRepository;
+import com.example.jwt.JwtUtil;
 import com.example.service.PoseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,8 +35,11 @@ public class poseRestController {
 
     @Autowired ResourceLoader resLoader;
     @Autowired PoseService pService;
+    
+    @Autowired JwtUtil jwtUtil;
 
     @Value("${default.image}") String DEFAULT_IMAGE;
+    @Value("${board.page.count}") int PAGECNT;
 
     // 자세 등록
     // 127.0.0.1:9090/ROOT/api/pose/insert.json
@@ -47,10 +47,13 @@ public class poseRestController {
     @RequestMapping(value="/insert.json", method = {RequestMethod.POST},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseInsertPOST(
+        @RequestHeader(name="token") String token,
         @RequestBody PoseCHG pose
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
             int ret = pService.poseInsert(pose);
             if(ret == 1){
                 map.put("status", 200);
@@ -69,10 +72,13 @@ public class poseRestController {
     @RequestMapping(value="/update.json", method = {RequestMethod.PUT},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseUpdatePOST(
+        @RequestHeader(name="token") String token,
         @RequestBody PoseCHG pose
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
             PoseCHG pose1 = pService.poseSelectOne(pose.getPno());
             pose1.setPname(pose.getPname());
             pose1.setPpart(pose.getPpart());
@@ -116,23 +122,21 @@ public class poseRestController {
 
 
     // 자세 목록 (검색어 + 페이지네이션)
-    // 127.0.0.1:9090/ROOT/api/pose/selectlist.json?page=1&title=&step=1
+    // 127.0.0.1:9090/ROOT/api/pose/selectlist.json?page=1&title=
     @RequestMapping(value="/selectlist.json", method = {RequestMethod.GET},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectlistGET(
-        @RequestParam(name="step546821#232", defaultValue = "1") int step,
+        @RequestParam(name="step546821#232", defaultValue="1") int step,
         @RequestParam(name = "page", defaultValue = "1") int page,
         @RequestParam(name="title", defaultValue = "") String title
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
-            Pageable pageable = PageRequest.of(page-1, 10);
+            Pageable pageable = PageRequest.of(page-1, PAGECNT);
             List<PoseCHG> list = pService.poseSelectList(step, pageable, title);
-            long cnt = pService.poseCountSelect(title);
             if(list != null){
                 map.put("status", 200);
                 map.put("result", list);
-                map.put("count", cnt);
             }
             
         } catch (Exception e) {
@@ -148,10 +152,13 @@ public class poseRestController {
     @RequestMapping(value="/delete.json", method = {RequestMethod.PUT},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseDeletePOST(
+        @RequestHeader(name="token") String token,
         @RequestBody PoseCHG pose
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
             PoseCHG pose1 = pService.poseSelectOne(pose.getPno());
             pose1.setPstep(pose.getPstep());
             
@@ -172,6 +179,7 @@ public class poseRestController {
     @RequestMapping(value="/insertvideo.json", method = {RequestMethod.POST},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseVideoInsertPOST(
+        @RequestHeader(name="token") String token,
         @RequestParam(name="pvideo") MultipartFile file,
         @RequestParam(name="pno") long pno,
         @ModelAttribute VideoCHG video,
@@ -180,6 +188,8 @@ public class poseRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             if(!file.isEmpty()){
+                String username = jwtUtil.extractUsername(token);
+                System.out.println(username);
                 PoseCHG poseCHG = new PoseCHG();
                 poseCHG.setPno(pno);
                 video.setPosechg(poseCHG);
@@ -255,6 +265,7 @@ public class poseRestController {
     @RequestMapping(value="/updatevideo.json", method = {RequestMethod.PUT},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseVideoUpdatePOST(
+        @RequestHeader(name="token") String token,
         @RequestParam(name="pvideo") MultipartFile file,
         @RequestParam(name="vno") long vno,
         @ModelAttribute VideoCHG video
@@ -262,6 +273,8 @@ public class poseRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             if(!file.isEmpty()){
+                String username = jwtUtil.extractUsername(token);
+                System.out.println(username);
                 VideoCHG videoCHG = pService.poseVideoSelectOne(video.getVno());
                 videoCHG.setVtype(file.getContentType());
                 videoCHG.setVname(file.getOriginalFilename());
@@ -286,11 +299,13 @@ public class poseRestController {
     @RequestMapping(value="/deletevideo.json", method = {RequestMethod.DELETE},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseVideoDeleteDELETE(
+        @RequestHeader(name="token") String token,
         @RequestParam(name="no") long vno
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
-            
+            String username = jwtUtil.extractUsername(token);
+            System.out.println(username);
             int ret = pService.poseVideoDelete(vno);
             if(ret == 1){
                 map.put("status", 200);

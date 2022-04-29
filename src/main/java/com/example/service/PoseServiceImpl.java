@@ -83,18 +83,6 @@ public class PoseServiceImpl implements PoseService{
         }
     }
 
-    // 자세 검색 개수 구하기
-    @Override
-    public long poseCountSelect(String title) {
-        try {
-            long count = pRepository.countByPnameContaining(title);
-            return count;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
     // 자세 비디오 등록
     @Override
     public long poseVideoInsert(VideoCHG video) {
