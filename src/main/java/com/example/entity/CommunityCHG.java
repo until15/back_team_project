@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -54,6 +56,7 @@ public class CommunityCHG {
     private List<BimgCHG> bimgchgList = new ArrayList<>();
 
     // // 댓글 테이블
+    @JsonBackReference
     @OneToMany(mappedBy = "communitychg")
     private List<CommentCHG> commentchgList = new ArrayList<>();
 }

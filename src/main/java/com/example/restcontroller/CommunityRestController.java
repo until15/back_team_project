@@ -34,6 +34,7 @@ public class CommunityRestController {
     @Autowired
     JwtUtil jwtUtil;
 
+    // 게시글 등록
     // 127.0.0.1:9090/ROOT/api/community/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
@@ -63,6 +64,7 @@ public class CommunityRestController {
         return map;
     }
 
+    // 게시글 조회 및 페이지네이션
     // 127.0.0.1:9090/ROOT/api/community/selectlist
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
@@ -87,6 +89,7 @@ public class CommunityRestController {
         return map;
     }
 
+    // 게시글 1개 조회
     // 127.0.0.1:9090/ROOT/api/community/selectone?bno=1
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -106,6 +109,7 @@ public class CommunityRestController {
 
     }
 
+    // 게시글 삭제
     // 127.0.0.1:9090/ROOT/api/community/delete?bno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -126,6 +130,7 @@ public class CommunityRestController {
 
     }
 
+    // 게시글 수정
     // 127.0.0.1:9090/ROOT/api/community/update?bno=1
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -146,6 +151,7 @@ public class CommunityRestController {
         return map;
     }
 
+    // 게시글 조회수 증가
     // 127.0.0.1:9090/ROOT/api/community/updatehit
     @RequestMapping(value = "/updatehit", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -166,6 +172,7 @@ public class CommunityRestController {
         return map;
     }
 
+    // 게시글 조회수증가(이거 사용)
     // 127.0.0.1:9090/ROOT/api/community/updatehit1
     @RequestMapping(value = "/updatehit1", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
