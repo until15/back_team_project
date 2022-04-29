@@ -1,12 +1,15 @@
 package com.example.restcontroller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.entity.CommentCHG;
+import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.service.CommentService;
+import com.example.service.CommuniryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,8 +28,12 @@ public class CommentRestController {
     CommentService cService;
 
     @Autowired
+    CommuniryService coService;
+
+    @Autowired
     JwtUtil jwtUtil;
 
+    // 댓글 등록
     // 127.0.0.1:9090/ROOT/api/comment/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
@@ -55,15 +62,21 @@ public class CommentRestController {
         return map;
     }
 
-    // 127.0.0.1:9090/ROOT/api/comment/select?cmtno=3
-    @RequestMapping(value = "/select", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertPOST(@RequestParam(name = "cmtno") long cmtno) {
+    // 댓글 목록에 보이기
+    // 127.0.0.1:9090/ROOT/api/comment/selectone
+    @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> insertPOST(@RequestParam(name = "bno") long bno) {
         Map<String, Object> map = new HashMap<>();
         try {
-            CommentCHG comment = cService.selectOneComment(cmtno);
-            map.put("result", comment);
-            map.put("status", 200);
+            CommunityCHG community = coService.boardSelectOne(bno);
+            List<CommentCHG> list = cService.commentSelectList(community.getBno());
+            if (list != null) {
+
+                map.put("result", list);
+                map.put("status", 200);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,6 +85,7 @@ public class CommentRestController {
         return map;
     }
 
+    // 댓글 삭제
     // 127.0.0.1:9090/ROOT/api/comment/delete?cmtno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = {
@@ -91,6 +105,7 @@ public class CommentRestController {
         return map;
     }
 
+    // 댓글 좋아요
     @RequestMapping(value = "/colike", method = { RequestMethod.PUT }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> likeUpPUT(@RequestParam(name = "cmtno") long cmtno) {
@@ -106,7 +121,6 @@ public class CommentRestController {
             map.put("status", 0);
         }
         return map;
-
     }
 
 }

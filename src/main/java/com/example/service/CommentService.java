@@ -9,14 +9,18 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CommentService {
 
+    // 댓글 등록
     public int commentInsert(CommentCHG comment);
 
     public CommentCHG selectOneComment(long cmtno);
 
-    public List<CommentCHG> commentSelectList(CommentCHG comment);
+    // 댓글 표시
+    public List<CommentCHG> commentSelectList(Long bno);
 
+    // 댓글 삭제
     public int deleteComment(long cmtno);
 
+    // 좋아요
     public CommentCHG likeOne(long cmtno);
 
 }

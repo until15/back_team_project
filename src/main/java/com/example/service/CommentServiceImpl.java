@@ -38,12 +38,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentCHG> commentSelectList(CommentCHG comment) {
+    public List<CommentCHG> commentSelectList(Long bno) {
         try {
+            List<CommentCHG> list = coRepository.findByCommunitychg_bnoOrderByCmtnoDesc(bno);
 
-            return null;
+            return list;
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return null;
