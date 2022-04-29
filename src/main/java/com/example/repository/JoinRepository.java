@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
+import com.example.entity.JoinSelectOne;
 
 @Repository
 public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
@@ -15,13 +16,19 @@ public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
 	// 첼린지 1개 조회
 	JoinProjection findByJno(Long no);
 
-	// 유저가 첼린지에 중복 참여 했는지 확인
+	// 첼린지 번호와 아이디가 동시에 일치하는 항목 조회
 	JoinCHG findByChallengechg_chgnoAndMemberchg_memail(Long no, String em);
 	
 	// 참여했던 첼린지 전체 조회
 	List<JoinProjection> findByMemberchg_memail(String em);
 	
-	// 내가 참여중인 첼린지 리스트
+	// 진행 중인 첼린지 리스트 조회
 	List<JoinProjection> findByMemberchg_memailAndChgstate(String em, int state);
+	
+	// 참여한 첼린지 1개 상세 조회
+	JoinSelectOne findByMemberchg_memailAndJno(String em, long no);
+	
+	// 진행 상태에 따른 첼린지 리스트 (페이지네이션)
+	
 	
 }

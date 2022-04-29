@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.entity.ChallengeCHG;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
+import com.example.entity.JoinSelectOne;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.service.JoinService;
@@ -134,21 +135,62 @@ public class JoinRestController {
 	}
 	
 	
-	// 참여 번호로 참가한 첼린지 1개 조회(테스트용)
-	// 127.0.0.1:9090/ROOT/api/join/selectone?jno=9
+	// 완료한 첼린지 조회
+	
+	
+	// 진행 상태에 따른 조회 리스트
+	// 127.0.0.1:9090/ROOT/api/join/joinstate?chgstate=
+	@RequestMapping(value="/joinstate", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> joinStateListGET(
+			@RequestHeader(name="token") String token,
+			@RequestParam(name = "chgstate") long state,
+			@RequestParam(name="page", defaultValue ="1") int page){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(state);
+			System.out.println(token);
+			System.out.println(page);
+			
+			PageRequest pageRequest = PageRequest.of(page-1, 5);
+			System.out.println(pageRequest);
+			
+			
+			
+			map.put("status", 200);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+		
+		return map;
+	}
+	
+	
+	// 내가 참여한 첼린지 1개 조회
+	// 127.0.0.1:9090/ROOT/api/join/selectone?jno=8
 	@RequestMapping(value="/selectone", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
-	public Map<String, Object> selectjoinGET(
-			@RequestParam(name = "jno") long jno){
+	public Map<String, Object> selectOneGET(
+			@RequestParam(name = "jno") long jno,
+			@RequestHeader(name="token") String token){
 		Map<String, Object> map = new HashMap<>();
 		try {
 			
 			System.out.println(jno);
+			System.out.println(token);
 			
-			JoinProjection join = jService.selectOneCHG(jno);
-			System.out.println(join.toString());
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+			
+			JoinSelectOne join = jService.selectOneCHG(username, jno);
+			System.out.println(join);
 			
 			map.put("result", join);
 			map.put("status", 200);
@@ -163,13 +205,46 @@ public class JoinRestController {
 	
 	
 	// 진행 중인 내 첼린지 전체 조회
+	// 127.0.0.1:9090/ROOT/api/join/inglist
+	// Headers => token :
+	@RequestMapping(value="/inglist", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectIngListGET(
+			@RequestHeader(name="token") String token){
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(token);
+			
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+			
+			// 참가상태 변수 : 3 => 진행중
+			int state = 3;
 
-	
-	// 내가 참여한 첼린지 1개 조회
+			// 아이디와 참가 변수를 전달해서 진행중 인 첼린지만 조회
+			List<JoinProjection> list = jService.joinChallengeList(username, state);
+			System.out.println(list);
+			
+			map.put("result", list);
+			map.put("status", 200);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+		
+		return map; 
+		
+	}
 	
 	
 	// 내가 참여했던 첼린지 전체 조회
 	// 127.0.0.1:9090/ROOT/api/join/selectlist
+	// Headers => token : 
 	@RequestMapping(value="/selectlist", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
@@ -184,9 +259,11 @@ public class JoinRestController {
 			String username = jwtUtil.extractUsername(token);
 			System.out.println("유저이름 : " + username);
 			
+			// 아이디로 참가한 첼린지 전체 조회
 			List<JoinProjection> list = jService.joinedChallengeAllList(username);
 			System.out.println(list);
 			
+			map.put("result", list);
 			map.put("status", 200);
 			
 		} catch (Exception e) {
@@ -194,11 +271,7 @@ public class JoinRestController {
 			map.put("status", 0);
 		}
 		
-		return map;
+		return map; 
 	}
-	
-	// 
-	
-	
 	
 }

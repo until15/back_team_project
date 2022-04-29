@@ -16,17 +16,20 @@ public interface JoinProjection {
 	// 참여일자
 	Date getJregdate();
 	
+	// 달성률
+	Float getChgrate();
+	
 	// 첼린지 번호
 	@Value("#{target.challengechg.chgno}")
-	Long getChallengeCHGChgno();	
+	Long getChallengechgChgno();	
 	
 	// 첼린지 제목
 	@Value("#{target.challengechg.chgtitle}")
-	String getChallengeCHGChgtitle();
+	String getChallengechgChgtitle();
 	
 	// 참가자 이메일
 	@Value("#{target.memberchg.memail}")
-	String getMemberCHGMemail();
+	String getMemberchgMemail();
 
 	
 }
