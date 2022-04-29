@@ -100,12 +100,12 @@ public class ChallengeRestController {
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> deleteChallengeDELETE(
         @RequestParam("chgno") long chgno ){
-            System.out.println(chgno);
+            System.out.println("챌린지 번호"+chgno);
         Map<String, Object> map = new HashMap<>();
         try {
              int ret = chgService.deleteChallenge(chgno);
             if(ret == 1) {
-                     map.put("status", 200);
+                map.put("status", 200);
             } 
         }
         catch(Exception e) {

@@ -7,7 +7,9 @@ import com.example.repository.BookMarkRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BookMarkServiceImpl implements BookMarkService {
     
     @Autowired BookMarkRepository bmkRepository;
@@ -42,15 +44,38 @@ public class BookMarkServiceImpl implements BookMarkService {
     // 북마크 조회
     @Override
     public BookMarkCHG bookmarkSelectOne(long bmkno) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return bmkRepository.findById(bmkno).orElse(null);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // 북마크 목록
     @Override
-    public List<BookMarkCHG> bookmarkSelectList(Pageable page, String bookmark) {
-        // TODO Auto-generated method stub
+    public List<BookMarkCHG> bookmarkSelectList(Pageable page, long bmkno) {
+        try {
+            List<BookMarkCHG> list = bmkRepository.findByBmknoLikeOrderByBmknoDesc(bmkno, page);
+            return list;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    // 중복
+    @Override
+    public BookMarkCHG duplicateInsert(Long no, String memail) {
+        try {
+            return bmkRepository.findByChallengechg_chgnoAndMemberchg_memail(no, memail);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     
