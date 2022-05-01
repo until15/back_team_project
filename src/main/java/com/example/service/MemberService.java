@@ -32,9 +32,9 @@ public interface MemberService {
     public int MemberUpdate(MemberCHG member);
 
     // 회원 암호 수정
-    public long MemberUpdatePw(MemberCHG member);
+    public long MemberUpdatePw(String memail, String mpw);
 
     // 회원 탈퇴 (삭제가 아닌 update)
     public int MemberLeave(MemberCHG member);
-    
+
 }

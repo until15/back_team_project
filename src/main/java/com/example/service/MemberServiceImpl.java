@@ -68,9 +68,9 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 암호 수정
     @Override
-    public long MemberUpdatePw(MemberCHG member) {
+    public long MemberUpdatePw(String memail, String mpw) {
         try {
-            mRepository.save(member);
+            mRepository.updatePwMember(memail, mpw);
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
