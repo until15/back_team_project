@@ -20,6 +20,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,6 +51,36 @@ public class MemberRestController {
 
 	@Value("${default.image}")
 	String DEFAULT_IMAGE;
+
+	// 회원가입
+	// 127.0.0.1:9090/ROOT/api/member/join
+	@RequestMapping(value = "/join", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> joinPOST(@ModelAttribute MemberCHG member, @AuthenticationPrincipal User user,
+			@RequestParam(name = "mimage") MultipartFile file) throws IOException {
+		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+
+		member.setMpw(bcpe.encode(member.getMpw())); // 비밀번호 설정
+		member.setMrole(member.getMrole()); // 권한 설정
+
+		// 프로필 이미지
+		member.setMprofile(file.getBytes()); // 프로필 이미지
+		member.setMpname(file.getOriginalFilename()); // 이미지 이름
+		member.setMpsize(file.getSize()); // 이미지 사이즈
+		member.setMptype(file.getContentType()); // 이미지 타입
+
+		Map<String, Object> map = new HashMap<>();
+		try {
+			int ret = mService.MemberInsertOne(member);
+			if (ret == 1) {
+				map.put("status", 200);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+		return map;
+	}
 
 	// 로그인
 	// 127.0.0.1:9090/ROOT/api/member/login

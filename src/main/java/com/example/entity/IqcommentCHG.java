@@ -33,6 +33,11 @@ public class IqcommentCHG {
     @CreationTimestamp // CURRENT_DATE
     @Column(name = "IQCMTGREGDATE")
     private Date iqcmtregdate;
+
+    @ManyToOne
+    @JoinColumn(name = "memail")
+    private MemberCHG memberchg;
+
     // 문의 테이블
     @ManyToOne
     @JoinColumn(name = "qno")

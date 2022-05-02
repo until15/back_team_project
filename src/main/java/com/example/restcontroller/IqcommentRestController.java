@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.example.entity.InquiryCHG;
 import com.example.entity.IqcommentCHG;
+import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.service.InquiryService;
 import com.example.service.IqcommentService;
@@ -42,13 +43,13 @@ public class IqcommentRestController {
         try {
 
             // 토큰에서 이메일 추출
-            String memail = jwtUtil.extractUsername(token);
+            String username = jwtUtil.extractUsername(token);
 
-            // // 회원엔티티 객체 생성 및 이메일 추가
-            // MemberCHG member = new MemberCHG();
-            // member.setMemail(memail);
-            // // 게시판 엔티티에 추가
-            // comment.setMemberchg(member);
+            // 회원엔티티 객체 생성 및 이메일 추가
+            MemberCHG member = new MemberCHG();
+            member.setMemail(username);
+            // 게시판 엔티티에 추가
+            iqcomment.setMemberchg(member);
 
             int ret = iService.iqcommentInsert(iqcomment);
             if (ret == 1) {
