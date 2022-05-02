@@ -77,7 +77,6 @@ public class JoinRestController {
 				if (ret == 1) {
 					// 새로 참가하기는 200
 					map.put("status", 200);
-					
 				}
 			}else {
 				// 이미 참여했으면 0
@@ -90,7 +89,6 @@ public class JoinRestController {
 		}
 		
 		return map;
-		
 	}
 	
 	
@@ -104,6 +102,7 @@ public class JoinRestController {
 	public Map<String, Object> giveupCHG(
 			@RequestHeader(name="token") String token,
 			@RequestParam(name = "chgno") long chgno){
+		
 		Map<String, Object> map = new HashMap<>();
 		try {
 			System.out.println("토큰 발급 : " + token);	// 토큰 발급
@@ -133,44 +132,56 @@ public class JoinRestController {
 		
 		return map;
 	}
-	
-	
-	// 완료한 첼린지 조회
+
 	
 	
 	// 진행 상태에 따른 조회 리스트
-	// 127.0.0.1:9090/ROOT/api/join/joinstate?chgstate=
+	// 127.0.0.1:9090/ROOT/api/join/joinstate?chgstate=&page=
 	@RequestMapping(value="/joinstate", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> joinStateListGET(
 			@RequestHeader(name="token") String token,
-			@RequestParam(name = "chgstate") long state,
+			@RequestParam(name ="chgstate", defaultValue = "") int state,
 			@RequestParam(name="page", defaultValue ="1") int page){
+		
 		Map<String, Object> map = new HashMap<>();
 		try {
 			System.out.println(state);
 			System.out.println(token);
 			System.out.println(page);
 			
+			// 페이지네이션
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println(pageRequest);
 			
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
 			
+			// 아이디, 진행 상태, 페이지네이션으로 조회
+			List<JoinProjection> list = jService.joinStateList(username, state, pageRequest);
+			System.out.println(list);
 			
-			map.put("status", 200);
+			if(!list.isEmpty()) {
+				map.put("result", list);
+				map.put("status", 200);				
+			}
+			else {
+				map.put("status", 0);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			map.put("status", 0);
+			map.put("status", -1);
 		}
 		
 		return map;
 	}
 	
 	
-	// 내가 참여한 첼린지 1개 조회
+	// 내가 참여한 첼린지 1개 상세 조회
 	// 127.0.0.1:9090/ROOT/api/join/selectone?jno=8
 	@RequestMapping(value="/selectone", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -189,15 +200,21 @@ public class JoinRestController {
 			String username = jwtUtil.extractUsername(token);
 			System.out.println("유저이름 : " + username);
 			
+			// 아이디와 번호가 동시에 일치하는 것 조회
 			JoinSelectOne join = jService.selectOneCHG(username, jno);
 			System.out.println(join);
 			
-			map.put("result", join);
-			map.put("status", 200);
+			if(join != null) {
+				map.put("result", join);
+				map.put("status", 200);
+			}
+			else {
+				map.put("status", 0);				
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			map.put("status", 0);
+			map.put("status", -1);
 		}
 		
 		return map;
@@ -223,7 +240,7 @@ public class JoinRestController {
 			System.out.println("유저이름 : " + username);
 			
 			// 참가상태 변수 : 3 => 진행중
-			int state = 3;
+			int state = 1;
 
 			// 아이디와 참가 변수를 전달해서 진행중 인 첼린지만 조회
 			List<JoinProjection> list = jService.joinChallengeList(username, state);
@@ -238,11 +255,10 @@ public class JoinRestController {
 		}
 		
 		return map; 
-		
 	}
 	
 	
-	// 내가 참여했던 첼린지 전체 조회
+	// 내가 참여했던 첼린지 전체 조회 (페이지네이션)
 	// 127.0.0.1:9090/ROOT/api/join/selectlist
 	// Headers => token : 
 	@RequestMapping(value="/selectlist", 
@@ -250,25 +266,40 @@ public class JoinRestController {
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> selectlistGET(
-			@RequestHeader(name="token") String token){
+			@RequestHeader(name="token") String token,
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "title", defaultValue = "") String title){
+		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(token);
+//			System.out.println(token);
+			System.out.println("페이지 확인" + page);
+			System.out.println("제목으로 검색 : " + title);
 			
 			// 토큰에서 아이디 추출
 			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+//			System.out.println("유저이름 : " + username);
 			
-			// 아이디로 참가한 첼린지 전체 조회
-			List<JoinProjection> list = jService.joinedChallengeAllList(username);
+			// 페이지네이션(시작페이지(0부터), 갯수)
+			PageRequest pageRequest = PageRequest.of(page-1, 5);
+			System.out.println("페이지네이션 : " + pageRequest);
+			
+			// 사용자가 참여한 첼린지 검색+페이지네이션 조회 
+			List<JoinProjection> list =jService.joinChallengeAllList(username, title, pageRequest);
+			
 			System.out.println(list);
 			
-			map.put("result", list);
-			map.put("status", 200);
+			if(!list.isEmpty()) {
+				map.put("result", list);
+				map.put("status", 200);				
+			}
+			else {
+				map.put("status", 0);				
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			map.put("status", 0);
+			map.put("status", -1);
 		}
 		
 		return map; 
