@@ -23,5 +23,5 @@ public interface BookMarkService {
     public BookMarkCHG bookmarkSelectOne(long bmkno);
 
     // 북마크 목록
-    public List<BookMarkCHG> bookmarkSelectList(Pageable page, long bmkno);
+    public List<BookMarkCHG> bookmarkSelectList(Pageable page, String memail);
 }

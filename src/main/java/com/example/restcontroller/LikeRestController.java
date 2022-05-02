@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.entity.BookMarkCHG;
 import com.example.entity.ChallengeCHG;
+import com.example.entity.LikeCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
-import com.example.service.BookMarkService;
 import com.example.service.ChallengeService;
+import com.example.service.LikeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,17 +23,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/bookmark")
-public class BookMarkRestController {
-    
+@RequestMapping("/api/like")
+public class LikeRestController {
+
     @Autowired JwtUtil jwtUtil;
 
-    @Autowired BookMarkService bmkService;
+    @Autowired LikeService lService;
 
     @Autowired ChallengeService chgService;
 
     // 북마크 추가
-    // 127.0.0.1:9090/ROOT/api/bookmark/insert
+    // 127.0.0.1:9090/ROOT/api/like/insert
     // params => chgno:1
     // headers => token:...
     // body/json => { "memail":"이메일" }
@@ -43,59 +43,11 @@ public class BookMarkRestController {
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> insertBookmarkPOST(
-        @RequestBody BookMarkCHG bookmark,
+        @RequestBody LikeCHG like,
         @RequestHeader(name = "token") String token, 
         @RequestParam(name = "chgno") long chgno ){  
-        Map<String, Object> map = new HashMap<>();
-        try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
-
-            // 멤버 엔티티
-            MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
-
-            // 챌린지 조회
-            ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
-            
-            // 저장
-            bookmark.setChallengechg(challenge);
-            bookmark.setMemberchg(member);
-
-            // 중복 확인
-            BookMarkCHG duplicate = bmkService.duplicateInsert(chgno, memail);
-            if(duplicate == null) {
-                int ret = bmkService.insertBookMark(bookmark);
-                if (ret == 1) {
-                    map.put("status", 200);
-                }  
-            }
-            else {
-                map.put("status", 0);
-            }       
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
-
-
-
-    // 북마크 삭제(해제)
-    // 127.0.0.1:9090/ROOT/api/bookmark/delete
-    // params => bmkno:1
-    // headers => token:...
-    @RequestMapping(
-        value    = "/delete", 
-        method   = {RequestMethod.DELETE},
-        consumes = {MediaType.ALL_VALUE}, 
-        produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> deleteChallengeDELETE(
-        @RequestHeader(name = "token") String token, 
-        @RequestParam(name = "bmkno") long bmkno ){
-            System.out.println("북마크 번호 : "+bmkno);
+            System.out.println("토큰 : " + token);
+            System.out.println("챌린지 번호 : " + chgno);
         Map<String, Object> map = new HashMap<>();
         try {
             // 멤버 토큰
@@ -105,7 +57,57 @@ public class BookMarkRestController {
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
 
-            int ret = bmkService.deleteBookMark(bmkno);
+            // 챌린지 조회
+            ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
+
+            // 저장
+            like.setChallengechg(challenge);
+            like.setMemberchg(member);
+
+            challenge.setChglike(challenge.getChglike());
+
+            // 중복 확인
+            LikeCHG duplicate = lService.duplicateInsert(chgno, memail);
+            if(duplicate == null) {
+                int ret = lService.insertLike(like);
+                if(ret == 1) {
+                    map.put("status", 200);
+                }
+            }
+            else {
+                map.put("status", 0);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 좋아요 삭제(해제)
+    // 127.0.0.1:9090/ROOT/api/like/delete
+    // params => lno:1
+    // headers => token:...
+    @RequestMapping(
+        value    = "/delete", 
+        method   = {RequestMethod.DELETE},
+        consumes = {MediaType.ALL_VALUE}, 
+        produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> deleteChallengeDELETE(
+        @RequestHeader(name = "token") String token, 
+        @RequestParam(name = "lno") long lno ){
+            System.out.println("좋아요 번호 : "+ lno);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            // 멤버 토큰
+            String memail = jwtUtil.extractUsername(token);
+
+            // 멤버 엔티티 
+            MemberCHG member = new MemberCHG();
+            member.setMemail(memail);
+
+            int ret = lService.deleteLike(lno);
             if(ret == 1) {
                 map.put("status", 200);
             } 
@@ -117,10 +119,9 @@ public class BookMarkRestController {
         return map;
     }
 
-
     // 북마크 조회(즐겨찾는 챌린지/1개)
-    // 127.0.0.1:9090/ROOT/api/bookmark/selectone?bmkno=북마크번호
-    // Params => key:chgno, values:챌린지번호
+    // 127.0.0.1:9090/ROOT/api/like/selectone?lno=  
+    // Params => key:lno, values:
     @RequestMapping(
         value    = "/selectone", 
         method   = {RequestMethod.GET},
@@ -128,7 +129,7 @@ public class BookMarkRestController {
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectOneChallengeGET(
         @RequestHeader(name = "token") String token, 
-        @RequestParam(name = "bmkno") long bmkno ){
+        @RequestParam(name = "lno") long lno ){
         Map<String, Object> map = new HashMap<>();
         try {
             // 멤버 토큰
@@ -138,11 +139,11 @@ public class BookMarkRestController {
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
 
-            BookMarkCHG bookmark = bmkService.bookmarkSelectOne(bmkno);
-            System.out.println("북마크 번호 : " + bmkno);
-            if(bookmark != null){
+            LikeCHG like = lService.likeSelectOne(lno);
+            System.out.println("좋아요 번호 : " + lno);
+            if(like != null){
                 map.put("status", 200);
-                map.put("result", bookmark);
+                map.put("result", like);
             }
         }
         catch(Exception e) {
@@ -152,9 +153,8 @@ public class BookMarkRestController {
         return map;
     }
 
-
     // 북마크 목록(즐켜찾는 챌린지/목록)
-    // 127.0.0.1:9090/ROOT/api/bookmark/selectlist
+    // 127.0.0.1:9090/ROOT/api/like/selectlist
     @RequestMapping(
         value    = "/selectlist", 
         method   = {RequestMethod.GET},
@@ -170,7 +170,7 @@ public class BookMarkRestController {
             String memail = jwtUtil.extractUsername(token);
             System.out.println("토큰 : " + token);
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<BookMarkCHG> list = bmkService.bookmarkSelectList(pageable, memail);
+            List<LikeCHG> list = lService.likeSelectList(pageable, memail);
             if(list != null){
                 map.put("status", 200);
                 map.put("result", list);
@@ -182,6 +182,4 @@ public class BookMarkRestController {
         }
         return map;
     }
-
-
 }
