@@ -28,7 +28,7 @@ public class ChallengeRestController {
     // 127.0.0.1:9090/ROOT/api/challenge/insert
     // {"chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc", "chgstart" : 1, "chgend" : 1, "recruitstart" : 1, "recruitend" : 1, "chfee" : 10000, "memberchg":{"memail":"admin"}}
     @RequestMapping(
-        value    ="/insert", 
+        value    = "/insert", 
         method   = {RequestMethod.POST},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -67,7 +67,7 @@ public class ChallengeRestController {
     // 127.0.0.1:9090/ROOT/api/challenge/updateone
     // {"chgno" : 1, "chgtitle" : "aaa2", "chgintro" : "bbb2", "chgcontent" : "ccc2"}
     @RequestMapping(
-        value    ="/updateone", 
+        value    = "/updateone", 
         method   = {RequestMethod.PUT},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -94,7 +94,7 @@ public class ChallengeRestController {
     // 챌린지 삭제
     // 127.0.0.1:9090/ROOT/api/challenge/delete?chgno=1
     @RequestMapping(
-        value    ="/delete", 
+        value    = "/delete", 
         method   = {RequestMethod.DELETE},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -120,7 +120,7 @@ public class ChallengeRestController {
     // 127.0.0.1:9090/ROOT/api/challenge/selectone?chgno=챌린지번호
     // Params => key:chgno, values:챌린지번호
     @RequestMapping(
-        value    ="/selectone", 
+        value    = "/selectone", 
         method   = {RequestMethod.GET},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -145,7 +145,7 @@ public class ChallengeRestController {
     // 챌린지 목록 (검색어 + 페이지네이션) 
     // 127.0.0.1:9090/ROOT/api/challenge/selectlist?page=1&challenge
     @RequestMapping(
-        value    ="/selectlist", 
+        value    = "/selectlist", 
         method   = {RequestMethod.GET},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})

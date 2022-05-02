@@ -55,9 +55,9 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     // 북마크 목록
     @Override
-    public List<BookMarkCHG> bookmarkSelectList(Pageable page, long bmkno) {
+    public List<BookMarkCHG> bookmarkSelectList(Pageable page, String memail) {
         try {
-            List<BookMarkCHG> list = bmkRepository.findByBmknoLikeOrderByBmknoDesc(bmkno, page);
+            List<BookMarkCHG> list = bmkRepository.findByMemberchg_memailOrderByBmknoDesc(memail, page);
             return list;
         }
         catch(Exception e) {
