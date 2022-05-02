@@ -1,5 +1,6 @@
 package com.example.restcontroller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,12 +8,16 @@ import java.util.Map;
 
 import javax.persistence.SequenceGenerator;
 
+import com.example.entity.PoseCHG;
 import com.example.entity.RoutineCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.PoseRepository;
 import com.example.service.RoutineService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,7 +38,7 @@ public class RoutineRestController {
     // [{"rtnday":"월", "rtncnt" : 10, "rtnset" : 1, "rtnname" : "가나다", "posechg":{"pno":15}}, {"rtnday":"화", "rtncnt" : 10, "rtnset" : 1, "rtnname" : "가나다", "posechg":{"pno":15}}]
     @RequestMapping(value="/insertbatch.json", method = {RequestMethod.POST},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> poseInsertPOST(
+    public Map<String, Object> RoutineInsertPOST(
         @RequestHeader(name="token") String token,
         @RequestBody RoutineCHG[] routine
     ){  
@@ -50,8 +55,9 @@ public class RoutineRestController {
                 obj.setRtnname(routine[i].getRtnname());
                 obj.setPosechg(routine[i].getPosechg());
                 
-                System.out.println(obj.toString());
+                // System.out.println(obj.toString());
                 list.add(obj);
+                System.out.println(list);
             }
             int ret = rService.RoutineInsertBatch(list);
             if(ret == 1){

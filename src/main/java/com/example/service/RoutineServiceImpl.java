@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.example.entity.PoseCHG;
 import com.example.entity.RoutineCHG;
 import com.example.repository.RoutineRepository;
 
@@ -26,7 +27,6 @@ public class RoutineServiceImpl implements RoutineService{
             em.getTransaction().begin();
             // 루틴 한 번에 추가
             for(RoutineCHG routine : list){
-                
 
                 em.persist(routine);
             }

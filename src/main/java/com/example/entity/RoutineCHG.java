@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,4 +44,5 @@ public class RoutineCHG {
   @ManyToOne
   @JoinColumn(name = "pno")
   private PoseCHG posechg;
+  
 }

@@ -134,7 +134,7 @@ public class poseRestController {
         try {
             Pageable pageable = PageRequest.of(page-1, PAGECNT);
             List<PoseCHG> list = pService.poseSelectList(step, pageable, title);
-            if(list != null){
+            if(!list.isEmpty()){
                 map.put("status", 200);
                 map.put("result", list);
             }
