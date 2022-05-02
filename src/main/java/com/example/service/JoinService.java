@@ -2,6 +2,7 @@ package com.example.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.JoinCHG;
@@ -22,12 +23,15 @@ public interface JoinService {
     
     // 챌린지 포기
     public int challengeGiveUp(JoinCHG join);
-	
-    // 참여했던 첼린지 전체 조회
-    public List<JoinProjection> joinedChallengeAllList(String memail);
+    
+    // 참여했던 첼린지 전체 조회 (페이지네이션)
+    public List<JoinProjection> joinChallengeAllList(String memail, String title, Pageable page);
 	
 	// 진행 중인 첼린지 조회
 	public List<JoinProjection> joinChallengeList(String memail, int state);
+	
+	// 진행 상태 별 첼린지 조회 (페이지네이션)
+	public List<JoinProjection> joinStateList(String memail, int state, Pageable page);
 	
 	
 }

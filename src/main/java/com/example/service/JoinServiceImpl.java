@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.JoinCHG;
@@ -83,12 +84,25 @@ public class JoinServiceImpl implements JoinService{
 	}
 
 	
-	// 참여했던 모든 첼린지 조회
+	// 참여했던 모든 첼린지 조회 (아이디, 검색, 페이지네이션)
 	@Override
-	public List<JoinProjection> joinedChallengeAllList(String memail) {
+	public List<JoinProjection> joinChallengeAllList(String memail, String title, Pageable page) {
 		try {
 			
-			return jRepository.findByMemberchg_memail(memail);
+			return jRepository.findByMemberchg_memailEqualsAndChallengechg_chgtitleContainingOrderByJnoDesc(memail, title, page);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	// 진행 상태 별 첼린지 조회 (아이디, 진행상태, 페이지네이션)
+	@Override
+	public List<JoinProjection> joinStateList(String memail, int state, Pageable page) {
+		try {
+			
+			return jRepository.findByMemberchg_memailAndChgstateOrderByJnoDesc(memail, state, page);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 
+// 참여한 첼린지 상세 조회할 때 항목
 public interface JoinSelectOne {
 
 	// 참여번호
