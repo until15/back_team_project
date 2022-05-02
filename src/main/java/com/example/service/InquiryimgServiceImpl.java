@@ -1,21 +1,21 @@
 package com.example.service;
 
-import com.example.entity.BimgCHG;
-import com.example.repository.BimgRepository;
+import com.example.entity.InquiryimgCHG;
+import com.example.repository.InquiryimgRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BimgServiceImpl implements BimgService {
+public class InquiryimgServiceImpl implements InquiryimgService {
 
     @Autowired
-    BimgRepository bRepository;
+    InquiryimgRepository imRepository;
 
     @Override
-    public int insertBimg(BimgCHG bimg) {
+    public int insertQimg(InquiryimgCHG inquiryimg) {
         try {
-            bRepository.save(bimg);
+            imRepository.save(inquiryimg);
             return 1;
 
         } catch (Exception e) {
@@ -25,10 +25,10 @@ public class BimgServiceImpl implements BimgService {
     }
 
     @Override
-    public BimgCHG selectOneimage(long bimgno) {
+    public InquiryimgCHG selectOneqimg(long qimgno) {
         try {
-            BimgCHG bimg = bRepository.findById(bimgno).orElse(null);
-            return bimg;
+            InquiryimgCHG inquiryimg = imRepository.findById(qimgno).orElse(null);
+            return inquiryimg;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,9 +37,9 @@ public class BimgServiceImpl implements BimgService {
     }
 
     @Override
-    public int bimgUpdateOne(BimgCHG bimg) {
+    public int qimgUpdateOne(InquiryimgCHG inquiryimg) {
         try {
-            bRepository.save(bimg);
+            imRepository.save(inquiryimg);
             return 1;
 
         } catch (Exception e) {
@@ -49,9 +49,9 @@ public class BimgServiceImpl implements BimgService {
     }
 
     @Override
-    public int deleteBimgOne(long bimgno) {
+    public int deleteqimgOne(long qimgno) {
         try {
-            bRepository.deleteById(bimgno);
+            imRepository.deleteById(qimgno);
             return 1;
 
         } catch (Exception e) {

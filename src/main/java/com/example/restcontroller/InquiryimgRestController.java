@@ -5,10 +5,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.entity.BimgCHG;
+import com.example.entity.InquiryimgCHG;
 import com.example.jwt.JwtUtil;
-import com.example.repository.BimgRepository;
-import com.example.service.BimgService;
+import com.example.service.InquiryimgService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,14 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(value = "/api/bimg")
-public class BimgRestController {
+@RequestMapping(value = "api/Inquiryimg")
+public class InquiryimgRestController {
 
     @Autowired
-    BimgRepository bRepository;
-
-    @Autowired
-    BimgService bService;
+    InquiryimgService inService;
 
     @Autowired
     ResourceLoader rLoader;
@@ -45,10 +41,10 @@ public class BimgRestController {
     String DEFAULT_IMAGE;
 
     // 게시판 이미지 등록
-    // 127.0.0.1:9090/ROOT/api/bimg/insert
+    // 127.0.0.1:9090/ROOT/api/Inquiryimg/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertPSOT(@ModelAttribute BimgCHG bimg,
+    public Map<String, Object> insertPSOT(@ModelAttribute InquiryimgCHG inquiryimg,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
@@ -58,16 +54,16 @@ public class BimgRestController {
 
             if (file != null) {
                 if (!file.isEmpty()) {
-                    bimg.setBimage(file.getBytes());
-                    bimg.setBimgname(file.getOriginalFilename());
-                    bimg.setBimgsize(file.getSize());
-                    bimg.setBimgtype(file.getContentType());
+                    inquiryimg.setQimage(file.getBytes());
+                    inquiryimg.setQimgname(file.getOriginalFilename());
+                    inquiryimg.setQimgsize(file.getSize());
+                    inquiryimg.setQimgtype(file.getContentType());
                 }
             }
 
-            int ret = bService.insertBimg(bimg);
+            int ret = inService.insertQimg(inquiryimg);
             if (ret == 1) {
-                map.put("result", bimg);
+                map.put("result", inquiryimg);
                 map.put(("status"), 200);
             }
 
@@ -79,27 +75,27 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 1개 조회
-    // 127.0.0.1:9090/ROOT/api/bimg/selectimg?bimgno=4
+    // 127.0.0.1:9090/ROOT/api/Inquiryimg/selectimg?qimgno=4
     @RequestMapping(value = "/selectimg", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<byte[]> selectvideoGET(
-            @RequestParam(name = "bimgno") long bimgno) throws IOException {
+            @RequestParam(name = "qimgno") long qimgno) throws IOException {
         try {
-            BimgCHG bimgCHG = bService.selectOneimage(bimgno);
-            System.out.println(bimgCHG.getBimgtype());
-            System.out.println(bimgCHG.getBimage().length);
+            InquiryimgCHG inquiryimg = inService.selectOneqimg(qimgno);
+            System.out.println(inquiryimg.getQimgtype());
+            System.out.println(inquiryimg.getQimage().length);
 
-            if (bimgCHG.getBimgsize() > 0) {
+            if (inquiryimg.getQimgsize() > 0) {
                 HttpHeaders header = new HttpHeaders();
-                if (bimgCHG.getBimgtype().equals("image/jpeg")) {
+                if (inquiryimg.getQimgtype().equals("image/jpeg")) {
                     header.setContentType(MediaType.IMAGE_JPEG);
-                } else if (bimgCHG.getBimgtype().equals("image/png")) {
+                } else if (inquiryimg.getQimgtype().equals("image/png")) {
                     header.setContentType(MediaType.IMAGE_PNG);
-                } else if (bimgCHG.getBimgtype().equals("image/gif")) {
+                } else if (inquiryimg.getQimgtype().equals("image/gif")) {
                     header.setContentType(MediaType.IMAGE_GIF);
                 }
-                ResponseEntity<byte[]> response = new ResponseEntity<>(bimgCHG.getBimage(), header, HttpStatus.OK);
+                ResponseEntity<byte[]> response = new ResponseEntity<>(inquiryimg.getQimage(), header, HttpStatus.OK);
                 return response;
             } else {
                 InputStream is = rLoader.getResource(DEFAULT_IMAGE).getInputStream();
@@ -116,10 +112,10 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 수정
-    // 127.0.0.1:9090/ROOT/api/bimg/update
+    // 127.0.0.1:9090/ROOT/api/Inquiryimg/update
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> imgUpdatePUT(@ModelAttribute BimgCHG bimg,
+    public Map<String, Object> imgUpdatePUT(@ModelAttribute InquiryimgCHG inquiryimg,
             @RequestParam(name = "file", required = false) MultipartFile file,
             @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
@@ -127,12 +123,12 @@ public class BimgRestController {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
 
-            BimgCHG bimg1 = bService.selectOneimage(bimg.getBimgno());
-            bimg1.setBimage(file.getBytes());
-            bimg1.setBimgname(file.getOriginalFilename());
-            bimg1.setBimgsize(file.getSize());
-            bimg1.setBimgtype(file.getContentType());
-            int ret = bService.bimgUpdateOne(bimg1);
+            InquiryimgCHG inquiryimg1 = inService.selectOneqimg(inquiryimg.getQimgno());
+            inquiryimg1.setQimage(file.getBytes());
+            inquiryimg1.setQimgname(file.getOriginalFilename());
+            inquiryimg1.setQimgsize(file.getSize());
+            inquiryimg1.setQimgtype(file.getContentType());
+            int ret = inService.qimgUpdateOne(inquiryimg1);
             if (ret == 1) {
                 map.put("status", 200);
             }
@@ -145,10 +141,10 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 삭제
-    // 127.0.0.1:9090/ROOT/api/bimg/delete
+    // 127.0.0.1:9090/ROOT/api/Inquiryimg/delete?qimgno=7
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> imgDELETE(@RequestParam(name = "bimgno") long bimgno,
+    public Map<String, Object> imgDELETE(@RequestParam(name = "qimgno") long qimgno,
             @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
@@ -156,7 +152,7 @@ public class BimgRestController {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
 
-            int ret = bService.deleteBimgOne(bimgno);
+            int ret = inService.deleteqimgOne(qimgno);
             if (ret == 1) {
                 map.put("status", 200);
             }
@@ -166,4 +162,5 @@ public class BimgRestController {
         }
         return map;
     }
+
 }

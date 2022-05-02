@@ -12,6 +12,7 @@ public interface CommentService {
     // 댓글 등록
     public int commentInsert(CommentCHG comment);
 
+    // 댓글 조회
     public CommentCHG selectOneComment(long cmtno);
 
     // 댓글 표시

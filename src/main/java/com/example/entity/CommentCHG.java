@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -49,5 +50,10 @@ public class CommentCHG {
     @ManyToOne
     @JoinColumn(name = "memail")
     private MemberCHG memberchg;
+
+    // 좋아요
+    @JsonBackReference
+    @OneToMany(mappedBy = "commentchg", cascade = CascadeType.REMOVE)
+    private List<CmtLikeCHG> cmtLikechglist = new ArrayList<>();
 
 }
