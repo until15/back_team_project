@@ -37,5 +37,11 @@ public interface ChallengeService {
     // 모집 마감일
     public int recruitEnd(ChallengeCHG challenge);
 
+    // 썸네일 이미지 가져오기
+    public ChallengeCHG challengeImageSelect(long chgno);
+
+    // 썸네일 이미지 수정하기
+    public int challengeImageUpdate(ChallengeCHG challenge);
+
 
 }

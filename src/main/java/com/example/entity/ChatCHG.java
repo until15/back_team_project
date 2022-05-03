@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -19,26 +20,28 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "LikeCHG")
+@Table(name = "ChatCHG")
 @SequenceGenerator(
-    name = "SEQ_LIKE",
-    sequenceName = "SEQ_LIKE_LNO",
-    allocationSize = 1, initialValue = 1)
-public class LikeCHG {
-    
-    // 좋아요 번호
+    name = "SEQ_CHAT",
+    sequenceName = "SEQ_CHAT_CNO",
+    allocationSize = 1, initialValue = 1
+)
+public class ChatCHG {
+
+    // 채팅 번호
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_LIKE")
-    private Long lno;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CHAT")
+    private Long chtno;
+    
+    // 채팅 내용(문자)
+    @Lob
+	private String chtcontent;
 
-    // 상태
-    private int lstate = 1;
-
-    // 등록일
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    @CreationTimestamp // CURRENT_DATE
-    @Column(name = "BMKREGDATE")
-    private Date bmkregdate;
+    // 생성일자
+	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
+	@CreationTimestamp	// CURRENT_DATE
+	@Column(name = "CHGREGDATE")
+	private Date chtregdate;
 
     // ---------------외래키---------------
 

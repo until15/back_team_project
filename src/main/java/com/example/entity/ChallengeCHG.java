@@ -67,6 +67,19 @@ public class ChallengeCHG {
 	  
 	// 참여비
 	private Long chgfee;
+
+	// 이미지
+	@Lob
+	private byte[] chgimage;
+
+	// 이미지크기
+	private Long chgisize;
+
+	// 이미지타입
+	private String chgitype;
+
+	// 이미지명
+	private String chginame;
 	  
 	// 생성일자
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")

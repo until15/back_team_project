@@ -103,5 +103,34 @@ public class ChallengeServiceImpl implements ChallengeService {
         // TODO Auto-generated method stub
         return 0;
     }
+
+
+    // 썸네일 이미지 가져오기
+    @Override
+    public ChallengeCHG challengeImageSelect(long chgno) {
+        try {
+            ChallengeCHG challenge = chgRepository.findById(chgno).orElse(null);
+            return challenge;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+
+    // 썸네일 이미지 수정
+    @Override
+    public int challengeImageUpdate(ChallengeCHG challenge) {
+        try {
+            chgRepository.save(challenge);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
     
 }

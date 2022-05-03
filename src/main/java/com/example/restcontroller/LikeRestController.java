@@ -8,6 +8,8 @@ import com.example.entity.ChallengeCHG;
 import com.example.entity.LikeCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.ChallengeRepository;
+import com.example.repository.LikeRepository;
 import com.example.service.ChallengeService;
 import com.example.service.LikeService;
 
@@ -32,7 +34,14 @@ public class LikeRestController {
 
     @Autowired ChallengeService chgService;
 
-    // 북마크 추가
+    @Autowired LikeRepository lRepository;
+
+    @Autowired ChallengeRepository cRepository;
+
+
+
+
+    // 좋아요 추가
     // 127.0.0.1:9090/ROOT/api/like/insert
     // params => chgno:1
     // headers => token:...
@@ -59,18 +68,25 @@ public class LikeRestController {
 
             // 챌린지 조회
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
+            System.out.println(challenge.toString());
 
             // 저장
             like.setChallengechg(challenge);
             like.setMemberchg(member);
 
-            challenge.setChglike(challenge.getChglike());
-
             // 중복 확인
             LikeCHG duplicate = lService.duplicateInsert(chgno, memail);
+
             if(duplicate == null) {
                 int ret = lService.insertLike(like);
                 if(ret == 1) {
+                    // chgno 불러오기
+                    long chglike = lRepository.countByChallengechg_Chgno(chgno);
+                    System.out.println(chglike);
+                    challenge.setChglike(chglike);
+
+                    // 저장
+                    cRepository.save(challenge);
                     map.put("status", 200);
                 }
             }
@@ -87,7 +103,7 @@ public class LikeRestController {
 
     // 좋아요 삭제(해제)
     // 127.0.0.1:9090/ROOT/api/like/delete
-    // params => lno:1
+    // params => lno : 1, chgno : 1
     // headers => token:...
     @RequestMapping(
         value    = "/delete", 
@@ -96,6 +112,7 @@ public class LikeRestController {
         produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> deleteChallengeDELETE(
         @RequestHeader(name = "token") String token, 
+        @RequestParam(name = "chgno") long chgno,
         @RequestParam(name = "lno") long lno ){
             System.out.println("좋아요 번호 : "+ lno);
         Map<String, Object> map = new HashMap<>();
@@ -107,8 +124,17 @@ public class LikeRestController {
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
 
+            ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
+            System.out.println(challenge.toString());
+
             int ret = lService.deleteLike(lno);
             if(ret == 1) {
+                long chglike = lRepository.countByChallengechg_Chgno(chgno);
+                System.out.println(chglike);
+                challenge.setChglike(chglike);
+
+                // 저장
+                cRepository.save(challenge);
                 map.put("status", 200);
             } 
         }
@@ -119,7 +145,7 @@ public class LikeRestController {
         return map;
     }
 
-    // 북마크 조회(즐겨찾는 챌린지/1개)
+    // 좋아요 조회
     // 127.0.0.1:9090/ROOT/api/like/selectone?lno=  
     // Params => key:lno, values:
     @RequestMapping(
@@ -153,7 +179,7 @@ public class LikeRestController {
         return map;
     }
 
-    // 북마크 목록(즐켜찾는 챌린지/목록)
+    // 좋아요 목록
     // 127.0.0.1:9090/ROOT/api/like/selectlist
     @RequestMapping(
         value    = "/selectlist", 
