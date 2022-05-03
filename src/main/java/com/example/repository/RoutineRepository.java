@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoutineRepository extends JpaRepository<RoutineCHG, Long>{
 
-    List<RoutineCHG> findByRtnnameContainingOrderByRtnnoDesc(String[] rtnname);
+    List<RoutineCHG> findByMemberchg_memailEqualsOrderByRtnnoDesc(String memail);
     
 }

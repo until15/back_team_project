@@ -19,5 +19,5 @@ public interface RoutineService {
     public int RoutineDelete(Long[] rtnno);
 
     // 루틴 조회
-    public List<RoutineCHG> RoutineSelectlist(String[] rtnname);
+    public List<RoutineCHG> RoutineSelectlist(String memail);
 }

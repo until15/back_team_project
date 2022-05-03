@@ -126,15 +126,15 @@ public class poseRestController {
     @RequestMapping(value="/selectlist.json", method = {RequestMethod.GET},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectlistGET(
-        @RequestParam(name="step546821#232", defaultValue="1") int step,
+        @RequestBody PoseCHG pose,
         @RequestParam(name = "page", defaultValue = "1") int page,
         @RequestParam(name="title", defaultValue = "") String title
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page-1, PAGECNT);
-            List<PoseCHG> list = pService.poseSelectList(step, pageable, title);
-            if(list != null){
+            List<PoseCHG> list = pService.poseSelectList(pose.getPstep(), pageable, title);
+            if(!list.isEmpty()){
                 map.put("status", 200);
                 map.put("result", list);
             }

@@ -2,6 +2,7 @@ package com.example.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +36,9 @@ public class RoutineCHG {
   private Long rtnset;
   // 루틴 명
   private String rtnname;
+  // seq
+  @Column(nullable = true)
+  private Long rtnseq=0L;
 
   // 등록일
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
@@ -43,4 +49,11 @@ public class RoutineCHG {
   @ManyToOne
   @JoinColumn(name = "pno")
   private PoseCHG posechg;
+
+  // 멤버 테이블
+  @JsonBackReference
+  @ManyToOne
+  @JoinColumn(name = "memail")
+  private MemberCHG memberchg;
+  
 }
