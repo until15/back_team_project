@@ -38,7 +38,10 @@ public class ConfirmCHG {
 	private String cfcomment;
 	
 	// 성공유무
-	private int cfsuccess;
+	// 0 -> 인증대기
+	// 1 -> 인증 성공
+	// 2 -> 인증 실패
+	private int cfsuccess = 0;
 
 	// 인증일
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
