@@ -9,6 +9,7 @@ import java.util.Map;
 import com.example.entity.PoseCHG;
 import com.example.entity.VideoCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.PoseRepository;
 import com.example.service.PoseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class poseRestController {
 
     @Autowired ResourceLoader resLoader;
     @Autowired PoseService pService;
+    @Autowired PoseRepository pRepository;
     
     @Autowired JwtUtil jwtUtil;
 
@@ -79,7 +81,7 @@ public class poseRestController {
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            PoseCHG pose1 = pService.poseSelectOne(pose.getPno());
+            PoseCHG pose1 = pService.poseSelectPrivate(username, pose.getPno());
             pose1.setPname(pose.getPname());
             pose1.setPpart(pose.getPpart());
             pose1.setPcontent(pose.getPcontent());
@@ -159,7 +161,7 @@ public class poseRestController {
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            PoseCHG pose1 = pService.poseSelectOne(pose.getPno());
+            PoseCHG pose1 = pService.poseSelectPrivate(username, pose.getPno());
             pose1.setPstep(pose.getPstep());
             
             int ret = pService.poseDelete(pose1);
@@ -268,14 +270,19 @@ public class poseRestController {
         @RequestHeader(name="token") String token,
         @RequestParam(name="pvideo") MultipartFile file,
         @RequestParam(name="vno") long vno,
-        @ModelAttribute VideoCHG video
+        @RequestParam(name="pno") long pno
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             if(!file.isEmpty()){
                 String username = jwtUtil.extractUsername(token);
                 System.out.println(username);
-                VideoCHG videoCHG = pService.poseVideoSelectOne(video.getVno());
+                PoseCHG pose = pRepository.getById(pno);
+                // 나중에 수정
+
+
+
+                VideoCHG videoCHG = pService.poseVideoSelectOne(vno);
                 videoCHG.setVtype(file.getContentType());
                 videoCHG.setVname(file.getOriginalFilename());
                 videoCHG.setVsize(file.getSize());

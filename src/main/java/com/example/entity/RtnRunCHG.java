@@ -2,6 +2,7 @@ package com.example.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,6 +31,10 @@ public class RtnRunCHG {
   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
   @CreationTimestamp // CURRENT_DATE
   private Date runregdate;
+
+  // seq
+  @Column(nullable = true)
+  private Long runseq=0L;
 
   // 루틴 생성 테이블
   @ManyToOne
