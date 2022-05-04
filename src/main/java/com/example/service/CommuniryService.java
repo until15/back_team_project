@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public interface CommuniryService {
 
     // 게시물 입력
-    public int boardInsertOne(CommunityCHG community);
+    public long boardInsertOne(CommunityCHG community);
 
     // 게시판 목록
     public List<CommunityCHG> selectBoardList(Pageable page, String btitle);

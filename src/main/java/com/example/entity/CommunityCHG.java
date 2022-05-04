@@ -52,13 +52,14 @@ public class CommunityCHG {
     @JoinColumn(name = "memail")
     private MemberCHG memberchg;
 
-    // // 자유게시판 이미지 테이블
-    @JsonBackReference
-    @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
-    private List<BimgCHG> bimgchgList = new ArrayList<>();
+    // 자유게시판 이미지 테이블
+    // @JsonBackReference
+    // @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
+    // private List<BimgCHG> bimgchgList = new ArrayList<>();
 
-    // // 댓글 테이블
+    // 댓글 테이블
     @JsonBackReference
     @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
     private List<CommentCHG> commentchgList = new ArrayList<>();
+
 }

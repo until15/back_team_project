@@ -52,8 +52,8 @@ public class CommentCHG {
     private MemberCHG memberchg;
 
     // 좋아요
-    @JsonBackReference
-    @OneToMany(mappedBy = "commentchg", cascade = CascadeType.REMOVE)
-    private List<CmtLikeCHG> cmtLikechglist = new ArrayList<>();
+    // @JsonBackReference
+    // @OneToMany(mappedBy = "commentchg", cascade = CascadeType.REMOVE)
+    // private List<CmtLikeCHG> cmtLikechglist = new ArrayList<>();
 
 }
