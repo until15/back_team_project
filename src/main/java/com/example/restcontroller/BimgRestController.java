@@ -3,12 +3,15 @@ package com.example.restcontroller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
+import com.example.entity.CommunityCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.BimgRepository;
 import com.example.service.BimgService;
+import com.example.service.CommuniryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +42,9 @@ public class BimgRestController {
     ResourceLoader rLoader;
 
     @Autowired
+    CommuniryService cService;
+
+    @Autowired
     JwtUtil jwtUtil;
 
     @Value("${default.image}")
@@ -48,11 +54,18 @@ public class BimgRestController {
     // 127.0.0.1:9090/ROOT/api/bimg/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertPSOT(@ModelAttribute BimgCHG bimg,
+    public Map<String, Object> insertPSOT(
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @RequestHeader(name = "token") String token) {
+            @RequestHeader(name = "token") String token, @RequestParam(name = "bno") long bno) {
+        System.out.println(file.getOriginalFilename());
+        System.out.println(token);
+        System.out.println("===================================" + bno);
         Map<String, Object> map = new HashMap<>();
         try {
+            BimgCHG bimg = new BimgCHG();
+            CommunityCHG community = new CommunityCHG();
+            community.setBno(bno);
+            bimg.setCommunitychg(community);
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
 
@@ -83,9 +96,10 @@ public class BimgRestController {
     @RequestMapping(value = "/selectimg", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<byte[]> selectvideoGET(
+    public ResponseEntity<byte[]> selectImageGET(
             @RequestParam(name = "bimgno") long bimgno) throws IOException {
         try {
+
             BimgCHG bimgCHG = bService.selectOneimage(bimgno);
             System.out.println(bimgCHG.getBimgtype());
             System.out.println(bimgCHG.getBimage().length);
@@ -160,6 +174,52 @@ public class BimgRestController {
             if (ret == 1) {
                 map.put("status", 200);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 게시판 이미지 1개 조회
+    // 127.0.0.1:9090/ROOT/api/bimg/selectimage1?bimgno=4
+    @RequestMapping(value = "/selectimage1", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectImageOneGET(@RequestParam(name = "bimgno") long bimgno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            BimgCHG bimg = bService.selectOneimage(bimgno);
+            if (bimg != null) {
+
+                map.put("result", bimg);
+                map.put("status", 200);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+
+    }
+
+    // 게시판 이미지 1개 조회
+    // 127.0.0.1:9090/ROOT/api/bimg/selectimageone
+    @RequestMapping(value = "/selectimageone", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectOneImageGET(@RequestParam(name = "bno") long bno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            CommunityCHG community = cService.boardSelectOne(bno);
+            List<BimgCHG> list = bService.selectimageList(community.getBno());
+
+            if (list != null) {
+
+                map.put("result", list);
+                map.put("status", 200);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);

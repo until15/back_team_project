@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.List;
+
 import com.example.entity.BimgCHG;
 import com.example.repository.BimgRepository;
 
@@ -58,6 +60,18 @@ public class BimgServiceImpl implements BimgService {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public List<BimgCHG> selectimageList(long bno) {
+        try {
+            List<BimgCHG> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
+            return list;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

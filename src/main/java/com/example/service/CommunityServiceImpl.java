@@ -16,11 +16,11 @@ public class CommunityServiceImpl implements CommuniryService {
     CommunityRepository cRepository;
 
     @Override
-    public int boardInsertOne(CommunityCHG community) {
+    public long boardInsertOne(CommunityCHG community) {
         try {
-            cRepository.save(community);
-
-            return 1;
+            CommunityCHG community1 = cRepository.save(community);
+            System.out.println(community1.toString());
+            return community1.getBno();
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

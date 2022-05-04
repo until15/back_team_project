@@ -128,4 +128,57 @@ public class CommentRestController {
         return map;
     }
 
+    // @RequestMapping(
+    // value = "/insert", method = {RequestMethod.POST}, consumes =
+    // {MediaType.ALL_VALUE},
+    // produces = {MediaType.APPLICATION_JSON_VALUE})
+    // public Map<String, Object> insertBookmarkPOST(@RequestBody LikeCHG like,
+    // @RequestHeader(name = "token") String token,
+    // @RequestParam(name = "chgno") long chgno ){
+
+    // System.out.println("토큰 : " + token);
+    // System.out.println("챌린지 번호 : " + chgno);
+    // Map<String, Object> map = new HashMap<>();
+    // try {
+    // // 멤버 토큰
+    // String memail = jwtUtil.extractUsername(token);
+    // // 멤버 엔티티
+    // MemberCHG member = new MemberCHG();
+    // member.setMemail(memail);
+
+    // // 챌린지 조회
+    // ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
+    // System.out.println(challenge.toString());
+
+    // // 저장
+    // like.setChallengechg(challenge);
+    // like.setMemberchg(member);
+
+    // // 중복 확인
+    // LikeCHG duplicate = lService.duplicateInsert(chgno, memail);
+
+    // if(duplicate == null) {
+    // int ret = lService.insertLike(like);
+    // if(ret == 1) {
+    // // chgno 불러오기
+    // long chglike = lRepository.countByChallengechg_Chgno(chgno);
+    // System.out.println(chglike);
+    // challenge.setChglike(chglike);
+
+    // // 저장
+    // cRepository.save(challenge);
+    // map.put("status", 200);
+    // }
+    // }
+    // else {
+    // map.put("status", 0);
+    // }
+    // }
+    // catch(Exception e) {
+    // e.printStackTrace();
+    // map.put("status", 0);
+    // }
+    // return map;
+    // }
+
 }

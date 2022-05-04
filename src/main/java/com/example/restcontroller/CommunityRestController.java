@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.entity.BimgCHG;
 import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
@@ -44,21 +45,24 @@ public class CommunityRestController {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardInsertPOST(@RequestBody CommunityCHG community,
             @RequestHeader(name = "token") String token) {
+        System.out.println(community.toString());
+        System.out.println(token);
         Map<String, Object> map = new HashMap<>();
+
+        // 토큰에서 이메일 추출
+        String memail = jwtUtil.extractUsername(token);
+
+        // 회원엔티티 객체 생성 및 이메일 추가
+        MemberCHG member = new MemberCHG();
+        member.setMemail(memail);
+        // 게시판 엔티티에 추가
+        community.setMemberchg(member);
+
         try {
-
-            // 토큰에서 이메일 추출
-            String memail = jwtUtil.extractUsername(token);
-            System.out.println(memail);
-            // 회원엔티티 객체 생성 및 이메일 추가
-            MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
-            // 게시판 엔티티에 추가
-            community.setMemberchg(member);
-
-            int ret = cService.boardInsertOne(community);
-            if (ret == 1) {
+            long ret = cService.boardInsertOne(community);
+            if (ret > 0) {
                 map.put("status", 200);
+                map.put("result", ret);
             }
 
         } catch (Exception e) {
