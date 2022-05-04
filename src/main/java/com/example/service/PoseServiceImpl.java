@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.PoseCHG;
+import com.example.entity.PoseVideoVIEW;
 import com.example.entity.VideoCHG;
 import com.example.repository.PoseRepository;
 import com.example.repository.VideoRepository;
@@ -135,5 +136,31 @@ public class PoseServiceImpl implements PoseService{
             return 0;
         }
     }
+
+    // 자세 수정 조회용
+    @Override
+    public PoseCHG poseSelectPrivate(String memail, long pno) {
+        try {
+            PoseCHG pose = pRepository.findByMemberchg_memailAndPnoEqualsOrderByPnoDesc(memail, pno);
+            return pose; 
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // // 자세 동영상 수정 조회용
+    // @Override
+    // public PoseVideoVIEW poseVideoSelectPrivate(String memail, long vno) {
+    //     try {
+    //         PoseVideoVIEW video = pvRepository.findByMemailAndVnoEqualsOrderByVnoDesc(memail, vno);
+    //         return video;
+            
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return null;
+    //     }
+    // }
     
 }
