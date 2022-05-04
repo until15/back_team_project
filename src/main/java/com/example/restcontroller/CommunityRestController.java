@@ -115,8 +115,8 @@ public class CommunityRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             CommunityCHG ret = cService.boardSelectOne(bno);
-            List<BimgCHG> list = ret.getBimgchgList();
-            System.out.println(list.toString());
+            // List<BimgCHG> list = ret.getBimgchgList();
+            // System.out.println(list.toString());
             // String[] imgs = new String[list.size()];
             // for (int i = 0; i < list.size(); i++) {
             // imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
