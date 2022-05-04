@@ -45,7 +45,6 @@ public class BimgCHG {
     private Date bimgregdate;
 
     // 자유게시판 테이블
-
     @ManyToOne
     @JoinColumn(name = "bno")
     private CommunityCHG communitychg;

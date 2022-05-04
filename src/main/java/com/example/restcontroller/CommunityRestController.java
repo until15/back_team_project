@@ -8,14 +8,18 @@ import com.example.entity.BimgCHG;
 import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.BimgRepository;
 import com.example.repository.CommunityRepository;
 import com.example.service.CommentService;
 import com.example.service.CommuniryService;
+import com.example.service.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +39,12 @@ public class CommunityRestController {
 
     @Autowired
     CommentService coService;
+
+    @Autowired
+    BimgRepository bRepository;
+
+    @Autowired
+    UserDetailsServiceImpl uImpl;
 
     @Autowired
     JwtUtil jwtUtil;
@@ -105,7 +115,14 @@ public class CommunityRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             CommunityCHG ret = cService.boardSelectOne(bno);
-
+            List<BimgCHG> list = ret.getBimgchgList();
+            System.out.println(list.toString());
+            // String[] imgs = new String[list.size()];
+            // for (int i = 0; i < list.size(); i++) {
+            // imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
+            // }
+            // BimgCHG bimg = bRepository.findById(bno).orElse(null);
+            // ret.setImageurl(imgs);
             map.put("result", ret);
             map.put("status", 200);
 

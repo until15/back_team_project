@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -54,12 +55,14 @@ public class CommunityCHG {
 
     // 자유게시판 이미지 테이블
     // @JsonBackReference
-    // @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
-    // private List<BimgCHG> bimgchgList = new ArrayList<>();
+    @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
+    private List<BimgCHG> bimgchgList = new ArrayList<>();
 
     // 댓글 테이블
-    @JsonBackReference
-    @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
-    private List<CommentCHG> commentchgList = new ArrayList<>();
+    // @JsonBackReference
+    // @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
+    // private List<CommentCHG> commentchgList = new ArrayList<>();
 
+    @Transient
+    private String[] imageurl;
 }

@@ -99,7 +99,6 @@ public class BimgRestController {
     public ResponseEntity<byte[]> selectImageGET(
             @RequestParam(name = "bimgno") long bimgno) throws IOException {
         try {
-
             BimgCHG bimgCHG = bService.selectOneimage(bimgno);
             System.out.println(bimgCHG.getBimgtype());
             System.out.println(bimgCHG.getBimage().length);

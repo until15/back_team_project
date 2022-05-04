@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.entity.InquiryCHG;
 import com.example.entity.InquiryimgCHG;
 import com.example.jwt.JwtUtil;
 import com.example.service.InquiryimgService;
@@ -44,11 +45,16 @@ public class InquiryimgRestController {
     // 127.0.0.1:9090/ROOT/api/Inquiryimg/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertPSOT(@ModelAttribute InquiryimgCHG inquiryimg,
+    public Map<String, Object> insertPSOT(
             @RequestParam(name = "file", required = false) MultipartFile file,
-            @RequestHeader(name = "token") String token) {
+            @RequestHeader(name = "token") String token, @RequestParam(name = "qno") long qno) {
         Map<String, Object> map = new HashMap<>();
         try {
+            InquiryimgCHG inquiryimg = new InquiryimgCHG();
+            InquiryCHG inquiry = new InquiryCHG();
+            inquiry.setQno(qno);
+            inquiryimg.setInquirychg(inquiry);
+
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
 
