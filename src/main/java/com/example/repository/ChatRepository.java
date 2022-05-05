@@ -1,12 +1,11 @@
 package com.example.repository;
 
-import com.example.entity.VideoCHG;
+import com.example.entity.ChatCHG;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VideoRepository extends JpaRepository<VideoCHG, Long>{
+public interface ChatRepository extends JpaRepository<ChatCHG, Long> {
     
 }
