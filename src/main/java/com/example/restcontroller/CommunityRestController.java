@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
+import com.example.entity.BimgCHGProjection;
 import com.example.entity.CommunityCHG;
+import com.example.entity.CommunityCHGProjection;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.BimgRepository;
@@ -114,16 +116,16 @@ public class CommunityRestController {
     public Map<String, Object> boardSelectListGET(@RequestParam(name = "bno") long bno) {
         Map<String, Object> map = new HashMap<>();
         try {
-            CommunityCHG ret = cService.boardSelectOne(bno);
-            // List<BimgCHG> list = ret.getBimgchgList();
-            // System.out.println(list.toString());
-            // String[] imgs = new String[list.size()];
-            // for (int i = 0; i < list.size(); i++) {
-            // imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
-            // }
-            // BimgCHG bimg = bRepository.findById(bno).orElse(null);
-            // ret.setImageurl(imgs);
+            CommunityCHGProjection ret = cRepository.findByBno(bno);// .orElse(null);
+            // CommunityCHG ret = cService.boardSelectOne(bno);
+            List<BimgCHGProjection> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
+
+            String[] imgs = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
+            }
             map.put("result", ret);
+            map.put("imgurl", imgs);
             map.put("status", 200);
 
         } catch (Exception e) {
@@ -131,7 +133,6 @@ public class CommunityRestController {
             map.put("status", 0);
         }
         return map;
-
     }
 
     // 게시글 삭제
