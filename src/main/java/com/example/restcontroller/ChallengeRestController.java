@@ -46,7 +46,7 @@ public class ChallengeRestController {
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertChallengePOST(
-            @RequestBody ChallengeCHG chg,
+            //@RequestBody ChallengeCHG chg,
             @RequestHeader(name = "token") String token,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
 
@@ -56,12 +56,6 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            // 썸네일
-            chg.setChgimage(file.getBytes());
-            chg.setChginame(file.getOriginalFilename());
-            chg.setChgisize(file.getSize());
-            chg.setChgitype(file.getContentType());
-
             // 멤버 토큰
             String memail = jwtUtil.extractUsername(token);
             System.out.println(token.toString());
@@ -69,6 +63,8 @@ public class ChallengeRestController {
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
+
+            ChallengeCHG chg = new ChallengeCHG();
 
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
@@ -82,6 +78,13 @@ public class ChallengeRestController {
 
             // 챌린지 종료일 (임의 지정)
             chg.setChgend(chg.getChgend());
+
+            // 썸네일 수정 필요.
+            // 썸네일
+            chg.setChgimage(file.getBytes());
+            chg.setChginame(file.getOriginalFilename());
+            chg.setChgisize(file.getSize());
+            chg.setChgitype(file.getContentType());
 
             int ret = chgService.insertChallengeOne(chg);
             if (ret == 1) {
@@ -103,7 +106,8 @@ public class ChallengeRestController {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateChallengePUT(
             @RequestBody ChallengeCHG chg,
-            @RequestHeader(name = "token") String token) {
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "cimage") MultipartFile file) throws IOException {
         System.out.println("토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
@@ -121,6 +125,12 @@ public class ChallengeRestController {
             challenge.setChgintro(chg.getChgintro());
             challenge.setChgcontent(chg.getChgcontent());
 
+            // 썸네일 변경
+            chg.setChgimage(file.getBytes());
+            chg.setChginame(file.getOriginalFilename());
+            chg.setChgisize(file.getSize());
+            chg.setChgitype(file.getContentType());
+            
             // 저장
             chgService.challengeUpdateOne(challenge);
             map.put("status", 200);
