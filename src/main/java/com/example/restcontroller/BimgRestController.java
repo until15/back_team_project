@@ -3,7 +3,6 @@ package com.example.restcontroller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
@@ -65,7 +64,7 @@ public class BimgRestController {
             BimgCHG bimg = new BimgCHG();
             CommunityCHG community = new CommunityCHG();
             community.setBno(bno);
-            
+
             bimg.setCommunitychg(community);
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
@@ -203,27 +202,4 @@ public class BimgRestController {
 
     }
 
-    // 게시판 이미지 1개 조회
-    // 127.0.0.1:9090/ROOT/api/bimg/selectimageone
-    @RequestMapping(value = "/selectimageone", method = { RequestMethod.GET }, consumes = {
-            MediaType.ALL_VALUE }, produces = {
-                    MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> selectOneImageGET(@RequestParam(name = "bno") long bno) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-            CommunityCHG community = cService.boardSelectOne(bno);
-            List<BimgCHG> list = bService.selectimageList(community.getBno());
-
-            if (list != null) {
-
-                map.put("result", list);
-                map.put("status", 200);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
 }

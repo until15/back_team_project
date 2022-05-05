@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.BimgCHG;
+import com.example.entity.BimgCHGProjection;
 import com.example.repository.BimgRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +64,10 @@ public class BimgServiceImpl implements BimgService {
     }
 
     @Override
-    public List<BimgCHG> selectimageList(long bno) {
+    public List<BimgCHGProjection> selectimageList(long bno) {
         try {
-            List<BimgCHG> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
+            List<BimgCHGProjection> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
+
             return list;
 
         } catch (Exception e) {
