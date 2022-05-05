@@ -65,6 +65,7 @@ public class BimgRestController {
             BimgCHG bimg = new BimgCHG();
             CommunityCHG community = new CommunityCHG();
             community.setBno(bno);
+            c
             bimg.setCommunitychg(community);
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
