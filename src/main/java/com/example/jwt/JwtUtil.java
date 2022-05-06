@@ -24,6 +24,7 @@ public class JwtUtil {
     // 토큰생성(아이디 정보)
     public String generatorToken(String username) {
         Map<String, Object> map = new HashMap<>();
+
         String token = Jwts.builder()
             .setClaims(map)
             .setSubject(username)
@@ -32,7 +33,7 @@ public class JwtUtil {
             .signWith(SignatureAlgorithm.HS256, SECURITY_KEY)
             .compact();
 
-        return token;
+        return token;	// 토큰 반환
     }
 
 	// 정보 추출용 메소드

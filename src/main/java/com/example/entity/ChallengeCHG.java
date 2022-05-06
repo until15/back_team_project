@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -63,7 +65,7 @@ public class ChallengeCHG {
 	private int recstate = 1;
 	  
 	// 인원수
-	private Long chgcnt;
+	private Long chgcnt = 0L;
 	  
 	// 참여비
 	private Long chgfee;
@@ -92,5 +94,10 @@ public class ChallengeCHG {
 	  
 	// 난이도
 	private Long chglevel = 1L;
+	
+	// 첼린지 생성한 사람
+    @ManyToOne
+    @JoinColumn(name = "memail")
+    private MemberCHG memberchg;
 	
 }

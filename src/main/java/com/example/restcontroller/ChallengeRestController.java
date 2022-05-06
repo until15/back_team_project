@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,15 +41,15 @@ public class ChallengeRestController {
     // 챌린지 등록
     // 127.0.0.1:9090/ROOT/api/challenge/insert
     // headers => token:토큰
-    // {"chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc", "chgstart" : 1,
-    // "chgend" : 1, "recruitstart" : 1, "recruitend" : 1, "chfee" : 10000,
-    // "memberchg":{"memail":"admin"}}
+    // form-data : {"chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
+    // "chgend" : yyyy-mm-dd 00:00:00, "recruitend" : yyyy-mm-dd 00:00:00, "chfee" : 10000 }
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertChallengePOST(
-            //@RequestBody ChallengeCHG chg,
+    		@ModelAttribute ChallengeCHG chg1,	// 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
-            @RequestParam(name = "cimage") MultipartFile file) throws IOException {
+            @RequestParam(name = "cimage") MultipartFile file
+            ) throws IOException {
 
         System.out.println("토큰 : " + token);
         System.out.println("썸네일 : " + file);
@@ -69,15 +70,20 @@ public class ChallengeRestController {
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
             chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
-
-            // 모집 마감일 (임의 지정)
-            chg.setRecruitend(chg.getRecruitend());
-
-            // 챌린지 시작일 = 모집 마감일
-            chg.setChgstart(chg.getRecruitend());
-
-            // 챌린지 종료일 (임의 지정)
-            chg.setChgend(chg.getChgend());
+            
+            // Tiemstamp 타입의 형식에 맞게 전달해야함 => yyyy-mm-dd 00:00:00
+            chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
+            chg.setChgstart(chg1.getRecruitend()); // 챌린지 시작일 = 모집 마감일
+            chg.setChgend(chg1.getChgend()); 	// 챌린지 종료일 (임의 지정)
+            
+            chg.setMemberchg(member);	// 첼린지 생성자
+            
+            chg.setChgtitle(chg1.getChgtitle());	// 첼린지 제목
+            chg.setChgintro(chg1.getChgintro()); 	// 첼린지 소개글
+            chg.setChgcontent(chg1.getChgcontent());// 첼린지 내용
+            chg.setChgfee(chg1.getChgfee()); 	// 첼린지 참가비
+            
+            System.out.println("첼린지에 추가할 항목 : " + chg.toString());
 
             // 썸네일 수정 필요.
             // 썸네일
@@ -85,15 +91,21 @@ public class ChallengeRestController {
             chg.setChginame(file.getOriginalFilename());
             chg.setChgisize(file.getSize());
             chg.setChgitype(file.getContentType());
-
+                        
             int ret = chgService.insertChallengeOne(chg);
+            System.out.println("DB에 추가됨 : " + ret);
+            
             if (ret == 1) {
+            	
                 map.put("status", 200);
             }
+            else {
+				map.put("status", 0);
+			}
 
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status", 0);
+            map.put("status", -1);
         }
         return map;
     }
