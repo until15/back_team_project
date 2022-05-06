@@ -149,18 +149,5 @@ public class PoseServiceImpl implements PoseService{
             return null;
         }
     }
-
-    // // 자세 동영상 수정 조회용
-    // @Override
-    // public PoseVideoVIEW poseVideoSelectPrivate(String memail, long vno) {
-    //     try {
-    //         PoseVideoVIEW video = pvRepository.findByMemailAndVnoEqualsOrderByVnoDesc(memail, vno);
-    //         return video;
-            
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return null;
-    //     }
-    // }
     
 }

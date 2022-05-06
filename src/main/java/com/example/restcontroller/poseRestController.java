@@ -277,45 +277,54 @@ public class poseRestController {
             if(!file.isEmpty()){
                 String username = jwtUtil.extractUsername(token);
                 System.out.println(username);
+                // pose 에서 pno 추출 
                 PoseCHG pose = pRepository.getById(pno);
-                // 나중에 수정
+                // pno의 memail과 토큰에서 전달되는 meamil이 같은지 비교
+                if(username.equals(pose.getMemberchg().getMemail())){
+                    VideoCHG videoCHG = pService.poseVideoSelectOne(vno);
+                    videoCHG.setVtype(file.getContentType());
+                    videoCHG.setVname(file.getOriginalFilename());
+                    videoCHG.setVsize(file.getSize());
+                    videoCHG.setVvideo(file.getBytes());
+    
+                    long ret = pService.poseVideoUpdate(videoCHG);
+                    if(ret == 1){
+                        map.put("status", 200);
+                    }
 
-
-
-                VideoCHG videoCHG = pService.poseVideoSelectOne(vno);
-                videoCHG.setVtype(file.getContentType());
-                videoCHG.setVname(file.getOriginalFilename());
-                videoCHG.setVsize(file.getSize());
-                videoCHG.setVvideo(file.getBytes());
-
-                long ret = pService.poseVideoUpdate(videoCHG);
-                if(ret == 1){
-                    map.put("status", 200);
                 }
+                map.put("status", 0);
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status", 0);
+            map.put("status", -1);
         }
         return map;
     }
 
     // 자세 동영상 삭제
-    // 127.0.0.1:9090/ROOT/api/pose/deletevideo.json?no=
+    // 127.0.0.1:9090/ROOT/api/pose/deletevideo.json?no=8&pno=5
     @RequestMapping(value="/deletevideo.json", method = {RequestMethod.DELETE},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> poseVideoDeleteDELETE(
         @RequestHeader(name="token") String token,
-        @RequestParam(name="no") long vno
+        @RequestParam(name="no") long vno,
+        @RequestParam(name="pno") long pno
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            int ret = pService.poseVideoDelete(vno);
-            if(ret == 1){
-                map.put("status", 200);
+            // pose 에서 pno 추출 
+            PoseCHG pose = pRepository.getById(pno);
+            // pno의 memail과 토큰에서 전달되는 meamil이 같은지 비교
+            if(username.equals(pose.getMemberchg().getMemail())){
+                int ret = pService.poseVideoDelete(vno);
+                if(ret == 1){
+                    map.put("status", 200);
+                }
+                System.out.println("리턴값리턴값리턴값" + ret);
             }
             
         } catch (Exception e) {

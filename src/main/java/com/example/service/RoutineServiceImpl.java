@@ -104,5 +104,18 @@ public class RoutineServiceImpl implements RoutineService{
             return null;
         }
     }
+
+    // 루틴 조회 (수정용)
+    @Override
+    public List<RoutineCHG> RoutineSelectPrivate(String memail, Long[] rtnno) {
+        try {
+            List<RoutineCHG> routine = rRepository.findByMemberchg_memailAndRtnnoEqualsOrderByRtnnoDesc(memail, rtnno);
+            return routine;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
 }
