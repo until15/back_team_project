@@ -8,6 +8,7 @@ import java.util.Map;
 import com.example.entity.MemberCHG;
 import com.example.entity.RoutineCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.RoutineRepository;
 import com.example.service.RoutineService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class RoutineRestController {
 
     @Autowired JwtUtil jwtUtil;
     @Autowired RoutineService rService;
+
+    @Autowired RoutineRepository rRepository;
 
     @Value("${board.page.count}") int PAGECNT;
 
@@ -84,25 +87,29 @@ public class RoutineRestController {
             System.out.println(username);
             List<RoutineCHG> list = rService.RoutineSelectlist(username);
             for(int i=0; i<routine.length; i++){
-                RoutineCHG obj = new RoutineCHG();
-                obj.setRtnno(routine[i].getRtnno());
-                obj.setRtnday(routine[i].getRtnday());
-                obj.setRtncnt(routine[i].getRtncnt());
-                obj.setRtnset(routine[i].getRtnset());
-                obj.setRtnname(routine[i].getRtnname());
-                obj.setPosechg(routine[i].getPosechg());
-                
-                list.add(obj);
-                System.out.println(list);
+                if(username.equals(routine[i].getMemberchg().getMemail())){
+                    RoutineCHG obj = new RoutineCHG();
+                    obj.setRtnno(routine[i].getRtnno());
+                    obj.setRtnday(routine[i].getRtnday());
+                    obj.setRtncnt(routine[i].getRtncnt());
+                    obj.setRtnset(routine[i].getRtnset());
+                    obj.setRtnname(routine[i].getRtnname());
+                    obj.setPosechg(routine[i].getPosechg());
+                        
+                    list.add(obj);
+                    System.out.println(list);
+                }
             }
             int ret = rService.RoutineUpdateBatch(list);
             if(ret == 1){
                 map.put("status", 200);
             }
-
+            else{
+                map.put("status", 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status", 0);
+            map.put("status", -1);
         }
         return map;
     }
@@ -133,20 +140,30 @@ public class RoutineRestController {
 
     // 루틴 삭제
     //127.0.0.1:9090/ROOT/api/routine/deletebatch.json?no=1,2
+    // {"memberchg":{"memail":""}}
     @RequestMapping(value="/deletebatch.json", method = {RequestMethod.DELETE},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> RoutineDeleteDELETE(
         @RequestHeader(name="token") String token,
-        @RequestParam(name="no") Long[] rtnno
+        // @RequestParam(name="no") Long[] rtnno,
+        // @RequestBody RoutineCHG routine,
+        @RequestBody List<RoutineCHG> routine1
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            int ret = rService.RoutineDelete(rtnno);
-            if(ret == 1){
-                map.put("status", 200);
-            }
+            List<RoutineCHG> list = rRepository.findByRtnnoIn(routine1);
+            System.out.println(list.get(0).getMemberchg().getMemail());
+
+            // if(username.equals(routine.getMemberchg().getMemail())){
+            //     int ret = rService.RoutineDelete(rtnno);
+            //     if(ret == 1){
+            //         map.put("status", 200);
+            //     }
+            // }
+
+            map.put("status", 200);
             
         } catch (Exception e) {
             e.printStackTrace();
