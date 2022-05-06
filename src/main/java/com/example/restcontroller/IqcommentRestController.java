@@ -65,11 +65,11 @@ public class IqcommentRestController {
     // 댓글 목록에 보이기
     // 127.0.0.1:9090/ROOT/api/Iqcomment/selectone
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
-            MediaType.ALL_VALUE }, produces = {
-                    MediaType.APPLICATION_JSON_VALUE })
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPOST(@RequestParam(name = "qno") long qno) {
         Map<String, Object> map = new HashMap<>();
         try {
+
             InquiryCHG inquiry = inService.inquirySelectOne(qno);
             List<IqcommentCHG> list = iService.icommentSelectList(inquiry.getQno());
             if (list != null) {

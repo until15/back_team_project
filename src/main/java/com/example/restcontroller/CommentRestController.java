@@ -70,8 +70,13 @@ public class CommentRestController {
     public Map<String, Object> insertPOST(@RequestParam(name = "bno") long bno) {
         Map<String, Object> map = new HashMap<>();
         try {
+
+            // 게시판 번호 불러옴
             CommunityCHG community = coService.boardSelectOne(bno);
+
+            // 게시판에 등록된 댓글 목록 불러옴
             List<CommentCHG> list = cService.commentSelectList(community.getBno());
+
             if (list != null) {
 
                 map.put("result", list);
@@ -110,71 +115,20 @@ public class CommentRestController {
         return map;
     }
 
-    // 댓글 좋아요
-    @RequestMapping(value = "/colike", method = { RequestMethod.PUT }, consumes = { MediaType.ALL_VALUE }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> likeUpPUT(@RequestParam(name = "cmtno") long cmtno) {
-        Map<String, Object> map = new HashMap<>();
-        System.out.println(cmtno);
-        try {
-            CommentCHG comment = cService.likeOne(cmtno);
-            map.put("retult", comment);
-            map.put("status", 200);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
-
-    // @RequestMapping(
-    // value = "/insert", method = {RequestMethod.POST}, consumes =
-    // {MediaType.ALL_VALUE},
-    // produces = {MediaType.APPLICATION_JSON_VALUE})
-    // public Map<String, Object> insertBookmarkPOST(@RequestBody LikeCHG like,
-    // @RequestHeader(name = "token") String token,
-    // @RequestParam(name = "chgno") long chgno ){
-
-    // System.out.println("토큰 : " + token);
-    // System.out.println("챌린지 번호 : " + chgno);
+    // // 댓글 좋아요
+    // @RequestMapping(value = "/colike", method = { RequestMethod.PUT }, consumes =
+    // { MediaType.ALL_VALUE }, produces = {
+    // MediaType.APPLICATION_JSON_VALUE })
+    // public Map<String, Object> likeUpPUT(@RequestParam(name = "cmtno") long
+    // cmtno) {
     // Map<String, Object> map = new HashMap<>();
+    // System.out.println(cmtno);
     // try {
-    // // 멤버 토큰
-    // String memail = jwtUtil.extractUsername(token);
-    // // 멤버 엔티티
-    // MemberCHG member = new MemberCHG();
-    // member.setMemail(memail);
-
-    // // 챌린지 조회
-    // ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
-    // System.out.println(challenge.toString());
-
-    // // 저장
-    // like.setChallengechg(challenge);
-    // like.setMemberchg(member);
-
-    // // 중복 확인
-    // LikeCHG duplicate = lService.duplicateInsert(chgno, memail);
-
-    // if(duplicate == null) {
-    // int ret = lService.insertLike(like);
-    // if(ret == 1) {
-    // // chgno 불러오기
-    // long chglike = lRepository.countByChallengechg_Chgno(chgno);
-    // System.out.println(chglike);
-    // challenge.setChglike(chglike);
-
-    // // 저장
-    // cRepository.save(challenge);
+    // CommentCHG comment = cService.likeOne(cmtno);
+    // map.put("retult", comment);
     // map.put("status", 200);
-    // }
-    // }
-    // else {
-    // map.put("status", 0);
-    // }
-    // }
-    // catch(Exception e) {
+
+    // } catch (Exception e) {
     // e.printStackTrace();
     // map.put("status", 0);
     // }

@@ -4,15 +4,19 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public interface InquiryCHGProjection {
+public interface PoseCHGProjection {
 
-    Long getQno();
+    Long getPno();
 
-    String getQtitle();
+    String getPname();
 
-    String getQcontent();
+    String getPpart();
 
-    Date getQregdate();
+    String getPcontent();
+
+    Long getPlevel();
+
+    Date getPregdate();
 
     @Value("#{target.memberchg.memail}")
     String getMemberchgMemail();

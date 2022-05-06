@@ -59,9 +59,9 @@ public class CommunityCHG {
     // private List<BimgCHG> bimgchgList = new ArrayList<>();
 
     // 댓글 테이블
-    @JsonBackReference
-    @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
-    private List<CommentCHG> commentchgList = new ArrayList<>();
+    // @JsonBackReference
+    // @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
+    // private List<CommentCHG> commentchgList = new ArrayList<>();
 
     @Transient
     private String[] imageurl;
