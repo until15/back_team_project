@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.ConfirmCHG;
+import com.example.entity.ConfirmProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
 import com.example.entity.MemberCHG;
@@ -93,28 +96,27 @@ public class ConfirmRestController {
 //			System.out.println(endtstamp);
 			
 			// 아이디와 오늘 날짜로 인증글 조회
-			ConfirmCHG todayConfirm = cfService.todayConfirm(username, starttstamp, endtstamp);
-			System.out.println("오늘 등록한 인증 조회 : " + todayConfirm.toString());
-			
-			// 첼린지 한 곳에서만 인증 가능하게됨 -> 인증글 조회 할 때 글번호 조건 추가해야됨
+			ConfirmCHG todayConfirm = cfService.todayConfirm(username, jno, starttstamp, endtstamp);
+//			System.out.println("오늘 등록한 인증 조회 : " + todayConfirm.toString());
 			
 			// 유저가 등록한 인증글 중에 오늘날짜에 해당하는게 없을 경우에 인증 등록가능
-//			if (todayConfirm == null) {
-//				// 참가한 사람과 인증글 올릴 사람의 아이디가 일치하면 
-//				if (join1.getMemberchgMemail().equals(username) ) {
-//					
-//					int ret = cfService.ConfirmInsert(confirm);
-//					System.out.println(ret);
-//					
-//					if (ret == 1) {
-//						map.put("status", 200);
-//					}
-//
-//				}
-//			}
-//			else {
-//				map.put("status", 0);
-//			}
+			if (todayConfirm == null) {
+				System.out.println("된다");
+				// 참가한 사람과 인증글 올릴 사람의 아이디가 일치하면 
+				if (join1.getMemberchgMemail().equals(username) ) {
+					
+					int ret = cfService.ConfirmInsert(confirm);
+					System.out.println(ret);
+					
+					if (ret == 1) {
+						map.put("status", 200);
+					}
+
+				}
+			}
+			else {
+				map.put("status", 0);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", -1);
@@ -152,18 +154,20 @@ public class ConfirmRestController {
 			
 			
 			// 인증 상태가 대기 중일 때만 수정 가능
-			if (confirm1.getCfsuccess() == 0) {
-				
-				// 가져온 항목에 수정할 인증글 덮어씌우기
-				confirm1.setCfcomment(confirm.getCfcomment());
-				System.out.println(confirm1);
-				
-				// 수정한 항목 저장
-				int ret = cfService.updateOneConfirm(confirm1);
-				System.out.println(ret);
-				
-				if (ret == 1) {
-					map.put("status", 200);				
+			if (confirm1 != null) {				
+				if (confirm1.getCfsuccess() == 0) {
+					
+					// 가져온 항목에 수정할 인증글 덮어씌우기
+					confirm1.setCfcomment(confirm.getCfcomment());
+					System.out.println(confirm1);
+					
+					// 수정한 항목 저장
+					int ret = cfService.updateOneConfirm(confirm1);
+					System.out.println(ret);
+					
+					if (ret == 1) {
+						map.put("status", 200);				
+					}
 				}
 			}
 			else {
@@ -194,7 +198,31 @@ public class ConfirmRestController {
 			System.out.println(cfno);	// 인증 번호
 			System.out.println(token);	// 토큰
 			
-			map.put("status", 0);
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+			
+			// 인증 번호와 토큰 아이디로 항목 1개 조회
+			ConfirmCHG confirm1 = cfService.selectOneConfirm(cfno, username);
+			System.out.println("1개 조회 : " + confirm1);
+			
+			// 조회한 값이 있을 때
+			if (confirm1 != null) {
+				// 성공 유무가 판별나기 전에만 삭제 가능
+				if(confirm1.getCfsuccess() == 0) {
+					
+					// DB에서 완전 삭제
+					int ret = cfService.deleteOneConfirm(cfno);
+					System.out.println(ret);
+					
+					if (ret == 1) {
+						map.put("status", 200);						
+					}
+				}
+			}			
+			else {				
+				map.put("status", 0);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", -1);
@@ -204,14 +232,179 @@ public class ConfirmRestController {
 	
 	
 	// 인증 1개 조회
+	// 127.0.0.1:9090/ROOT/api/confirm/selectone.json?cfno=
+	// Headers -> token:
+	@RequestMapping(value="/selectone.json", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectOneConfirm(
+			@RequestParam(name = "cfno") long cfno){
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(cfno);	// 인증 번호
+			
+			// 인증 번호로 항목 1개 조회
+			// Projection 으로 필요한 항목만 조회
+			ConfirmProjection cfProjection = cfService.findOneConfirm(cfno);
+			System.out.println(cfProjection);
+			
+			// 조회할 값이 있을 때 결과 반환
+			if(cfProjection != null) {
+				map.put("result", cfProjection);
+				map.put("status", 200);
+			}
+			else {
+				map.put("status", 0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+	
+	// 첼린지 내에서 인증 리스트 전체 조회
+	// 127.0.0.1:9090/ROOT/api/confirm/chgcfmlist.json?chgno=&page=
+	@RequestMapping(value="/chgcfmlist.json", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectChgConfirmList(
+			@RequestParam(name = "chgno") long chgno,
+			@RequestParam(name = "page", defaultValue = "1") int page){
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(chgno); 	// 첼린지 번호
+			System.out.println(page); 	// 페이지네이션
+			
+			// 페이지네이션(시작페이지(0부터), 갯수)
+			PageRequest pageRequest = PageRequest.of(page-1, 5);
+			System.out.println("페이지네이션 : " + pageRequest);
+			
+			// 첼린지 번호에 해당하는 인증글 전체 조회
+			List<ConfirmProjection> cfmFromChg = cfService.confirmFromChallenge(chgno ,pageRequest);
+			System.out.println(cfmFromChg);
+			
+			// 조회한 값이 있을 때 반환 
+			if(!cfmFromChg.isEmpty()) {
+				map.put("result", cfmFromChg);
+				map.put("status", 200);				
+			}
+			else {
+				map.put("status", 0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+	
+	
+	// 내가 인증한 리스트 전체 조회 (페이지네이션)
+	// 127.0.0.1:9090/ROOT/api/confirm/myselectlist.json?page=?&text=?
+	// Headers -> token :
+	@RequestMapping(value="/myselectlist.json", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectlistConfirm(
+			@RequestHeader(name = "token") String token,
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "text", defaultValue = "") String text){
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(token);	// 토큰
+			System.out.println(page); 	// 페이지네이션
+			System.out.println(text); 	// 검색어
+			
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+			
+			// 페이지네이션(시작페이지(0부터), 갯수)
+			PageRequest pageRequest = PageRequest.of(page-1, 5);
+			System.out.println("페이지네이션 : " + pageRequest);
+			
+			// 검색 + 페이지네이션으로 아이디에 해당하는 인증 리스트 조회하기
+			List<ConfirmProjection> list = cfService.selectListConfirm(username, text, pageRequest);
+			System.out.println(list);
+			
+			// 결과값이 있을 때 반환
+			if (!list.isEmpty()) {				
+				map.put("result", list);
+				map.put("status", 200);
+			}
+			else {
+				map.put("status", 0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+	
+	
+	// 내가 인증한 리스트 첼린지별 조회 (페이지네이션)
+	// 127.0.0.1:9090/ROOT/api/confirm/mycfmlist.json?chgno=&page=
+	// Headers -> token :
+	@RequestMapping(value="/mycfmlist.json", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectMyConfirmLIST(
+			@RequestHeader(name = "token") String token,
+			@RequestParam(name = "chgno") long chgno,
+			@RequestParam(name = "page", defaultValue = "1") int page){
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(token);	// 토큰
+			System.out.println(chgno); 	// 첼린지 번호
+			System.out.println(page); 	// 페이지
+
+			// 토큰에서 아이디 추출
+			String username = jwtUtil.extractUsername(token);
+			System.out.println("유저이름 : " + username);
+			
+			// 페이지네이션(시작페이지(0부터), 갯수)
+			PageRequest pageRequest = PageRequest.of(page-1, 5);
+			System.out.println("페이지네이션 : " + pageRequest);
+			
+			// 첼린지 번호와 토큰의 아이디로 인증 리스트 조회
+			List<ConfirmProjection> list = cfService.myConfirmFromChallenge(chgno, username, pageRequest);
+			System.out.println(list);
+			
+			// 결과 값이 있을 때 list 반환
+			if(!list.isEmpty()) {
+				map.put("result", list);
+				map.put("status", 200);			
+			}
+			else {
+				map.put("status", 0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+	
+	
+	// 인증 성공 여부 판별하기
 	
 	
 	
-	// 인증 리스트
-	
-	
-	
-	// 인증 성공 여부
+	// 성공 유무 별로 조회하기 (첼린지 생성자 권한)
 	
 	
 	
