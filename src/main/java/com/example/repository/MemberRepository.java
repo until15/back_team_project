@@ -18,6 +18,10 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
 
     long countByMemailContaining(String memail);
 
+    @Transactional
+    @Query(value = "SELECT * FROM MEMBERCHG WHERE MEMAIL =:memail", nativeQuery = true)
+    public MemberCHG selectOneMember(@Param(value = "memail") String memail);
+
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'

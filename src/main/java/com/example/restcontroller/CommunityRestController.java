@@ -113,10 +113,15 @@ public class CommunityRestController {
     public Map<String, Object> boardSelectListGET(@RequestParam(name = "bno") long bno) {
         Map<String, Object> map = new HashMap<>();
         try {
+
+            // 게시판 번호 불러옴
             CommunityCHGProjection ret = cRepository.findByBno(bno);// .orElse(null);
             // CommunityCHG ret = cService.boardSelectOne(bno);
+
+            // 저장되있는 이미지 목록 불러옴
             List<BimgCHGProjection> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
 
+            // 배열 형태로 반복문 돌림
             String[] imgs = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
                 imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
@@ -138,6 +143,8 @@ public class CommunityRestController {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardDELETE(@RequestParam(name = "bno") long bno,
             @RequestHeader(name = "token") String token) {
+        System.out.println(bno);
+        System.out.println(token);
         Map<String, Object> map = new HashMap<>();
         try {
 

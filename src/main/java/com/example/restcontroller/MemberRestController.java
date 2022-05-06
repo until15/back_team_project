@@ -24,6 +24,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -120,25 +121,6 @@ public class MemberRestController {
 		return map;
 	}
 
-	// 127.0.0.1:9090/ROOT/api/member/mypage
-	@RequestMapping(value = "/mypage", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> customerMypageGET(@RequestHeader(name = "token") String token) {
-		System.out.println("MYPAGE:" + token);
-		Map<String, Object> map = new HashMap<>();
-		try {
-			String username = jwtUtil.extractUsername(token);
-			System.out.println(username);
-			// 토큰이 있어야 실행됨.
-			map.put("status", 200);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return map;
-	}
-
 	// 127.0.0.1:9090/ROOT/api/member/updatemember
 	// 회원정보수정 (토큰, 이름, 전화번호)
 	@RequestMapping(value = "/updatemember", method = { RequestMethod.PUT }, consumes = {
@@ -210,7 +192,7 @@ public class MemberRestController {
 
 	// 회원탈퇴(삭제가 아닌 수정)
 	// 127.0.0.1:9090/ROOT/api/member/deletemember
-	@RequestMapping(value = "deletemember", method = { RequestMethod.PUT }, consumes = {
+	@RequestMapping(value = "/deletemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> selectMemberOneGET(@RequestHeader(name = "token") String token,
 			@RequestBody MemberCHG member) {
@@ -235,12 +217,18 @@ public class MemberRestController {
 
 	// 회원 1명 조회
 	// 127.0.0.1:9090/ROOT/api/member/selectmemberone
-	@RequestMapping(value = "selectmemberone", method = { RequestMethod.GET }, consumes = {
+	@RequestMapping(value = "/selectmemberone", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> selectMemberOneGET(@RequestBody MemberCHG member) throws IOException {
+	public Map<String, Object> selectMemberOneGET(
+			@RequestHeader(name = "token") String token) {
+		System.out.println(token);
 		Map<String, Object> map = new HashMap<>();
 		try {
-			MemberCHG member1 = mService.MemberSelectOne(member.getMemail());
+
+			String username = jwtUtil.extractUsername(token);
+			System.out.println(username);
+
+			MemberCHG member1 = mService.MemberSelectOne(username);
 
 			if (member1 != null) {
 				map.put("result", member1);
@@ -258,9 +246,11 @@ public class MemberRestController {
 	@RequestMapping(value = "/profile", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<byte[]> selectProfileGET(
-			@RequestBody MemberCHG member) throws IOException {
+			@RequestHeader(name = "token") String token) throws IOException {
 		try {
-			MemberCHG member1 = mService.MemberSelectOne(member.getMemail());
+			String username = jwtUtil.extractUsername(token);
+			System.out.println(username);
+			MemberCHG member1 = mService.MemberSelectOne(username);
 
 			if (member1.getMpsize() > 0) {
 				HttpHeaders header = new HttpHeaders();

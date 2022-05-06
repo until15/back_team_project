@@ -51,7 +51,7 @@ public class RoutineCHG {
   private PoseCHG posechg;
 
   // 멤버 테이블
-  @JsonBackReference
+  // @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "memail")
   private MemberCHG memberchg;

@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.PoseCHG;
-import com.example.entity.PoseVideoVIEW;
 import com.example.entity.VideoCHG;
 
 import org.springframework.data.domain.Pageable;
@@ -41,7 +40,4 @@ public interface PoseService {
 
     // 자세 동영상 조회
     public VideoCHG poseVideoSelectOne(long vno);
-
-    // 자세 동영상 조회 (수정용)
-    // public PoseVideoVIEW poseVideoSelectPrivate(String memail, long vno);
 }

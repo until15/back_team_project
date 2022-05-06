@@ -33,4 +33,9 @@ public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
     @Query(value = "UPDATE COMMUNITYCHG SET BHIT=BHIT+1 WHERE BNO=:bno", nativeQuery = true)
     public int updateBoardHitOne(@Param(value = "bno") long bno);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "DELETE FROM COMMUNITYCHG WHERE BNO =:bno", nativeQuery = true)
+    public int deleteBoardOne(@Param(value = "bno") long bno);
+
 }
