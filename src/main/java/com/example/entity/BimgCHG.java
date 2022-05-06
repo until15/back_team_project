@@ -18,6 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -45,7 +46,8 @@ public class BimgCHG {
     private Date bimgregdate;
 
     // 자유게시판 테이블
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    @ManyToOne
     @JoinColumn(name = "bno")
     private CommunityCHG communitychg;
 }
