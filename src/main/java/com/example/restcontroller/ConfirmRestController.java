@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -56,13 +57,19 @@ public class ConfirmRestController {
 			System.out.println(token);	// 토큰
 			System.out.println(confirm.toString());	// 인증글
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-//			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// Confirm 엔티티에 회원정보를 담기 위해 아이디를 Member 엔티티에 넣어서 사용
 			MemberCHG member = new MemberCHG();
-			member.setMemail(username);
+			member.setMemail(email);
 //			System.out.println("아이디가 엔티티에 담김 : " + member);
 			
 			// Confirm 엔티티의 Jno외래키에 참가번호를 담기 위해 Join 엔티티 사용 
@@ -96,14 +103,14 @@ public class ConfirmRestController {
 //			System.out.println(endtstamp);
 			
 			// 아이디와 오늘 날짜로 인증글 조회
-			ConfirmCHG todayConfirm = cfService.todayConfirm(username, jno, starttstamp, endtstamp);
+			ConfirmCHG todayConfirm = cfService.todayConfirm(email, jno, starttstamp, endtstamp);
 //			System.out.println("오늘 등록한 인증 조회 : " + todayConfirm.toString());
 			
 			// 유저가 등록한 인증글 중에 오늘날짜에 해당하는게 없을 경우에 인증 등록가능
 			if (todayConfirm == null) {
 				System.out.println("된다");
 				// 참가한 사람과 인증글 올릴 사람의 아이디가 일치하면 
-				if (join1.getMemberchgMemail().equals(username) ) {
+				if (join1.getMemberchgMemail().equals(email) ) {
 					
 					int ret = cfService.ConfirmInsert(confirm);
 					System.out.println(ret);
@@ -144,12 +151,18 @@ public class ConfirmRestController {
 			System.out.println(token);	// 토큰
 			System.out.println(confirm.toString());	// 수정할 인증글
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 인증 번호와 토큰 아이디로 항목 1개 조회
-			ConfirmCHG confirm1 = cfService.selectOneConfirm(cfno, username);
+			ConfirmCHG confirm1 = cfService.selectOneConfirm(cfno, email);
 			System.out.println("1개 조회 : " + confirm1);
 			
 			
@@ -198,12 +211,18 @@ public class ConfirmRestController {
 			System.out.println(cfno);	// 인증 번호
 			System.out.println(token);	// 토큰
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 인증 번호와 토큰 아이디로 항목 1개 조회
-			ConfirmCHG confirm1 = cfService.selectOneConfirm(cfno, username);
+			ConfirmCHG confirm1 = cfService.selectOneConfirm(cfno, email);
 			System.out.println("1개 조회 : " + confirm1);
 			
 			// 조회한 값이 있을 때
@@ -324,16 +343,22 @@ public class ConfirmRestController {
 			System.out.println(page); 	// 페이지네이션
 			System.out.println(text); 	// 검색어
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 검색 + 페이지네이션으로 아이디에 해당하는 인증 리스트 조회하기
-			List<ConfirmProjection> list = cfService.selectListConfirm(username, text, pageRequest);
+			List<ConfirmProjection> list = cfService.selectListConfirm(email, text, pageRequest);
 			System.out.println(list);
 			
 			// 결과값이 있을 때 반환
@@ -371,16 +396,22 @@ public class ConfirmRestController {
 			System.out.println(chgno); 	// 첼린지 번호
 			System.out.println(page); 	// 페이지
 
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 첼린지 번호와 토큰의 아이디로 인증 리스트 조회
-			List<ConfirmProjection> list = cfService.myConfirmFromChallenge(chgno, username, pageRequest);
+			List<ConfirmProjection> list = cfService.myConfirmFromChallenge(chgno, email, pageRequest);
 			System.out.println(list);
 			
 			// 결과 값이 있을 때 list 반환

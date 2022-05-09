@@ -49,15 +49,21 @@ public class JoinRestController {
 			System.out.println("토큰 발급 : " + token);	// 토큰 발급
 			System.out.println(chgno); 	// 넘어오는 join
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// member 엔티티에 아이디 담기
-			MemberCHG email = new MemberCHG();
-			email.setMemail(username);
+			MemberCHG memail = new MemberCHG();
+			memail.setMemail(email);
 			
-			System.out.println("아이디 : " + email);
+			System.out.println("아이디 : " + memail);
 			
 			// challenge 엔티티에 첼린지 번호 담기
 			ChallengeCHG challenge = new ChallengeCHG();
@@ -67,13 +73,13 @@ public class JoinRestController {
 			
 			// 참가 엔티티에 아이디와 첼린지 번호 담기
 			JoinCHG join = new JoinCHG();
-			join.setMemberchg(email);
+			join.setMemberchg(memail);
 			join.setChallengechg(challenge);
 			
 			System.out.println(join);	// join엔티티에 담겨있는 값 확인
 			
 			// 아이디와 첼린지 번호 동시에 일치하는 지 확인
-			JoinCHG duplicate = jService.duplicateJoin(chgno, username);
+			JoinCHG duplicate = jService.duplicateJoin(chgno, email);
 			System.out.println(duplicate);
 			
 			if(duplicate == null) {
@@ -116,11 +122,17 @@ public class JoinRestController {
 			System.out.println("토큰 발급 : " + token);	// 토큰 발급
 			System.out.println(chgno); 	// 넘어오는 join
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
-			JoinCHG join = jService.duplicateJoin(chgno, username);
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
+
+			JoinCHG join = jService.duplicateJoin(chgno, email);
 			
 			join.setChgstate(2);
 
@@ -164,12 +176,18 @@ public class JoinRestController {
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println(pageRequest);
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 아이디, 진행 상태, 페이지네이션으로 조회
-			List<JoinProjection> list = jService.joinStateList(username, state, pageRequest);
+			List<JoinProjection> list = jService.joinStateList(email, state, pageRequest);
 			System.out.println(list);
 			
 			if(!list.isEmpty()) {
@@ -204,28 +222,28 @@ public class JoinRestController {
 			System.out.println(jno);
 			System.out.println(token);
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
-	        JSONObject jsonObject = new JSONObject(username);
+	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
 	        
 	        System.out.println(email);
 	        
 			
 			// 아이디와 번호가 동시에 일치하는 것 조회
-//			JoinSelectOne join = jService.selectOneCHG(username, jno);
-//			System.out.println(join);
-//			
-//			if(join != null) {
-//				map.put("result", join);
-//				map.put("status", 200);
-//			}
-//			else {
-//				map.put("status", 0);				
-//			}
+			JoinSelectOne join = jService.selectOneCHG(email, jno);
+			System.out.println(join);
+			
+			if(join != null) {
+				map.put("result", join);
+				map.put("status", 200);
+			}
+			else {
+				map.put("status", 0);				
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -250,15 +268,21 @@ public class JoinRestController {
 		try {
 			System.out.println(token);
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 참가상태 변수 : 3 => 진행중
 			int state = 1;
 
 			// 아이디와 참가 변수를 전달해서 진행중 인 첼린지만 조회
-			List<JoinProjection> list = jService.joinChallengeList(username, state);
+			List<JoinProjection> list = jService.joinChallengeList(email, state);
 			System.out.println(list);
 			
 			map.put("result", list);
@@ -291,16 +315,22 @@ public class JoinRestController {
 			System.out.println("페이지 확인" + page);
 			System.out.println("제목으로 검색 : " + title);
 			
-			// 토큰에서 아이디 추출
-			String username = jwtUtil.extractUsername(token);
-//			System.out.println("유저이름 : " + username);
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 사용자가 참여한 첼린지 검색+페이지네이션 조회 
-			List<JoinProjection> list =jService.joinChallengeAllList(username, title, pageRequest);
+			List<JoinProjection> list =jService.joinChallengeAllList(email, title, pageRequest);
 			
 			System.out.println(list);
 			
