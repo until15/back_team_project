@@ -1,7 +1,10 @@
 package com.example.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -47,13 +51,19 @@ public class RoutineCHG {
   
   // 자세 테이블
   @ManyToOne
+  @JsonBackReference
   @JoinColumn(name = "pno")
   private PoseCHG posechg;
 
   // 멤버 테이블
-  // @JsonBackReference
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "memail")
   private MemberCHG memberchg;
+
+  // 루틴 실행 테이블 (cascade 설정)
+  @OneToMany(mappedBy = "routinechg", cascade = CascadeType.REMOVE)
+  @JsonBackReference
+  private List<RtnRunCHG> rtnrunchgList = new ArrayList<>();
   
 }

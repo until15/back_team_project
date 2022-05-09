@@ -19,6 +19,6 @@ public interface RtnRunService {
     public int RtnRunDelete(Long[] runno);
 
     // 루틴 실행 조회
-    public List<RtnRunCHG> RtnRunSelectlist(long runseq);
+    public List<RtnRunCHG> RtnRunSelectlist(Long runseq);
     
 }

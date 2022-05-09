@@ -95,7 +95,7 @@ public class RtnRunServiceImpl implements RtnRunService{
 
     // 루틴 실행 조회
     @Override
-    public List<RtnRunCHG> RtnRunSelectlist(long runseq) {
+    public List<RtnRunCHG> RtnRunSelectlist(Long runseq) {
         try {
             List<RtnRunCHG> list = rrRepository.findByRunseqEqualsOrderByRunnoDesc(runseq);
             return list;

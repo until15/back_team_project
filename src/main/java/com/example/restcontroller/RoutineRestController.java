@@ -52,11 +52,11 @@ public class RoutineRestController {
                 obj.setRtncnt(routine[i].getRtncnt());
                 obj.setRtnset(routine[i].getRtnset());
                 obj.setRtnname(routine[i].getRtnname());
+                obj.setPosechg(routine[i].getPosechg());
 
                 MemberCHG member = new MemberCHG();
                 member.setMemail(username);
                 obj.setMemberchg(member);
-                obj.setPosechg(routine[i].getPosechg());
                 
                 list.add(obj);
                 System.out.println(list);
@@ -75,6 +75,7 @@ public class RoutineRestController {
 
     // 루틴 수정
     //127.0.0.1:9090/ROOT/api/routine/updatebatch.json
+    // [{"rtnno" : 19, "rtnday":"수정123", "rtncnt" : 120, "rtnset" : 13, "rtnname" : "가나", "posechg":{"pno":15}, "memberchg":{"memail":"a@a.com"}}, {"rtnno" : 20, ...}]
     @RequestMapping(value="/updatebatch.json", method = {RequestMethod.PUT},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> RoutineUpdatePUT(
@@ -139,29 +140,30 @@ public class RoutineRestController {
     }
 
     // 루틴 삭제
-    //127.0.0.1:9090/ROOT/api/routine/deletebatch.json?no=1,2
+    //127.0.0.1:9090/ROOT/api/routine/deletebatch.json
     // {"memberchg":{"memail":""}}
     @RequestMapping(value="/deletebatch.json", method = {RequestMethod.DELETE},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> RoutineDeleteDELETE(
         @RequestHeader(name="token") String token,
-        // @RequestParam(name="no") Long[] rtnno,
-        // @RequestBody RoutineCHG routine,
-        @RequestBody List<RoutineCHG> routine1
+        @RequestParam(name="no") Long[] rtnno,
+        @RequestBody RoutineCHG routine
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            List<RoutineCHG> list = rRepository.findByRtnnoIn(routine1);
-            System.out.println(list.get(0).getMemberchg().getMemail());
 
-            // if(username.equals(routine.getMemberchg().getMemail())){
-            //     int ret = rService.RoutineDelete(rtnno);
-            //     if(ret == 1){
-            //         map.put("status", 200);
-            //     }
-            // }
+            MemberCHG member = new MemberCHG();
+            member.setMemail(username);
+            routine.setMemberchg(member);
+
+            if(username.equals(routine.getMemberchg().getMemail())){
+                int ret = rService.RoutineDelete(rtnno);
+                if(ret == 1){
+                    map.put("status", 200);
+                }
+            }
 
             map.put("status", 200);
             
