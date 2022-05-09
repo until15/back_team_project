@@ -12,12 +12,16 @@ import org.springframework.stereotype.Repository;
 
 @Transactional
 @Repository
-public interface RtnRunRepository extends JpaRepository<RtnRunCHG, Long>{
+public interface RtnRunRepository extends JpaRepository<RtnRunCHG, Long> {
 
     // 루틴 실행 조회
     List<RtnRunCHG> findByRunseqEqualsOrderByRunnoDesc(long runseq);
 
     // 루틴 삭제 조회
     List<RtnRunCHG> findByRunnoIn(List<Integer> runno);
-    
+
+    // 루틴 삭제 조회
+    @Query("select r from RtnRunCHG r where r.runno in :runno")
+    List<RtnRunCHG> findRtnRunCHGsIn(Long[] runno);
+
 }

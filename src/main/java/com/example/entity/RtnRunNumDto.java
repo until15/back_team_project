@@ -2,14 +2,15 @@ package com.example.entity;
 
 import java.util.List;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class RtnRunNumDto {
 
-    public int num1;
+    private int num1;
 
-    public List<Integer> num;
+    private List<Integer> num;
 
-    
 }
