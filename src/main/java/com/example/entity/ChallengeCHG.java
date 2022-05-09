@@ -65,7 +65,7 @@ public class ChallengeCHG {
 	private int recstate = 1;
 	  
 	// 인원수
-	private Long chgcnt = 0L;
+	private Long chgcnt = 1L;
 	  
 	// 참여비
 	private Long chgfee;

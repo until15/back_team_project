@@ -19,6 +19,9 @@ public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
 
 	// 첼린지 번호와 아이디가 동시에 일치하는 항목 조회
 	JoinCHG findByChallengechg_chgnoAndMemberchg_memail(Long no, String em);
+
+	// 검색어가 포함된 항목 갯수
+	
 	
 	// 참여했던 첼린지 전체 조회 (페이지네이션 : 첼린지 제목, 페이지별)
 	List<JoinProjection> findByMemberchg_memailEqualsAndChallengechg_chgtitleContainingOrderByJnoDesc(String em, String title, Pageable page);
@@ -29,7 +32,11 @@ public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
 	// 참여한 첼린지 1개 상세 조회
 	JoinSelectOne findByMemberchg_memailAndJno(String em, long no);
 	
+	// 상태에 따른 첼린지 갯수
+	
+	
 	// 진행 상태에 따른 첼린지 리스트 (페이지네이션)
 	List<JoinProjection> findByMemberchg_memailAndChgstateOrderByJnoDesc(String em, int state, Pageable page);
-	
+		
+  
 }

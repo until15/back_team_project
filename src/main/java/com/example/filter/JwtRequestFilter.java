@@ -40,6 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 
                     // 컨트롤러로 이동
                     filterChain.doFilter(request, response);
+                    System.out.println("필터 체임 : " + filterChain);
                 }
             }
             // 토큰이 없을시 오류 발생

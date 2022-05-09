@@ -3,11 +3,16 @@ package com.example.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,7 +27,6 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
     List<ChallengeCHG> findByChgtitleContainingOrderByChgnoDesc(String challenge, Pageable page);
     // 오류 도와준 다희씨 고마워요 . . . 2022/04/28
-
     
     
     // 첼린지 인기 조회
@@ -39,4 +43,13 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
 //			"SELECT MAX(CHGNO) FROM CHALLENGECHG WHERE MEMAIL=:em", 
 //			nativeQuery = true)
 //    long selectLastChallenge(@Param(value = "em") String email);
+    
+    // 첼린지에 가입할 때마다 인원수 1씩 증가
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = 
+    		"UPDATE CHALLENGECHG SET CHGCNT=CHGCNT+1 WHERE CHGNO=:no",
+    		nativeQuery = true)
+    int increaseCnt(@Param(value="no") long chgno);
+    
 }
