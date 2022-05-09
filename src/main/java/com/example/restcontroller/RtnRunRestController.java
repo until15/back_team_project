@@ -7,11 +7,14 @@ import java.util.Map;
 
 import com.example.entity.RoutineCHG;
 import com.example.entity.RtnRunCHG;
+import com.example.entity.RtnRunNumDto;
 import com.example.jwt.JwtUtil;
 import com.example.repository.RoutineRepository;
 import com.example.repository.RtnRunRepository;
 import com.example.service.RtnRunService;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -130,15 +133,19 @@ public class RtnRunRestController {
     public Map<String, Object> RoutineDeleteDELETE(
         @RequestHeader(name="token") String token,
         // @RequestParam(name="no") Long[] runno,
-        @RequestBody List<Integer> runno1
+        @RequestBody RtnRunNumDto num
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
 
+            // List로 변환
+            List<Integer> arr = num.getNum();
+            System.out.println("=====================" + arr);
+
             // 루틴 실행 번호 추출
-            List<RtnRunCHG> rtnRun = rrRepository.findByRunnoInOrderByRunnoDesc(runno1);
+            List<RtnRunCHG> rtnRun = rrRepository.findByRunnoIn(arr);
             System.out.println(rtnRun);
 
             // if(username.equals(rtnRun.get(0).getRoutinechg().getMemberchg().getMemail())){
