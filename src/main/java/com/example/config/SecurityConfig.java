@@ -33,8 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.passwordEncoder(bCryptPasswordEncoder());
 	}
 
+	// 기존기능을 제거한 후 필요한 것을 추가
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		// 부모에서 오는 메소드를 호출(부모의 기능을 전부 사용)
 		// super.configure(http);
 
 		// 페이지별 접근 권한 설정

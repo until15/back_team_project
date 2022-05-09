@@ -19,6 +19,7 @@ import com.example.entity.JoinProjection;
 import com.example.entity.JoinSelectOne;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.ChallengeRepository;
 import com.example.service.JoinService;
 
 @RestController
@@ -26,6 +27,8 @@ import com.example.service.JoinService;
 public class JoinRestController {
 
 	@Autowired JoinService jService;
+	
+	@Autowired ChallengeRepository chgRepository;
 	
 	@Autowired JwtUtil jwtUtil;
 	
@@ -75,6 +78,10 @@ public class JoinRestController {
 			if(duplicate == null) {
 				int ret = jService.challengeJoin(join);
 				if (ret == 1) {
+					// 참가할 때마다 첼린지 인원수 1씩 증가
+					int ret1 = chgRepository.increaseCnt(chgno);
+					System.out.println(ret1);
+					
 					// 새로 참가하기는 200
 					map.put("status", 200);
 				}
