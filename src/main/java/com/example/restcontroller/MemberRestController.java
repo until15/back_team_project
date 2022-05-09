@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
 import com.example.service.UserDetailsServiceImpl;
 
@@ -24,7 +25,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -46,6 +46,9 @@ public class MemberRestController {
 
 	@Autowired
 	JwtUtil jwtUtil;
+
+	@Autowired
+	MemberRepository mRepository;
 
 	@Autowired
 	ResourceLoader rLoader;
@@ -126,14 +129,16 @@ public class MemberRestController {
 	@RequestMapping(value = "/updatemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> customerupdateMemberPUT(@RequestHeader(name = "token") String token,
-			@ModelAttribute MemberCHG member, @RequestParam(name = "mimage") MultipartFile file) throws IOException {
-		System.out.println(member);
+	public Map<String, Object> updateMemberPUT(@RequestHeader(name = "token") String token,
+			@RequestParam(name = "mimage") MultipartFile file, @ModelAttribute MemberCHG member)
+			throws IOException {
+		System.out.println("============================================" + file);
 		Map<String, Object> map = new HashMap<>();
+
 		try {
 			String username = jwtUtil.extractUsername(token);
 			System.out.println(username);
-			MemberCHG member1 = mService.MemberSelectOne(member.getMemail());
+			MemberCHG member1 = mService.MemberSelectOne(username);
 			// 닉네임
 			member1.setMid(member.getMid());
 			// // 이름
@@ -229,9 +234,12 @@ public class MemberRestController {
 			System.out.println(username);
 
 			MemberCHG member1 = mService.MemberSelectOne(username);
+			String imgs = new String();
+			imgs = "/ROOT/api/member/profile?memail=" + username;
 
 			if (member1 != null) {
 				map.put("result", member1);
+				map.put("imgurl", imgs);
 				map.put("status", 200);
 			}
 		} catch (Exception e) {
@@ -246,11 +254,10 @@ public class MemberRestController {
 	@RequestMapping(value = "/profile", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<byte[]> selectProfileGET(
-			@RequestHeader(name = "token") String token) throws IOException {
+			@RequestParam(name = "memail") String memail) throws IOException {
 		try {
-			String username = jwtUtil.extractUsername(token);
-			System.out.println(username);
-			MemberCHG member1 = mService.MemberSelectOne(username);
+
+			MemberCHG member1 = mService.MemberSelectOne(memail);
 
 			if (member1.getMpsize() > 0) {
 				HttpHeaders header = new HttpHeaders();
@@ -263,6 +270,7 @@ public class MemberRestController {
 				}
 				ResponseEntity<byte[]> response = new ResponseEntity<>(member1.getMprofile(), header, HttpStatus.OK);
 				return response;
+
 			} else {
 				InputStream is = rLoader.getResource(DEFAULT_IMAGE).getInputStream();
 				HttpHeaders headers = new HttpHeaders();

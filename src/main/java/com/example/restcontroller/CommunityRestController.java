@@ -126,6 +126,7 @@ public class CommunityRestController {
             for (int i = 0; i < list.size(); i++) {
                 imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
             }
+
             map.put("result", ret);
             map.put("imgurl", imgs);
             map.put("status", 200);
