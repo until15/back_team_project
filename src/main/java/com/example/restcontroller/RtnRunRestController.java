@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.entity.RoutineCHG;
 import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.RoutineRepository;
+import com.example.repository.RtnRunRepository;
 import com.example.service.RtnRunService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RtnRunRestController {
 
     @Autowired RtnRunService rrService;
+    @Autowired RoutineRepository rRepository;
+    @Autowired RtnRunRepository rrRepository;
     @Autowired JwtUtil jwtUtil;
 
     // 루틴 실행 등록
@@ -99,7 +104,7 @@ public class RtnRunRestController {
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> RoutineselectlistGET(
         @RequestHeader(name="token") String token,
-        @RequestParam(name="no") long runseq
+        @RequestParam(name="no") Long runseq
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
@@ -124,16 +129,24 @@ public class RtnRunRestController {
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> RoutineDeleteDELETE(
         @RequestHeader(name="token") String token,
-        @RequestParam(name="no") Long[] rtnno
+        // @RequestParam(name="no") Long[] runno,
+        @RequestBody List<Integer> runno1
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            int ret = rrService.RtnRunDelete(rtnno);
-            if(ret == 1){
-                map.put("status", 200);
-            }
+
+            // 루틴 실행 번호 추출
+            List<RtnRunCHG> rtnRun = rrRepository.findByRunnoInOrderByRunnoDesc(runno1);
+            System.out.println(rtnRun);
+
+            // if(username.equals(rtnRun.get(0).getRoutinechg().getMemberchg().getMemail())){
+            //     int ret = rrService.RtnRunDelete(runno);
+            //     if(ret == 1){
+            //         map.put("status", 200);
+            //     }
+            // }
             
         } catch (Exception e) {
             e.printStackTrace();

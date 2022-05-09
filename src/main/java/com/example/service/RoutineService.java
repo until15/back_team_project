@@ -15,9 +15,6 @@ public interface RoutineService {
     // 루틴 수정
     public int RoutineUpdateBatch(List<RoutineCHG> list);
 
-    // 루틴 조회 (수정용)
-    public List<RoutineCHG> RoutineSelectPrivate(String memail, Long[] rtnno);
-
     // 루틴 삭제
     public int RoutineDelete(Long[] rtnno);
 
