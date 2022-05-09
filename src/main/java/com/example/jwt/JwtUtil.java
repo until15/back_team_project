@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -22,19 +23,28 @@ public class JwtUtil {
     private final long VALIDATE_TIME = 1000 * 60 * 60 * 9;
 
     // 토큰생성(아이디 정보)
-    public String generatorToken(String username) {
+    public String generatorToken(String username, String userrole, String userrank) {
         Map<String, Object> map = new HashMap<>();
+        
+        System.out.println("유저 아이디 : " + username);
+        System.out.println("유저 권한 : " + userrole);
+        System.out.println("유저 등급 : " + userrank);
+        
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", username);
+        jsonObject.put("userrole", userrole);
+        jsonObject.put("userrank", userrank);
+        
+        System.out.println("토큰 정보 객체화 : " + jsonObject);
         
         String token = Jwts.builder()
                 .setClaims(map)
-                .setSubject(username)
+                .setSubject(jsonObject.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + VALIDATE_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECURITY_KEY)
                 .compact();
 
-        
-        
         return token;	// 토큰 반환
     }
 
@@ -44,7 +54,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    // 토근에서 아이디 추출
+    // 토근에서 아이디, 권한, 등급 추출
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }

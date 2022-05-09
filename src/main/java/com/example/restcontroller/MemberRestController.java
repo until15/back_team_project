@@ -86,7 +86,7 @@ public class MemberRestController {
 		return map;
 	}
 
-	// 로그인
+	// 로그인 (토큰 사용)
 	// 127.0.0.1:9090/ROOT/api/member/login
 	@RequestMapping(value = "/login", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
@@ -94,7 +94,7 @@ public class MemberRestController {
 			@RequestBody MemberCHG member) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(member.toString());
+			System.out.println(member.toString());	// 들어오는 값 확인
 
 			// Security 인증
 			UserDetails user = userDetailsService.loadUserByUsername(member.getMemail());
@@ -104,15 +104,23 @@ public class MemberRestController {
 			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 			System.out.println("비밀번호 암호화: " + bcpe.toString());
 
+			// 로그인 아이디로 멤버 조회
+			MemberCHG member1 = mRepository.findById(member.getMemail()).orElse(null);
+			System.out.println("멤버 조회 : " + member1.toString());
+			
+			
+			// long 타입의 mrank를 string 으로 변환
+			String rank = member1.getMrank().toString();
+			
 			// 토큰 발급
-			System.out.println("토큰 발급: " + jwtUtil.generatorToken(member.getMemail()));
+			System.out.println("토큰 발급: " + jwtUtil.generatorToken(member.getMemail(), member1.getMrole(), rank));
 
 			// 유저의 암호와 입력한 암호가 일치하는 지 확인
 			if (bcpe.matches(member.getMpw(), user.getPassword())) {
-
+				
 				// 토큰 발급
-				String token = jwtUtil.generatorToken(member.getMemail());
-
+				String token = jwtUtil.generatorToken(member.getMemail(), member1.getMrole(), rank);
+				
 				map.put("token", token);
 				map.put("status", 200);
 			}

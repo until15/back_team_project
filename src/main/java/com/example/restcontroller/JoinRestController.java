@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -206,18 +207,25 @@ public class JoinRestController {
 			// 토큰에서 아이디 추출
 			String username = jwtUtil.extractUsername(token);
 			System.out.println("유저이름 : " + username);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(username);
+	        String email = jsonObject.getString("username");
+	        
+	        System.out.println(email);
+	        
 			
 			// 아이디와 번호가 동시에 일치하는 것 조회
-			JoinSelectOne join = jService.selectOneCHG(username, jno);
-			System.out.println(join);
-			
-			if(join != null) {
-				map.put("result", join);
-				map.put("status", 200);
-			}
-			else {
-				map.put("status", 0);				
-			}
+//			JoinSelectOne join = jService.selectOneCHG(username, jno);
+//			System.out.println(join);
+//			
+//			if(join != null) {
+//				map.put("result", join);
+//				map.put("status", 200);
+//			}
+//			else {
+//				map.put("status", 0);				
+//			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
