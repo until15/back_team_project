@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeProjection;
+import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.ChallengeRepository;
 import com.example.service.ChallengeService;
+import com.example.service.JoinService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,15 +38,42 @@ public class ChallengeRestController {
 
     @Autowired
     ChallengeService chgService;
+    
+    @Autowired
+    ChallengeRepository chgRepository;
+    
+    @Autowired
+    JoinService jService;
 
     @Value("${default.image}")
     String DEFAULT_IMAGE;
 
+    
+    // 생성자가 마지막으로 만든 첼린지 조회 테스트
+    // 127.0.0.1:9090/ROOT/api/challenge/testone?email='cc'
+    @RequestMapping(value = "/testone", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> testGET(
+    		@RequestParam(name = "email") String em){
+        Map<String, Object> map = new HashMap<>();
+    	try {
+    		ChallengeProjection chg = chgRepository.findTop1ByMemberchg_memailOrderByChgnoDesc(em);
+    		System.out.println(chg.toString());
+    		
+    		map.put("ressult", chg);
+			map.put("status", 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+    	return map;
+    }
+    
     // 챌린지 등록
     // 127.0.0.1:9090/ROOT/api/challenge/insert
     // headers => token:토큰
-    // form-data : {"chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
-    // "chgend" : yyyy-mm-dd 00:00:00, "recruitend" : yyyy-mm-dd 00:00:00, "chfee" : 10000 }
+    // form-data : "chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
+    // "chgend" : yyyy-mm-dd 00:00:00, "recruitend" : yyyy-mm-dd 00:00:00, "chfee" : 10000 
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertChallengePOST(
@@ -83,7 +114,7 @@ public class ChallengeRestController {
             chg.setChgcontent(chg1.getChgcontent());// 첼린지 내용
             chg.setChgfee(chg1.getChgfee()); 	// 첼린지 참가비
             
-            System.out.println("첼린지에 추가할 항목 : " + chg.toString());
+//            System.out.println("첼린지에 추가할 항목 : " + chg.toString());
 
             // 썸네일 수정 필요.
             // 썸네일
@@ -96,8 +127,24 @@ public class ChallengeRestController {
             System.out.println("DB에 추가됨 : " + ret);
             
             if (ret == 1) {
+            	// 첼린지 생성 시 생성자 참가
+            	JoinCHG join = new JoinCHG();
+            	join.setMemberchg(member);	// 참가하는 아이디(생성자)
             	
-                map.put("status", 200);
+            	// 생성자가 마지막으로 만든 첼린지 조회
+            	ChallengeProjection chgpro = chgRepository.findTop1ByMemberchg_memailOrderByChgnoDesc(memail);
+            	ChallengeCHG chg3 = new ChallengeCHG();
+            	chg3.setChgno(chgpro.getChgno());
+            	
+            	join.setChallengechg(chg3);	// 참가하는 첼린지 번호
+            	
+            	// 생성자 첼린지에 참여하기
+            	int ret1 = jService.challengeJoin(join);
+            	if (ret1 == 1) {
+					
+            		map.put("status", 200);
+				}
+            	
             }
             else {
 				map.put("status", 0);

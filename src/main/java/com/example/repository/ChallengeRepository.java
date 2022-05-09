@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,11 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     List<ChallengeCHG> findByChgregdateOrderByChgregdateDesc(Date chgregdate, Pageable page);
 
     
+    // 생성자가 마지막으로 만든 첼린지 조회
+    ChallengeProjection findTop1ByMemberchg_memailOrderByChgnoDesc(String em);
+    
+//    @Query(value = 
+//			"SELECT MAX(CHGNO) FROM CHALLENGECHG WHERE MEMAIL=:em", 
+//			nativeQuery = true)
+//    long selectLastChallenge(@Param(value = "em") String email);
 }
