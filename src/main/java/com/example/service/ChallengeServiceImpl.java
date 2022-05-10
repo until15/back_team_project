@@ -76,31 +76,54 @@ public class ChallengeServiceImpl implements ChallengeService {
         return null;
     }
 
+    // 난이도별 조회
+    @Override
+    public List<ChallengeCHG> levelSelectList(Pageable page, long chglevel) {
+        try {
+            List<ChallengeCHG> list = chgRepository.findByChglevelOrderByChglevelDesc(chglevel, page);
+            return list;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // 인기순 조회
+    @Override
+    public List<ChallengeCHG> likeSelectList(Pageable page, long chglike) {
+        try {
+            List<ChallengeCHG> list = chgRepository.findByChglikeOrderByChglikeDesc(chglike, page);
+            return list;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+        
+
     // 챌린지 시작
     @Override
     public int challengeStart(ChallengeCHG challenge) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     // 챌린지 종료
     @Override
     public int challengeEnd(ChallengeCHG challenge) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     // 챌린지 모집 시작
     @Override
     public int recruitStart(ChallengeCHG challenge) {
-        // TODO Auto-generated method stub
         return 0;
     }
     
     // 챌린지 모집 마감
     @Override
     public int recruitEnd(ChallengeCHG challenge) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -132,5 +155,6 @@ public class ChallengeServiceImpl implements ChallengeService {
             return 0;
         }
     }
-    
+
+
 }

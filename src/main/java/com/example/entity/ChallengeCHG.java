@@ -94,6 +94,9 @@ public class ChallengeCHG {
 	  
 	// 난이도
 	private Long chglevel = 1L;
+
+	// 루틴
+	private Long chgroutine;
 	
 	// 첼린지 생성한 사람
     @ManyToOne

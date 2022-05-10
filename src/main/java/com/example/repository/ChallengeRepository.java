@@ -28,9 +28,11 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     List<ChallengeCHG> findByChgtitleContainingOrderByChgnoDesc(String challenge, Pageable page);
     // 오류 도와준 다희씨 고마워요 . . . 2022/04/28
     
-    
     // 첼린지 인기 조회
     List<ChallengeCHG> findByChglikeOrderByChglikeDesc(long chglike, Pageable page);
+
+    // 챌린지 난이도별 조회
+    List<ChallengeCHG> findByChglevelOrderByChglevelDesc(long chglevel, Pageable page);
     
     // 첼린지 신규 조회
     List<ChallengeCHG> findByChgregdateOrderByChgregdateDesc(Date chgregdate, Pageable page);
