@@ -19,6 +19,12 @@ public interface ChallengeService {
     // 챌린지 목록 (페이지 1 2 3)
     public List<ChallengeCHG> challengeSelectList(Pageable page, String challenge);
 
+    // 챌린지 난이도별 조회
+    public List<ChallengeCHG> levelSelectList(Pageable page, long chglevel);
+
+    // 챌린지 인기순 조회
+    public List<ChallengeCHG> likeSelectList(Pageable page, long chglike);
+
     // 챌린지 수정
     public int challengeUpdateOne(ChallengeCHG challenge);
 
