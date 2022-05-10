@@ -12,6 +12,7 @@ import com.example.jwt.JwtUtil;
 import com.example.repository.PoseRepository;
 import com.example.service.PoseService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -54,8 +55,14 @@ public class poseRestController {
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
+            // 토큰에서 아이디 추출
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username"); 
+            System.out.println(email);
+
             int ret = pService.poseInsert(pose);
             if(ret == 1){
                 map.put("status", 200);
@@ -81,7 +88,12 @@ public class poseRestController {
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
-            PoseCHG pose1 = pService.poseSelectPrivate(username, pose.getPno());
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username"); 
+            System.out.println(email);
+
+            PoseCHG pose1 = pService.poseSelectPrivate(email, pose.getPno());
             pose1.setPname(pose.getPname());
             pose1.setPpart(pose.getPpart());
             pose1.setPcontent(pose.getPcontent());
@@ -160,8 +172,10 @@ public class poseRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
-            PoseCHG pose1 = pService.poseSelectPrivate(username, pose.getPno());
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            PoseCHG pose1 = pService.poseSelectPrivate(email, pose.getPno());
             pose1.setPstep(pose.getPstep());
             
             int ret = pService.poseDelete(pose1);
@@ -192,6 +206,11 @@ public class poseRestController {
             if(!file.isEmpty()){
                 String username = jwtUtil.extractUsername(token);
                 System.out.println(username);
+                // 추출된 결과값을 JSONObject 형태로 파싱
+                JSONObject jsonObject = new JSONObject(username);
+                String email = jsonObject.getString("username"); 
+                System.out.println(email);
+
                 PoseCHG poseCHG = new PoseCHG();
                 poseCHG.setPno(pno);
                 video.setPosechg(poseCHG);
@@ -277,10 +296,14 @@ public class poseRestController {
             if(!file.isEmpty()){
                 String username = jwtUtil.extractUsername(token);
                 System.out.println(username);
+                // 추출된 결과값을 JSONObject 형태로 파싱
+                JSONObject jsonObject = new JSONObject(username);
+                String email = jsonObject.getString("username"); 
+                System.out.println(email);
                 // pose 에서 pno 추출 
                 PoseCHG pose = pRepository.getById(pno);
                 // pno의 memail과 토큰에서 전달되는 meamil이 같은지 비교
-                if(username.equals(pose.getMemberchg().getMemail())){
+                if(email.equals(pose.getMemberchg().getMemail())){
                     VideoCHG videoCHG = pService.poseVideoSelectOne(vno);
                     videoCHG.setVtype(file.getContentType());
                     videoCHG.setVname(file.getOriginalFilename());
@@ -293,7 +316,6 @@ public class poseRestController {
                     }
 
                 }
-                map.put("status", 0);
             }
             
         } catch (Exception e) {
@@ -316,10 +338,14 @@ public class poseRestController {
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username"); 
+            System.out.println(email);
             // pose 에서 pno 추출 
             PoseCHG pose = pRepository.getById(pno);
             // pno의 memail과 토큰에서 전달되는 meamil이 같은지 비교
-            if(username.equals(pose.getMemberchg().getMemail())){
+            if(email.equals(pose.getMemberchg().getMemail())){
                 int ret = pService.poseVideoDelete(vno);
                 if(ret == 1){
                     map.put("status", 200);

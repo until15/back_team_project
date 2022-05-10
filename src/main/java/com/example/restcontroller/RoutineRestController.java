@@ -11,6 +11,7 @@ import com.example.jwt.JwtUtil;
 import com.example.repository.RoutineRepository;
 import com.example.service.RoutineService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -43,8 +44,13 @@ public class RoutineRestController {
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
+            // 토큰에서 아이디 추출
             String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
+
             List<RoutineCHG> list = new ArrayList<>();
             for(int i=0; i<routine.length; i++){
                 RoutineCHG obj = new RoutineCHG();
@@ -55,7 +61,7 @@ public class RoutineRestController {
                 obj.setPosechg(routine[i].getPosechg());
 
                 MemberCHG member = new MemberCHG();
-                member.setMemail(username);
+                member.setMemail(email);
                 obj.setMemberchg(member);
                 
                 list.add(obj);
@@ -85,10 +91,14 @@ public class RoutineRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
-            List<RoutineCHG> list = rService.RoutineSelectlist(username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
+
+            List<RoutineCHG> list = rService.RoutineSelectlist(email);
             for(int i=0; i<routine.length; i++){
-                if(username.equals(routine[i].getMemberchg().getMemail())){
+                if(email.equals(routine[i].getMemberchg().getMemail())){
                     RoutineCHG obj = new RoutineCHG();
                     obj.setRtnno(routine[i].getRtnno());
                     obj.setRtnday(routine[i].getRtnday());
@@ -125,8 +135,13 @@ public class RoutineRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
-            List<RoutineCHG> list = rService.RoutineSelectlist(username);
+            System.out.println("token : " + username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
+
+            List<RoutineCHG> list = rService.RoutineSelectlist(email);
             if(!list.isEmpty()){
                 map.put("status", 200);
                 map.put("result", list);
@@ -152,13 +167,16 @@ public class RoutineRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
 
             MemberCHG member = new MemberCHG();
-            member.setMemail(username);
+            member.setMemail(email);
             routine.setMemberchg(member);
 
-            if(username.equals(routine.getMemberchg().getMemail())){
+            if(email.equals(routine.getMemberchg().getMemail())){
                 int ret = rService.RoutineDelete(rtnno);
                 if(ret == 1){
                     map.put("status", 200);
