@@ -43,5 +43,7 @@ public interface ChallengeService {
     // 썸네일 이미지 수정하기
     public int challengeImageUpdate(ChallengeCHG challenge);
 
+    
+
 
 }
