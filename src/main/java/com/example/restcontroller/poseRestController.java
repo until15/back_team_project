@@ -10,6 +10,7 @@ import com.example.entity.PoseCHG;
 import com.example.entity.VideoCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.PoseRepository;
+import com.example.repository.VideoRepository;
 import com.example.service.PoseService;
 
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ public class poseRestController {
     @Autowired ResourceLoader resLoader;
     @Autowired PoseService pService;
     @Autowired PoseRepository pRepository;
+    @Autowired VideoRepository vRepository;
     
     @Autowired JwtUtil jwtUtil;
 
@@ -122,9 +124,16 @@ public class poseRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             PoseCHG pose = pService.poseSelectOne(pno);
+
+            // 수정 필요 비디오가 없는 자세는 조회가 안됨
+            VideoCHG videochg = vRepository.findByPosechg_pnoEquals(pno);
+            String video = new String();
+            video = "127.0.0.1:9090/ROOT/api/pose/video?no=" + videochg.getVno();
+
             if(pose != null){
                 map.put("status", 200);
                 map.put("result", pose);
+                map.put("videoUrl", video);
             }
             
         } catch (Exception e) {
@@ -137,7 +146,7 @@ public class poseRestController {
 
     // 자세 목록 (검색어 + 페이지네이션)
     // 127.0.0.1:9090/ROOT/api/pose/selectlist.json?page=1&title=
-    @RequestMapping(value="/selectlist.json", method = {RequestMethod.GET},
+    @RequestMapping(value="/selectlist.json", method = {RequestMethod.POST},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectlistGET(
         @RequestBody PoseCHG pose,
