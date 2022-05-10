@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class RtnRunNumDto {
 
-    private int num1;
+    private int[] num1;
 
-    private List<Integer> num;
+    // private List<Integer> num;
 
 }
