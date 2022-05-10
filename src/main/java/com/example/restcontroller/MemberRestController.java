@@ -12,6 +12,7 @@ import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
 import com.example.service.UserDetailsServiceImpl;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -94,35 +95,37 @@ public class MemberRestController {
 			@RequestBody MemberCHG member) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(member.toString());	// 들어오는 값 확인
+			// System.out.println(member.toString()); // 들어오는 값 확인
 
 			// Security 인증
 			UserDetails user = userDetailsService.loadUserByUsername(member.getMemail());
-			System.out.println("유저 아이디 : " + user);
+			// System.out.println("유저 아이디 : " + user);
 
 			// 비밀번호 암호화
 			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
-			System.out.println("비밀번호 암호화: " + bcpe.toString());
+			// System.out.println("비밀번호 암호화: " + bcpe.toString());
 
 			// 로그인 아이디로 멤버 조회
 			MemberCHG member1 = mRepository.findById(member.getMemail()).orElse(null);
-			System.out.println("멤버 조회 : " + member1.toString());
-			
-			
-			// long 타입의 mrank를 string 으로 변환
-			String rank = member1.getMrank().toString();
-			
-			// 토큰 발급
-			System.out.println("토큰 발급: " + jwtUtil.generatorToken(member.getMemail(), member1.getMrole(), rank));
+			// System.out.println("멤버 조회 : " + member1.toString());
+			if (member1.getMstep() == 0) {
 
-			// 유저의 암호와 입력한 암호가 일치하는 지 확인
-			if (bcpe.matches(member.getMpw(), user.getPassword())) {
-				
+				// long 타입의 mrank를 string 으로 변환
+				String rank = member1.getMrank().toString();
+
 				// 토큰 발급
-				String token = jwtUtil.generatorToken(member.getMemail(), member1.getMrole(), rank);
-				
-				map.put("token", token);
-				map.put("status", 200);
+				// System.out.println("토큰 발급: " + jwtUtil.generatorToken(member.getMemail(),
+				// member1.getMrole(), rank));
+
+				// 유저의 암호와 입력한 암호가 일치하는 지 확인
+				if (bcpe.matches(member.getMpw(), user.getPassword())) {
+
+					// 토큰 발급
+					String token = jwtUtil.generatorToken(member.getMemail(), member1.getMrole(), rank);
+
+					map.put("token", token);
+					map.put("status", 200);
+				}
 			}
 
 		} catch (Exception e) {
@@ -143,7 +146,13 @@ public class MemberRestController {
 		Map<String, Object> map = new HashMap<>();
 
 		try {
-			String username = jwtUtil.extractUsername(token);
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String username = jsonObject.getString("username");
+
 			System.out.println(username);
 			MemberCHG member1 = mService.MemberSelectOne(username);
 			// 닉네임
@@ -188,7 +197,14 @@ public class MemberRestController {
 		System.out.println(member.toString());
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String username = jwtUtil.extractUsername(token);
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String username = jsonObject.getString("username");
+
+			System.out.println(username);
 			UserDetails user = userDetailsService.loadUserByUsername(username);
 
 			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
@@ -215,7 +231,13 @@ public class MemberRestController {
 			@RequestBody MemberCHG member) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String username = jwtUtil.extractUsername(token);
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String username = jsonObject.getString("username");
+
 			System.out.println(username);
 			MemberCHG member1 = mService.MemberSelectOne(username);
 			member1.setMstep(member.getMstep());
@@ -242,7 +264,13 @@ public class MemberRestController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 
-			String username = jwtUtil.extractUsername(token);
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String username = jsonObject.getString("username");
+
 			System.out.println(username);
 
 			MemberCHG member1 = mService.MemberSelectOne(username);

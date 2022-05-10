@@ -15,6 +15,7 @@ import com.example.service.CommentService;
 import com.example.service.CommuniryService;
 import com.example.service.UserDetailsServiceImpl;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,8 +60,14 @@ public class CommunityRestController {
         Map<String, Object> map = new HashMap<>();
 
         // 토큰에서 이메일 추출
-        String memail = jwtUtil.extractUsername(token);
+        String userSubject = jwtUtil.extractUsername(token);
+        System.out.println("토큰에 담긴 전보 : " + userSubject);
 
+        // 추출된 결과값을 JSONObject 형태로 파싱
+        JSONObject jsonObject = new JSONObject(userSubject);
+        String memail = jsonObject.getString("username");
+
+        System.out.println(memail);
         // 회원엔티티 객체 생성 및 이메일 추가
         MemberCHG member = new MemberCHG();
         member.setMemail(memail);
@@ -149,7 +156,13 @@ public class CommunityRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+
             System.out.println(username);
 
             int ret = cService.boardDeleteOne(bno);
@@ -173,7 +186,13 @@ public class CommunityRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+
             System.out.println(username);
 
             CommunityCHG community1 = cService.boardSelectOne(bno);
