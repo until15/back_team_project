@@ -138,9 +138,8 @@ public class MemberRestController {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> updateMemberPUT(@RequestHeader(name = "token") String token,
-			@RequestParam(name = "mimage") MultipartFile file, @ModelAttribute MemberCHG member)
+			@RequestParam(name = "mimage", required = false) MultipartFile file, @ModelAttribute MemberCHG member)
 			throws IOException {
-		System.out.println("============================================" + file);
 		Map<String, Object> map = new HashMap<>();
 
 		try {
@@ -159,10 +158,14 @@ public class MemberRestController {
 			member1.setMweight(member.getMweight());
 
 			// // 이미지
-			member1.setMpname(file.getOriginalFilename());
-			member1.setMprofile(file.getBytes());
-			member1.setMpsize(file.getSize());
-			member1.setMptype(file.getContentType());
+			if (file != null) {
+				if (!file.isEmpty()) {
+					member1.setMpname(file.getOriginalFilename());
+					member1.setMprofile(file.getBytes());
+					member1.setMpsize(file.getSize());
+					member1.setMptype(file.getContentType());
+				}
+			}
 
 			int ret = mService.MemberUpdate(member1);
 			if (ret == 1) {
@@ -186,7 +189,8 @@ public class MemberRestController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String username = jwtUtil.extractUsername(token);
-			UserDetails user = userDetailsService.loadUserByUsername(member.getMemail());
+			UserDetails user = userDetailsService.loadUserByUsername(username);
+
 			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 			// 함호화 되지 않는 것과 암호화 된것 비교하기
 			if (bcpe.matches(member.getMpw(), user.getPassword())) {
@@ -213,7 +217,7 @@ public class MemberRestController {
 		try {
 			String username = jwtUtil.extractUsername(token);
 			System.out.println(username);
-			MemberCHG member1 = mService.MemberSelectOne(member.getMemail());
+			MemberCHG member1 = mService.MemberSelectOne(username);
 			member1.setMstep(member.getMstep());
 
 			int ret = mService.MemberLeave(member1);
