@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.RtnRunCHG;
-import com.example.entity.RtnRunNumDto;
 import com.example.jwt.JwtUtil;
 import com.example.repository.RoutineRepository;
 import com.example.repository.RtnRunRepository;
@@ -80,14 +79,19 @@ public class RtnRunRestController {
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
+            // runseq로 조회
+            List<RtnRunCHG> routine = rrRepository.findByRunseqEqualsOrderByRunnoDesc(runseq);
             List<RtnRunCHG> list = rrService.RtnRunSelectlist(runseq);
-            for (int i = 0; i < run.length; i++) {
-                RtnRunCHG obj = new RtnRunCHG();
-                obj.setRunno(run[i].getRunno());
-                obj.setRoutinechg(run[i].getRoutinechg());
-
-                list.add(obj);
-                System.out.println(list);
+            // rtnno -> routine의 memail과 동일한 지 비교
+            if(username.equals(routine.get(0).getRoutinechg().getMemberchg().getMemail())){
+                for (int i = 0; i < run.length; i++) {
+                    RtnRunCHG obj = new RtnRunCHG();
+                    obj.setRunno(run[i].getRunno());
+                    obj.setRoutinechg(run[i].getRoutinechg());
+    
+                    list.add(obj);
+                    // System.out.println(list);
+                }                
             }
             int ret = rrService.RtnRunUpdate(list);
             if (ret == 1) {
@@ -131,23 +135,23 @@ public class RtnRunRestController {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineDeleteDELETE(
             @RequestHeader(name = "token") String token,
-            // @RequestParam(name = "no") Long[] runno,
-            @RequestBody RtnRunNumDto num) {
+            @RequestParam(name="no") Long[] runno
+            ) {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
             System.out.println(username);
 
-            // List로 변환
-            List<Integer> arr = num.getNum();
-            System.out.println("=====================" + arr);
+            // // List로 변환
+            // List<Integer> arr = num.getNum();
+            // System.out.println("=====================" + arr);
 
             // 루틴 실행 번호 추출
-            List<RtnRunCHG> rtnRun = rrRepository.findByRunnoIn(arr);
-            System.out.println(rtnRun);
+            // List<RtnRunCHG> rtnRun = rrRepository.findByRunnoIn(arr);
+            // System.out.println(rtnRun);
 
             // List<RtnRunCHG> rtnRun = rrRepository.findRtnRunCHGsIn(runno);
-            // System.out.println("=======================" + a);
+            // System.out.println("=======================" + runno);
 
             // if
             // (username.equals(rtnRun.get(0).getRoutinechg().getMemberchg().getMemail())) {
@@ -156,6 +160,11 @@ public class RtnRunRestController {
             // map.put("status", 200);
             // }
             // }
+
+            int ret = rrService.RtnRunDelete(runno);
+            if (ret == 1) {
+            map.put("status", 200);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

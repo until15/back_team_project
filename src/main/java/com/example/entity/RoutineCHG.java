@@ -56,14 +56,14 @@ public class RoutineCHG {
   private PoseCHG posechg;
 
   // 멤버 테이블
-  @JsonBackReference
+  @JsonBackReference(value="member")
   @ManyToOne
   @JoinColumn(name = "memail")
   private MemberCHG memberchg;
 
   // 루틴 실행 테이블 (cascade 설정)
   @OneToMany(mappedBy = "routinechg", cascade = CascadeType.REMOVE)
-  @JsonBackReference
+  @JsonBackReference(value="rtnrun")
   private List<RtnRunCHG> rtnrunchgList = new ArrayList<>();
   
 }
