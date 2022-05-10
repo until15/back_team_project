@@ -52,4 +52,7 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     		nativeQuery = true)
     int increaseCnt(@Param(value="no") long chgno);
     
+    
+    // 첼린지 번호로 1개 조회
+    ChallengeProjection findByChgno(long chgno);
 }

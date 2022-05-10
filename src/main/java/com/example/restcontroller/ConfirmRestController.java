@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.ChallengeProjection;
 import com.example.entity.ConfirmCHG;
 import com.example.entity.ConfirmProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.ChallengeRepository;
 import com.example.repository.JoinRepository;
 import com.example.service.ConfirmService;
 
@@ -36,6 +38,7 @@ public class ConfirmRestController {
 	@Autowired JwtUtil jwtUtil;
 	@Autowired JoinRepository jRepository;
 	@Autowired ConfirmService cfService;
+	@Autowired ChallengeRepository chgRepository;
 	
 	// 인증하기
 	// 127.0.0.1:9090/ROOT/api/confirm/insert.json?jno=
@@ -65,7 +68,7 @@ public class ConfirmRestController {
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
 	        
-	        System.out.println(email);
+//	        System.out.println(email);
 			
 			// Confirm 엔티티에 회원정보를 담기 위해 아이디를 Member 엔티티에 넣어서 사용
 			MemberCHG member = new MemberCHG();
@@ -431,12 +434,119 @@ public class ConfirmRestController {
 	}
 	
 	
-	// 인증 성공 여부 판별하기
+	// 생성자가 인증 성공 여부 판별하기
+	// 127.0.0.1:9090/ROOT/api/confirm/whethercfm.json?chgno=&cfno=
+	// Headers -> token :
+	// Body -> {"cfsuccess" : "1"}
+	@RequestMapping(value="/whethercfm.json", 
+			method = {RequestMethod.PUT},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> whethersuccessPUT(
+			@RequestParam(name = "chgno") long chgno,
+			@RequestParam(name = "cfno") long cfno,
+			@RequestHeader(name = "token") String token,
+			@RequestBody ConfirmCHG confirm){
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(chgno);	// 첼린지 번호
+			System.out.println(token);	// 토큰
+			System.out.println(cfno); 	// 인증글 번호
+			System.out.println(confirm);	// 성공 여부
+			
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 	
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");	// 로그인 한 아이디
+	        
+	        System.out.println("토큰에서 아이디 추출 : " + email);
+			
+	        // 번호로 해당 첼린지 조회
+			ChallengeProjection chg = chgRepository.findByChgno(chgno);
+//			System.out.println("생성자 아이디 : " + chg.getMemberchgMemail());	// 첼린지 생성자
+			
+			// 생성자와 회원이 동일 할 때
+			if (chg.getMemberchgMemail().equals(email)) {
+				
+				// 인증 번호로 조회
+				ConfirmCHG cfm = cfService.selectSuccessOne(cfno);
+				System.out.println("인증글 조회 : " + cfm);
+				
+				cfm.setCfsuccess(confirm.getCfsuccess()); 	// 성공 여부
+				
+				int ret = cfService.updateOneConfirm(cfm);
+				if (ret == 1) {	
+					map.put("status", 200);
+				}
+			}
+			else {	
+				map.put("status", 0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
 	
 	
 	// 성공 유무 별로 조회하기 (첼린지 생성자 권한)
+	// 127.0.0.1:9090/ROOT/api/confirm/selectsuccess.json?chgno=&cfsuccess=&page=
+	// Headers => token :
+	@RequestMapping(value="/selectsuccess.json", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> selectSuccessGET(
+			@RequestParam(name = "chgno") long chgno,
+			@RequestHeader(name = "token") String token,
+			@RequestParam(name = "cfsuccess") int cfsuccess,
+			@RequestParam(name = "page", defaultValue = "1") int page){	// 페이지네이션
+		
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(chgno);	// 첼린지 번호
+			System.out.println(token);	// 토큰
+			System.out.println(cfsuccess); 	// 성공 유무
+			System.out.println(page); 	// 페이지
+			
+			// 페이지네이션(시작페이지(0부터), 갯수)
+			PageRequest pageRequest = PageRequest.of(page-1, 5);
+			System.out.println("페이지네이션 : " + pageRequest);
+			
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 	
-	
+			// 추출된 결과값을 JSONObject 형태로 파싱
+	        JSONObject jsonObject = new JSONObject(userSubject);
+	        String email = jsonObject.getString("username");	// 로그인 한 아이디
+	        
+	        System.out.println("토큰에서 아이디 추출 : " + email);
+			
+	        // 번호로 해당 첼린지 조회
+ 			ChallengeProjection chg = chgRepository.findByChgno(chgno);
+	        
+	        // 생성자와 회원이 동일 할 때
+			if (chg.getMemberchgMemail().equals(email)) {
+				List<ConfirmProjection> list = cfService.whetherSuccessCFM(chgno, cfsuccess, pageRequest);
+				if (!list.isEmpty()) {
+					map.put("result", list);
+					map.put("status", 200);					
+				}
+			}
+			else {
+				map.put("status", 0);				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
 	
 }

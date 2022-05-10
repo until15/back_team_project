@@ -39,4 +39,10 @@ public interface ConfirmService {
 	// 내가 쓴 인증글 첼린지 별로 조회
 	public List<ConfirmProjection> myConfirmFromChallenge(long no, String email, Pageable page);
 	
+	// 인증글 한개 조회(성공 여부 판별용)
+	public ConfirmCHG selectSuccessOne(long no);
+	
+	// 성공 유무 별로 인증글 조회 (페이지네이션)
+	public List<ConfirmProjection> whetherSuccessCFM(long chgno, int no, Pageable page);
+	
 }

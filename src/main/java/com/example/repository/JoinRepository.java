@@ -14,7 +14,7 @@ import com.example.entity.JoinSelectOne;
 @Repository
 public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
 
-	// 첼린지 1개 조회
+	// 참가 1개 조회
 	JoinProjection findByJno(Long no);
 
 	// 첼린지 번호와 아이디가 동시에 일치하는 항목 조회
