@@ -56,7 +56,7 @@ public class BimgRestController {
     public Map<String, Object> insertPSOT(
             @RequestParam(name = "file", required = false) MultipartFile file,
             @RequestHeader(name = "token") String token, @RequestParam(name = "bno") long bno) {
-        System.out.println(file.getOriginalFilename());
+
         System.out.println(token);
         System.out.println("===================================" + bno);
         Map<String, Object> map = new HashMap<>();
@@ -100,8 +100,6 @@ public class BimgRestController {
             @RequestParam(name = "bimgno") long bimgno) throws IOException {
         try {
             BimgCHG bimgCHG = bService.selectOneimage(bimgno);
-            System.out.println(bimgCHG.getBimgtype());
-            System.out.println(bimgCHG.getBimage().length);
 
             if (bimgCHG.getBimgsize() > 0) {
                 HttpHeaders header = new HttpHeaders();
