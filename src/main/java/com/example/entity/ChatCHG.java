@@ -50,8 +50,13 @@ public class ChatCHG {
     @JoinColumn(name = "chgno")
     private ChallengeCHG challengechg;
     
-    // 회원테이블
+    // 회원테이블(발신)
     @ManyToOne
-    @JoinColumn(name = "memail")
-    private MemberCHG memberchg;
+    @JoinColumn(name = "sndmember")
+    private MemberCHG sendmember;
+
+    // 회원테이블(수신)
+    @ManyToOne
+    @JoinColumn(name = "rcvmember")
+    private MemberCHG receivemember;
 }
