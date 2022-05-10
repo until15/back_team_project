@@ -36,6 +36,7 @@ public class JwtUtil {
         jsonObject.put("userrank", userrank);
         
         System.out.println("토큰 정보 객체화 : " + jsonObject);
+        System.out.println("날짜 정보 : " + new Date(System.currentTimeMillis()));
         
         String token = Jwts.builder()
                 .setClaims(map)

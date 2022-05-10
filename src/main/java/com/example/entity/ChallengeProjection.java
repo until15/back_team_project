@@ -8,6 +8,9 @@ public interface ChallengeProjection {
 	// 첼린지 번호
 	Long getChgno();
 	
+	// 첼린지 난이도
+	Long getChglevel();
+	
 	// 회원 아이디
 	@Value("#{target.memberchg.memail}")
 	String getMemberchgMemail();
