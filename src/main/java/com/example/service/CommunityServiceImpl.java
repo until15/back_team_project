@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.CommunityCHG;
+import com.example.entity.CommunityCHGProjection;
 import com.example.repository.CommunityRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class CommunityServiceImpl implements CommuniryService {
     }
 
     @Override
-    public List<CommunityCHG> selectBoardList(Pageable page, String btitle) {
+    public List<CommunityCHGProjection> selectBoardList(Pageable page, String btitle) {
         try {
-            List<CommunityCHG> list = cRepository.findByBtitleContainingOrderByBnoDesc(btitle, page);
+            List<CommunityCHGProjection> list = cRepository.findByBtitleContainingOrderByBnoDesc(btitle, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();

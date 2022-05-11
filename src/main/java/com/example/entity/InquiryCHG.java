@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -49,12 +50,12 @@ public class InquiryCHG {
     private MemberCHG memberchg;
 
     // 문의 사진 테이블
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "inquirychg", cascade = CascadeType.REMOVE)
     private List<InquiryimgCHG> inquiryimgchgList = new ArrayList<>();
 
     // 문의 댓글 테이블
-    // @JsonBackReference
-    // @OneToMany(mappedBy = "inquirychg", cascade = CascadeType.REMOVE)
-    // private List<IqcommentCHG> iqcommentchgList = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "inquirychg", cascade = CascadeType.REMOVE)
+    private List<IqcommentCHG> iqcommentchgList = new ArrayList<>();
 }

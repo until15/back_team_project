@@ -16,6 +16,6 @@ public interface CommunityCHGProjection {
     Date getBregdate();
 
     @Value("#{target.memberchg.memail}")
-    String getMemberchgMemail();
+    String getMemail();
 
 }

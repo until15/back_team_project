@@ -28,7 +28,7 @@ public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
-    List<CommunityCHG> findByBtitleContainingOrderByBnoDesc(String btitle, Pageable page);
+    List<CommunityCHGProjection> findByBtitleContainingOrderByBnoDesc(String btitle, Pageable page);
 
     @Transactional
     @Modifying(clearAutomatically = true)

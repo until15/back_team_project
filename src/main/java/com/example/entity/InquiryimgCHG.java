@@ -12,6 +12,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -42,7 +44,13 @@ public class InquiryimgCHG {
     @Column(name = "QIMGREGDATE")
     private Date qimgregdate;
 
+    // 회원테이블
+    @ManyToOne
+    @JoinColumn(name = "memail")
+    private MemberCHG memberchg;
+
     // 문의 테이블
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "qno")
     private InquiryCHG inquirychg;

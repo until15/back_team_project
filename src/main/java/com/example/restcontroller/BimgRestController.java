@@ -69,12 +69,17 @@ public class BimgRestController {
             bimg.setCommunitychg(community);
 
             String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 전보 : " + userSubject);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
-            System.out.println(username);
+            // System.out.println(username);
+
+            MemberCHG member = new MemberCHG();
+            member.setMemail(username);
+            // 게시판 엔티티에 추가
+            bimg.setMemberchg(member);
 
             if (file != null) {
                 if (!file.isEmpty()) {
