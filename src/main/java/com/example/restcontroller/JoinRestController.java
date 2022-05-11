@@ -185,29 +185,33 @@ public class JoinRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(state);
-			System.out.println(token);
-			System.out.println(page);
+//			System.out.println(state);
+//			System.out.println(token);
+//			System.out.println(page);
 			
 			// 페이지네이션
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println(pageRequest);
+//			System.out.println(pageRequest);
 			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
 	        
-	        System.out.println(email);
+//	        System.out.println(email);
 			
 			// 아이디, 진행 상태, 페이지네이션으로 조회
 			List<JoinProjection> list = jService.joinStateList(email, state, pageRequest);
-			System.out.println(list);
+//			System.out.println(list);
+			
+			long total = jService.selectStateCount(email, state);
+//			System.out.println(total);
 			
 			if(!list.isEmpty()) {
+				map.put("pages", (total-1)/5+1);
 				map.put("result", list);
 				map.put("status", 200);				
 			}
@@ -315,7 +319,7 @@ public class JoinRestController {
 	
 	
 	// 내가 참여했던 첼린지 전체 조회 (페이지네이션)
-	// 127.0.0.1:9090/ROOT/api/join/selectlist
+	// 127.0.0.1:9090/ROOT/api/join/selectlist?page=&title=
 	// Headers => token : 
 	@RequestMapping(value="/selectlist", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -329,29 +333,41 @@ public class JoinRestController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 //			System.out.println(token);
-			System.out.println("페이지 확인" + page);
-			System.out.println("제목으로 검색 : " + title);
+//			System.out.println("페이지 확인" + page);
+//			System.out.println("제목으로 검색 : " + title);
 			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
 	        
-	        System.out.println(email);
+//	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println("페이지네이션 : " + pageRequest);
+//			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 사용자가 참여한 첼린지 검색+페이지네이션 조회 
 			List<JoinProjection> list =jService.joinChallengeAllList(email, title, pageRequest);
+//			System.out.println(list);
 			
-			System.out.println(list);
+			// 검색어가 포함된 항목의 갯수
+			// 페이지네이션 계산
+			long total = jService.selectCount(email, title);
+//			System.out.println(total);
+//			System.out.println((total-1)/5+1);
+			
+			// 7 -> 2
+			// 10 -> 2
+			// 8 -> 2
+			// 3 -> 1
+			// 11 -> 3
 			
 			if(!list.isEmpty()) {
+				map.put("pages", (total-1)/5+1);
 				map.put("result", list);
 				map.put("status", 200);				
 			}

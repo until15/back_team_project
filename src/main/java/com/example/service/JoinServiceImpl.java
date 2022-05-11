@@ -109,6 +109,28 @@ public class JoinServiceImpl implements JoinService{
 		}
 	}
 
+	// 검색어가 포함된 항목의 갯수
+	@Override
+	public long selectCount(String email, String title) {
+		try {
+			return jRepository.countByMemberchg_memailAndChallengechg_chgtitleContaining(email, title);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	// 진행 상태 별 참가 갯수
+	@Override
+	public long selectStateCount(String memail, int state) {
+		try {
+			return jRepository.countByMemberchg_memailAndChgstate(memail, state);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
 	
 	
 }
