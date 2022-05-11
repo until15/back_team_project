@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
+import com.example.entity.BimgCHGProjection;
 import com.example.entity.CommunityCHG;
+import com.example.entity.CommunityCHGProjection;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.BimgRepository;
+import com.example.repository.CommunityRepository;
 import com.example.service.BimgService;
 import com.example.service.CommuniryService;
 
@@ -38,6 +41,9 @@ public class BimgRestController {
 
     @Autowired
     BimgRepository bRepository;
+
+    @Autowired
+    CommunityRepository cRepository;
 
     @Autowired
     BimgService bService;
@@ -226,16 +232,19 @@ public class BimgRestController {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> imgDELETE(@RequestParam(name = "bimgno") long bimgno,
             @RequestHeader(name = "token") String token) {
+
         Map<String, Object> map = new HashMap<>();
         try {
 
             String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 전보 : " + userSubject);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
-            System.out.println(username);
+            // System.out.println(username);
+
+            // 게시판 번호 불러옴
 
             int ret = bService.deleteBimgOne(bimgno);
             if (ret == 1) {
