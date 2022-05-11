@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.entity.MemberCHGProjection;
 import com.example.entity.PoseCHG;
 import com.example.entity.VideoCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.MemberRepository;
 import com.example.repository.PoseRepository;
+import com.example.repository.VideoRepository;
 import com.example.service.PoseService;
 
 import org.json.JSONObject;
@@ -38,6 +41,8 @@ public class poseRestController {
     @Autowired ResourceLoader resLoader;
     @Autowired PoseService pService;
     @Autowired PoseRepository pRepository;
+    @Autowired VideoRepository vRepository;
+    @Autowired MemberRepository mRepository;
     
     @Autowired JwtUtil jwtUtil;
 
@@ -80,7 +85,7 @@ public class poseRestController {
     // {"pname":"aaa2", "ppart" : "bbb2", "pcontent" : "ccc2", "plevel" : 1, "memberchg":{"memail":"a@a.com"}, "pno" : 1}
     @RequestMapping(value="/update.json", method = {RequestMethod.PUT},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> poseUpdatePOST(
+    public Map<String, Object> poseUpdatePUT(
         @RequestHeader(name="token") String token,
         @RequestBody PoseCHG pose
     ){  
@@ -98,7 +103,6 @@ public class poseRestController {
             pose1.setPpart(pose.getPpart());
             pose1.setPcontent(pose.getPcontent());
             pose1.setPlevel(pose.getPlevel());
-            pose1.setMemberchg(pose.getMemberchg());
             
             int ret = pService.poseUpdate(pose1);
             if(ret == 1){
@@ -117,16 +121,51 @@ public class poseRestController {
     @RequestMapping(value="/selectone.json", method = {RequestMethod.GET},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectoneGET(
+        @RequestHeader(name="token", required = false) String token,
         @RequestParam(name="pno") long pno
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
-            PoseCHG pose = pService.poseSelectOne(pno);
-            if(pose != null){
-                map.put("status", 200);
-                map.put("result", pose);
+            // 로그인
+            if(token != null){
+                String username = jwtUtil.extractUsername(token);
+                // 추출된 결과값을 JSONObject 형태로 파싱
+                JSONObject jsonObject = new JSONObject(username);
+                String email = jsonObject.getString("username");
+                System.out.println(email);
+    
+                MemberCHGProjection member = mRepository.findByMemail(email);
+                map.put("userEmail", member);
+                PoseCHG pose = pService.poseSelectOne(pno);
+                if(pose != null){
+                    map.put("status", 200);
+                    map.put("result", pose);
+                    map.put("videoUrl", null);
+                }
+                VideoCHG videochg = vRepository.findByPosechg_pnoEquals(pno);
+                String video = new String();
+                video = "/ROOT/api/pose/video?no=" + videochg.getVno();
+                if(video != null){
+                    map.put("videoUrl", video);
+                }
+
             }
-            
+            // 비회원
+            else{
+                PoseCHG pose = pService.poseSelectOne(pno);
+                if(pose != null){
+                    map.put("status", 200);
+                    map.put("result", pose);
+                    map.put("videoUrl", null);
+                }
+                VideoCHG videochg = vRepository.findByPosechg_pnoEquals(pno);
+                String video = new String();
+                video = "/ROOT/api/pose/video?no=" + videochg.getVno();
+                if(video != null){
+                    map.put("videoUrl", video);
+                }
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
@@ -134,10 +173,9 @@ public class poseRestController {
         return map;
     }
 
-
     // 자세 목록 (검색어 + 페이지네이션)
     // 127.0.0.1:9090/ROOT/api/pose/selectlist.json?page=1&title=
-    @RequestMapping(value="/selectlist.json", method = {RequestMethod.GET},
+    @RequestMapping(value="/selectlist.json", method = {RequestMethod.POST},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectlistGET(
         @RequestBody PoseCHG pose,
