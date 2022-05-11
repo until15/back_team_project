@@ -69,7 +69,7 @@ public class ChallengeRestController {
         value    = "/testone", 
         method   = { RequestMethod.GET }, 
         consumes = { MediaType.ALL_VALUE }, 
-        produces = {MediaType.APPLICATION_JSON_VALUE })
+        produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> testGET(
     		@RequestParam(name = "email") String em){
         Map<String, Object> map = new HashMap<>();
@@ -95,7 +95,7 @@ public class ChallengeRestController {
         value    = "/insert", 
         method   = { RequestMethod.POST }, 
         consumes = { MediaType.ALL_VALUE }, 
-        produces = {MediaType.APPLICATION_JSON_VALUE })
+        produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertChallengePOST(
     		@ModelAttribute ChallengeCHG chg1,	// 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
@@ -108,7 +108,7 @@ public class ChallengeRestController {
 
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 전보 : " + userSubject);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
@@ -121,7 +121,6 @@ public class ChallengeRestController {
             MemberCHG member = new MemberCHG();
             member.setMemail(email);
             
-
             ChallengeCHG chg = new ChallengeCHG();
             
             // 챌린지 생성일 = 모집 시작일
@@ -132,17 +131,15 @@ public class ChallengeRestController {
             chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
             chg.setChgstart(chg1.getRecruitend());   // 챌린지 시작일 = 모집 마감일
             chg.setChgend(chg1.getChgend()); 	     // 챌린지 종료일 (임의 지정)
-            
-            chg.setMemberchg(member);	             // 첼린지 생성자
-            
             chg.setChgtitle(chg1.getChgtitle());	 // 첼린지 제목
             chg.setChgintro(chg1.getChgintro()); 	 // 첼린지 소개글
             chg.setChgcontent(chg1.getChgcontent()); // 첼린지 내용
             chg.setChgfee(chg1.getChgfee()); 	     // 첼린지 참가비
             chg.setChglevel(chg1.getChglevel());     // 챌린지 레벨
+            chg.setMemberchg(member);	             // 첼린지 생성자
+
 
             // 루틴
-            
             // RtnRunCHG rtn = new RtnRunCHG(); 
             // RtnSeqCHG rtn = new RtnSeqCHG();
             // RtnSeqCHG routine = rtnService.RtnRunSelectlist(runseq);
@@ -160,11 +157,6 @@ public class ChallengeRestController {
                         
             int ret = chgService.insertChallengeOne(chg);
             System.out.println("DB에 추가됨 : " + ret);
-            
-            
-            
-          
-
             
             if (ret == 1) {
             	// 첼린지 생성 시 생성자 참가
@@ -184,13 +176,11 @@ public class ChallengeRestController {
             	if (ret1 == 1) {
 					
             		map.put("status", 200);
-				}
-            	
+				}      	
             }
             else {
 				map.put("status", 0);
 			}
-
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", -1);
@@ -203,8 +193,8 @@ public class ChallengeRestController {
     // {"chgno" : 1, "chgtitle" : "aaa2", "chgintro" : "bbb2", "chgcontent" :
     // "ccc2"}
     @RequestMapping(
-        value = "/updateone", 
-        method = { RequestMethod.PUT }, 
+        value    = "/updateone", 
+        method   = { RequestMethod.PUT }, 
         consumes = { MediaType.ALL_VALUE }, 
         produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateChallengePUT(
@@ -253,8 +243,8 @@ public class ChallengeRestController {
     // 챌린지 삭제
     // 127.0.0.1:9090/ROOT/api/challenge/delete?chgno=1
     @RequestMapping(
-        value = "/delete", 
-        method = { RequestMethod.DELETE }, 
+        value    = "/delete", 
+        method   = { RequestMethod.DELETE }, 
         consumes = { MediaType.ALL_VALUE }, 
         produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> deleteChallengeDELETE(
@@ -332,7 +322,7 @@ public class ChallengeRestController {
                 map.put("status", 200);
                 map.put("result", list);
             }
-
+    
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);

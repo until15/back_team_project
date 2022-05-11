@@ -11,6 +11,7 @@ import com.example.jwt.JwtUtil;
 import com.example.service.BookMarkService;
 import com.example.service.ChallengeService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,12 +49,17 @@ public class BookMarkRestController {
         @RequestParam(name = "chgno") long chgno ){  
         Map<String, Object> map = new HashMap<>();
         try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(email);
 
             // 챌린지 조회
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
@@ -63,7 +69,7 @@ public class BookMarkRestController {
             bookmark.setMemberchg(member);
 
             // 중복 확인
-            BookMarkCHG duplicate = bmkService.duplicateInsert(chgno, memail);
+            BookMarkCHG duplicate = bmkService.duplicateInsert(chgno, email);
             if(duplicate == null) {
                 int ret = bmkService.insertBookMark(bookmark);
                 if (ret == 1) {
@@ -98,12 +104,17 @@ public class BookMarkRestController {
             System.out.println("북마크 번호 : "+bmkno);
         Map<String, Object> map = new HashMap<>();
         try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
 
             // 멤버 엔티티 
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(email);
 
             int ret = bmkService.deleteBookMark(bmkno);
             if(ret == 1) {
@@ -131,12 +142,17 @@ public class BookMarkRestController {
         @RequestParam(name = "bmkno") long bmkno ){
         Map<String, Object> map = new HashMap<>();
         try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(email);
 
             BookMarkCHG bookmark = bmkService.bookmarkSelectOne(bmkno);
             System.out.println("북마크 번호 : " + bmkno);
@@ -167,10 +183,16 @@ public class BookMarkRestController {
         System.out.println("토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
-            String memail = jwtUtil.extractUsername(token);
-            System.out.println("토큰 : " + token);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
+
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<BookMarkCHG> list = bmkService.bookmarkSelectList(pageable, memail);
+            List<BookMarkCHG> list = bmkService.bookmarkSelectList(pageable, email);
             if(list != null){
                 map.put("status", 200);
                 map.put("result", list);

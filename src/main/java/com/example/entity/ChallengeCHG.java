@@ -31,8 +31,7 @@ public class ChallengeCHG {
 
 	// 챌린지번호
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-		generator = "SEQ_CHG_NO")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CHG_NO")
 	private Long chgno;
 	  
 	// 제목
@@ -96,7 +95,7 @@ public class ChallengeCHG {
 	private Long chglevel = 1L;
 
 	// 루틴
-	private Long chgroutine;
+	//private Long chgroutine;
 	
 	// 첼린지 생성한 사람
     @ManyToOne
