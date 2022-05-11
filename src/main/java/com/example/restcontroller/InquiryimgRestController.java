@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.example.entity.InquiryCHG;
 import com.example.entity.InquiryimgCHG;
+import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.service.InquiryimgService;
 
@@ -63,6 +64,11 @@ public class InquiryimgRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
             // System.out.println(username);
+
+            MemberCHG member = new MemberCHG();
+            member.setMemail(username);
+            // 게시판 엔티티에 추가
+            inquiryimg.setMemberchg(member);
 
             if (file != null) {
                 if (!file.isEmpty()) {

@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.CommunityCHG;
+import com.example.entity.CommunityCHGProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public interface CommuniryService {
     public long boardInsertOne(CommunityCHG community);
 
     // 게시판 목록
-    public List<CommunityCHG> selectBoardList(Pageable page, String btitle);
+    public List<CommunityCHGProjection> selectBoardList(Pageable page, String btitle);
 
     // 게시물 1개 조회
     public CommunityCHG boardSelectOne(long bno);

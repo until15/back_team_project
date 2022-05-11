@@ -100,7 +100,7 @@ public class CommunityRestController {
         try {
 
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<CommunityCHG> list = cService.selectBoardList(pageable, btitle);
+            List<CommunityCHGProjection> list = cService.selectBoardList(pageable, btitle);
             if (list != null) {
                 map.put("status", 200);
                 map.put("result", list);
