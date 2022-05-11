@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.example.entity.MemberCHG;
+import com.example.entity.MemberCHGProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +32,8 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE MEMBERCHG SET MPW=:mpw WHERE MEMAIL=:memail", nativeQuery = true)
     public int updatePwMember(@Param(value = "memail") String memail, @Param(value = "mpw") String mpw);
+
+    // memberprojection
+    MemberCHGProjection findByMemail(String email);
 
 }
