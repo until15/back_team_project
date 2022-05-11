@@ -13,6 +13,7 @@ import com.example.repository.LikeRepository;
 import com.example.service.ChallengeService;
 import com.example.service.LikeService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,12 +60,17 @@ public class LikeRestController {
             System.out.println("챌린지 번호 : " + chgno);
         Map<String, Object> map = new HashMap<>();
         try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
+           // 토큰에서 정보 추출
+           String userSubject = jwtUtil.extractUsername(token);
+           System.out.println("토큰에 담긴 정보 : " + userSubject);
 
+           // 추출된 결과값을 JSONObject 형태로 파싱
+           JSONObject jsonObject = new JSONObject(userSubject);
+           String email = jsonObject.getString("username");
+           
             // 멤버 엔티티 
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(email);
 
             // 챌린지 조회
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
@@ -75,7 +81,7 @@ public class LikeRestController {
             like.setMemberchg(member);
 
             // 중복 확인
-            LikeCHG duplicate = lService.duplicateInsert(chgno, memail);
+            LikeCHG duplicate = lService.duplicateInsert(chgno, email);
 
             if(duplicate == null) {
                 int ret = lService.insertLike(like);
@@ -117,12 +123,17 @@ public class LikeRestController {
             System.out.println("좋아요 번호 : "+ lno);
         Map<String, Object> map = new HashMap<>();
         try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
 
             // 멤버 엔티티 
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(email);
 
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
             System.out.println(challenge.toString());
@@ -158,12 +169,17 @@ public class LikeRestController {
         @RequestParam(name = "lno") long lno ){
         Map<String, Object> map = new HashMap<>();
         try {
-            // 멤버 토큰
-            String memail = jwtUtil.extractUsername(token);
+            // 토큰에서 정보 추출
+           String userSubject = jwtUtil.extractUsername(token);
+           System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+           // 추출된 결과값을 JSONObject 형태로 파싱
+           JSONObject jsonObject = new JSONObject(userSubject);
+           String email = jsonObject.getString("username");
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(email);
 
             LikeCHG like = lService.likeSelectOne(lno);
             System.out.println("좋아요 번호 : " + lno);
@@ -193,10 +209,16 @@ public class LikeRestController {
         System.out.println("토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
-            String memail = jwtUtil.extractUsername(token);
-            System.out.println("토큰 : " + token);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
+
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<LikeCHG> list = lService.likeSelectList(pageable, memail);
+            List<LikeCHG> list = lService.likeSelectList(pageable, email);
             if(list != null){
                 map.put("status", 200);
                 map.put("result", list);
