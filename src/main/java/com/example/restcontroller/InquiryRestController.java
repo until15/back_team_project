@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.InquiryCHG;
+import com.example.entity.InquiryCHGProjection;
+import com.example.entity.InquiryimgCHGProjection;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.InquiryRepository;
+import com.example.repository.InquiryimgRepository;
 import com.example.service.InquiryService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,26 +33,37 @@ public class InquiryRestController {
     InquiryService iService;
     @Autowired
     JwtUtil jwtUtil;
+    @Autowired
+    InquiryRepository iRepository;
+    @Autowired
+    InquiryimgRepository imRepository;
 
     // 문의등록
-    // 127.0.0.1:9090/ROOT/api/Inquiry/selectlist
+    // 127.0.0.1:9090/ROOT/api/Inquiry/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPOST(@RequestBody InquiryCHG inquiry,
             @RequestHeader(name = "token") String token) {
+
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String memail = jwtUtil.extractUsername(token);
-            System.out.println(memail);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
+
             // 회원엔티티 객체 생성 및 이메일 추가
             MemberCHG member = new MemberCHG();
-            member.setMemail(memail);
+            member.setMemail(username);
             // 게시판 엔티티에 추가
             inquiry.setMemberchg(member);
 
-            int ret = iService.inquiryInsertOne(inquiry);
-            if (ret == 1) {
+            long ret = iService.inquiryInsertOne(inquiry);
+            if (ret > 0) {
+                map.put("result", ret);
                 map.put("status", 200);
             }
 
@@ -83,16 +99,63 @@ public class InquiryRestController {
         return map;
     }
 
+    // 문의 게시판 리스트
+    // 127.0.0.1:9090/ROOT/api/Inquiry/selectlistone
+    @RequestMapping(value = "/selectlistone", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> buyselectListGET(
+            @RequestHeader(name = "token") String token) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
+
+            List<InquiryCHGProjection> list = iService.selectListInquiry(username);
+
+            map.put("result", list);
+            map.put("status", 200);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+
+        return map;
+
+    }
+
     // 문의 게시글 1개 조회
     // 127.0.0.1:9090/ROOT/api/Inquiry/selectone?qno=1
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> inquirySelectListGET(@RequestParam(name = "qno") long qno) {
+    public Map<String, Object> inquirySelectListGET(@RequestParam(name = "qno") long qno,
+            @RequestHeader(name = "token") String token) {
+
         Map<String, Object> map = new HashMap<>();
         try {
-            InquiryCHG ret = iService.inquirySelectOne(qno);
 
-            map.put("result", ret);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
+
+            InquiryCHGProjection inquiry = iRepository.findByQno(qno);
+            // InquiryCHG ret = iService.inquirySelectOne(qno);
+
+            List<InquiryimgCHGProjection> list = imRepository.findByInquirychg_qnoOrderByQimgnoDesc(qno);
+            String[] imgs = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                imgs[i] = "/ROOT/api/Inquiryimg/selectimg?qimgno=" + list.get(i).getQimgno();
+            }
+
+            map.put("result", inquiry);
+            map.put("imgurl", imgs);
             map.put("status", 200);
 
         } catch (Exception e) {
@@ -111,8 +174,13 @@ public class InquiryRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
 
             int ret = iService.inquiryDeleteOne(qno);
             if (ret == 1) {
@@ -135,8 +203,13 @@ public class InquiryRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
 
             InquiryCHG inquiry1 = iService.inquirySelectOne(qno);
             inquiry1.setQtitle(inquiry.getQtitle());

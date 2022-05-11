@@ -27,6 +27,7 @@ public class InquiryimgCHG {
     private Long qimgno;
     // 문의 이미지
     @Lob
+    @Column(nullable = true)
     private byte[] qimage;
     // 이미지 사이즈
     private Long qimgsize = 0L;
@@ -34,6 +35,7 @@ public class InquiryimgCHG {
     private String qimgtype;
     // 이미지 이름
     private String qimgname;
+
     // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE

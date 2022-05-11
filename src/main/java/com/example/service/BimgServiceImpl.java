@@ -2,6 +2,9 @@ package com.example.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import com.example.entity.BimgCHG;
 import com.example.entity.BimgCHGProjection;
 import com.example.repository.BimgRepository;
@@ -14,6 +17,8 @@ public class BimgServiceImpl implements BimgService {
 
     @Autowired
     BimgRepository bRepository;
+    @Autowired
+    EntityManagerFactory emf;
 
     @Override
     public int insertBimg(BimgCHG bimg) {
@@ -74,6 +79,26 @@ public class BimgServiceImpl implements BimgService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public int insertBatchBimg(List<BimgCHG> list) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            for (BimgCHG bimg : list) {
+                em.persist(bimg);
+            }
+            em.getTransaction().commit();
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+            return 0;
+        }
+
     }
 
 }

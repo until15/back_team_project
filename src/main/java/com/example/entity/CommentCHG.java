@@ -12,6 +12,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -37,6 +39,7 @@ public class CommentCHG {
     private Date cmtregdate;
 
     // 자유게시판 테이블
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "bno")
     private CommunityCHG communitychg;

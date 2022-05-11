@@ -68,6 +68,7 @@ public class CommunityRestController {
         String memail = jsonObject.getString("username");
 
         System.out.println(memail);
+
         // 회원엔티티 객체 생성 및 이메일 추가
         MemberCHG member = new MemberCHG();
         member.setMemail(memail);
@@ -195,7 +196,7 @@ public class CommunityRestController {
 
             System.out.println(username);
 
-            CommunityCHG community1 = cService.boardSelectOne(bno);
+            CommunityCHG community1 = cService.boardSelectPrivate(username, bno);
             community1.setBtitle(community.getBtitle());
             community1.setBcontent(community.getBcontent());
 

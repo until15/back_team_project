@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -49,11 +50,11 @@ public class InquiryCHG {
 
     // 문의 사진 테이블
     @JsonBackReference
-    @OneToMany(mappedBy = "inquirychg")
+    @OneToMany(mappedBy = "inquirychg", cascade = CascadeType.REMOVE)
     private List<InquiryimgCHG> inquiryimgchgList = new ArrayList<>();
 
     // 문의 댓글 테이블
-    @JsonBackReference
-    @OneToMany(mappedBy = "inquirychg")
-    private List<IqcommentCHG> iqcommentchgList = new ArrayList<>();
+    // @JsonBackReference
+    // @OneToMany(mappedBy = "inquirychg", cascade = CascadeType.REMOVE)
+    // private List<IqcommentCHG> iqcommentchgList = new ArrayList<>();
 }

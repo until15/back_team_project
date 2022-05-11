@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -54,14 +55,14 @@ public class CommunityCHG {
     private MemberCHG memberchg;
 
     // 자유게시판 이미지 테이블
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
     private List<BimgCHG> bimgchgList = new ArrayList<>();
 
     // 댓글 테이블
-    // @JsonBackReference
-    // @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
-    // private List<CommentCHG> commentchgList = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "communitychg", cascade = CascadeType.REMOVE)
+    private List<CommentCHG> commentchgList = new ArrayList<>();
 
     @Transient
     private String[] imageurl;

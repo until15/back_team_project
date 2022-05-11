@@ -22,6 +22,9 @@ public interface CommuniryService {
     // 게시물 수정
     public int boardUpdateOne(CommunityCHG community);
 
+    // 자세 조회 (수정용)
+    public CommunityCHG boardSelectPrivate(String memail, long bno);
+
     // 게시물 삭제
     public int boardDeleteOne(long bno);
 
