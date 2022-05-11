@@ -25,4 +25,7 @@ public interface BimgService {
     // 이미지 삭제
     public int deleteBimgOne(long bimgno);
 
+    // 루틴 등록
+    public int insertBatchBimg(List<BimgCHG> list);
+
 }

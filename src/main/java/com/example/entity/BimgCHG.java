@@ -50,4 +50,9 @@ public class BimgCHG {
     @ManyToOne
     @JoinColumn(name = "bno")
     private CommunityCHG communitychg;
+
+    // 회원테이블
+    @ManyToOne
+    @JoinColumn(name = "memail")
+    private MemberCHG memberchg;
 }

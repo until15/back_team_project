@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.InquiryCHG;
+import com.example.entity.InquiryCHGProjection;
 import com.example.repository.InquiryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,10 @@ public class InquiryServiceImpl implements InquiryService {
     InquiryRepository iRepository;
 
     @Override
-    public int inquiryInsertOne(InquiryCHG inquiry) {
+    public long inquiryInsertOne(InquiryCHG inquiry) {
         try {
-            iRepository.save(inquiry);
-            return 1;
+            InquiryCHG inquiry1 = iRepository.save(inquiry);
+            return inquiry1.getQno();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,6 +74,18 @@ public class InquiryServiceImpl implements InquiryService {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public List<InquiryCHGProjection> selectListInquiry(String memail) {
+        try {
+            List<InquiryCHGProjection> list = iRepository.findByMemberchg_memailOrderByQnoDesc(memail);
+            return list;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

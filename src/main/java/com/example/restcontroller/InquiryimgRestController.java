@@ -10,6 +10,7 @@ import com.example.entity.InquiryimgCHG;
 import com.example.jwt.JwtUtil;
 import com.example.service.InquiryimgService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -55,8 +56,13 @@ public class InquiryimgRestController {
             inquiry.setQno(qno);
             inquiryimg.setInquirychg(inquiry);
 
-            String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
 
             if (file != null) {
                 if (!file.isEmpty()) {
@@ -89,8 +95,8 @@ public class InquiryimgRestController {
             @RequestParam(name = "qimgno") long qimgno) throws IOException {
         try {
             InquiryimgCHG inquiryimg = inService.selectOneqimg(qimgno);
-            System.out.println(inquiryimg.getQimgtype());
-            System.out.println(inquiryimg.getQimage().length);
+            // System.out.println(inquiryimg.getQimgtype());
+            // System.out.println(inquiryimg.getQimage().length);
 
             if (inquiryimg.getQimgsize() > 0) {
                 HttpHeaders header = new HttpHeaders();
@@ -126,8 +132,13 @@ public class InquiryimgRestController {
             @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
-            String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
 
             InquiryimgCHG inquiryimg1 = inService.selectOneqimg(inquiryimg.getQimgno());
             inquiryimg1.setQimage(file.getBytes());
@@ -155,8 +166,13 @@ public class InquiryimgRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            // System.out.println(username);
 
             int ret = inService.deleteqimgOne(qimgno);
             if (ret == 1) {

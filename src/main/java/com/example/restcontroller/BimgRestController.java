@@ -2,16 +2,20 @@ package com.example.restcontroller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
 import com.example.entity.CommunityCHG;
+import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.BimgRepository;
 import com.example.service.BimgService;
 import com.example.service.CommuniryService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -20,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,17 +61,19 @@ public class BimgRestController {
     public Map<String, Object> insertPSOT(
             @RequestParam(name = "file", required = false) MultipartFile file,
             @RequestHeader(name = "token") String token, @RequestParam(name = "bno") long bno) {
-
-        System.out.println(token);
-        System.out.println("===================================" + bno);
         Map<String, Object> map = new HashMap<>();
         try {
             BimgCHG bimg = new BimgCHG();
             CommunityCHG community = new CommunityCHG();
             community.setBno(bno);
-
             bimg.setCommunitychg(community);
-            String username = jwtUtil.extractUsername(token);
+
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
             System.out.println(username);
 
             if (file != null) {
@@ -81,6 +88,54 @@ public class BimgRestController {
             int ret = bService.insertBimg(bimg);
             if (ret == 1) {
                 map.put("result", bimg);
+                map.put(("status"), 200);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put(("status"), 0);
+        }
+        return map;
+    }
+
+    // 게시판 이미지 일괄 등록
+    // 127.0.0.1:9090/ROOT/api/bimg/insertbatch
+    @RequestMapping(value = "/insertbatch", method = { RequestMethod.POST }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> insertbatchPSOT(
+            @RequestParam(name = "file", required = false) MultipartFile[] file,
+            @RequestHeader(name = "token") String token) {
+
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            String userSubject = jwtUtil.extractUsername(token);
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+            System.out.println(username);
+
+            List<BimgCHG> list = new ArrayList<>();
+            for (int i = 0; i < file.length; i++) {
+
+                BimgCHG bimg = new BimgCHG();
+
+                if (file != null) {
+                    if (!file[i].isEmpty()) {
+                        bimg.setBimage(file[i].getBytes());
+                        bimg.setBimgname(file[i].getOriginalFilename());
+                        bimg.setBimgsize(file[i].getSize());
+                        bimg.setBimgtype(file[i].getContentType());
+                    }
+                    MemberCHG member = new MemberCHG();
+                    member.setMemail(username);
+                    bimg.setMemberchg(member);
+                }
+                list.add(bimg);
+            }
+
+            int ret = bService.insertBatchBimg(list);
+            if (ret == 1) {
                 map.put(("status"), 200);
             }
 
@@ -135,7 +190,12 @@ public class BimgRestController {
             @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
-            String username = jwtUtil.extractUsername(token);
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
             System.out.println(username);
 
             BimgCHG bimg1 = bService.selectOneimage(bimg.getBimgno());
@@ -164,7 +224,12 @@ public class BimgRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
             System.out.println(username);
 
             int ret = bService.deleteBimgOne(bimgno);

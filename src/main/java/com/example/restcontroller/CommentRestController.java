@@ -11,6 +11,7 @@ import com.example.jwt.JwtUtil;
 import com.example.service.CommentService;
 import com.example.service.CommuniryService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,8 +44,14 @@ public class CommentRestController {
         try {
 
             // 토큰에서 이메일 추출
-            String memail = jwtUtil.extractUsername(token);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
 
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String memail = jsonObject.getString("username");
+
+            System.out.println(memail);
             // 회원엔티티 객체 생성 및 이메일 추가
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
@@ -100,8 +107,15 @@ public class CommentRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            // 토큰에서 이메일 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String memail = jsonObject.getString("username");
+
+            // System.out.println(memail);
 
             int ret = cService.deleteComment(cmtno);
             if (ret == 1) {

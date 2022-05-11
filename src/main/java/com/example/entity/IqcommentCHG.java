@@ -31,7 +31,7 @@ public class IqcommentCHG {
     // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
-    @Column(name = "IQCMTGREGDATE")
+    @Column(name = "IQCMTREGDATE")
     private Date iqcmtregdate;
 
     @ManyToOne

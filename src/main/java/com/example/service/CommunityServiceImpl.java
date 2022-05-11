@@ -103,4 +103,16 @@ public class CommunityServiceImpl implements CommuniryService {
         }
     }
 
+    @Override
+    public CommunityCHG boardSelectPrivate(String memail, long bno) {
+        try {
+            CommunityCHG community = cRepository.findByMemberchg_memailAndBnoEqualsOrderByBnoDesc(memail, bno);
+            return community;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

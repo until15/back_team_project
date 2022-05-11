@@ -6,7 +6,7 @@ public interface InquiryimgCHGProjection {
 
     Long getQimgno();
 
-    @Value("#{target.communitychg.bno}")
-    long getCommunitychgBno();
+    @Value("#{target.inquirychg.qno}")
+    long getInquiryimgchgQno();
 
 }

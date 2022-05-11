@@ -11,6 +11,7 @@ import com.example.jwt.JwtUtil;
 import com.example.service.InquiryService;
 import com.example.service.IqcommentService;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,11 +44,16 @@ public class IqcommentRestController {
         try {
 
             // 토큰에서 이메일 추출
-            String username = jwtUtil.extractUsername(token);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String memail = jsonObject.getString("username");
 
             // 회원엔티티 객체 생성 및 이메일 추가
             MemberCHG member = new MemberCHG();
-            member.setMemail(username);
+            member.setMemail(memail);
             // 게시판 엔티티에 추가
             iqcomment.setMemberchg(member);
 
@@ -66,9 +72,19 @@ public class IqcommentRestController {
     // 127.0.0.1:9090/ROOT/api/Iqcomment/selectone
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertPOST(@RequestParam(name = "qno") long qno) {
+    public Map<String, Object> insertPOST(@RequestParam(name = "qno") long qno,
+            @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
+
+            // 토큰에서 이메일 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String memail = jsonObject.getString("username");
+            // System.out.println(memail);
 
             InquiryCHG inquiry = inService.inquirySelectOne(qno);
             List<IqcommentCHG> list = iService.icommentSelectList(inquiry.getQno());
@@ -96,7 +112,7 @@ public class IqcommentRestController {
         try {
 
             String username = jwtUtil.extractUsername(token);
-            System.out.println(username);
+            // System.out.println(username);
 
             int ret = iService.deleteIqcomment(iqcmtno);
             if (ret == 1) {
