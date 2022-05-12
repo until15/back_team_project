@@ -16,6 +16,7 @@ import com.example.entity.RtnRunCHG;
 import com.example.entity.RtnSeqCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
+import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
 import com.example.service.ChallengeService;
 import com.example.service.JoinService;
@@ -58,6 +59,9 @@ public class ChallengeRestController {
     
     @Autowired
     JoinService jService;
+
+    @Autowired
+    MemberRepository mRepository;
 
     @Value("${default.image}")
     String DEFAULT_IMAGE;
@@ -113,19 +117,24 @@ public class ChallengeRestController {
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
-           
             
             System.out.println(email);
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
             member.setMemail(email);
+
+            // 멤버 레벨
+            MemberCHG member1 = mRepository.findById(email).orElse(null);
+            System.out.println(member1.getMrank());
+
             
             ChallengeCHG chg = new ChallengeCHG();
             
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
             chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
+            
             
             // Tiemstamp 타입의 형식에 맞게 전달해야함 => yyyy-mm-dd 00:00:00
             chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
@@ -135,8 +144,10 @@ public class ChallengeRestController {
             chg.setChgintro(chg1.getChgintro()); 	 // 첼린지 소개글
             chg.setChgcontent(chg1.getChgcontent()); // 첼린지 내용
             chg.setChgfee(chg1.getChgfee()); 	     // 첼린지 참가비
-            chg.setChglevel(chg1.getChglevel());     // 챌린지 레벨
+            chg.setChglevel(member1.getMrank());
+          //  chg.setChglevel(chg1.getChglevel());     // 챌린지 레벨
             chg.setMemberchg(member);	             // 첼린지 생성자
+            
 
 
             // 루틴
@@ -145,9 +156,6 @@ public class ChallengeRestController {
             // RtnSeqCHG routine = rtnService.RtnRunSelectlist(runseq);
             // rtn.setSeq(routine);
             // rtn.setRunseq(routine);
-            
-        
-//            System.out.println("첼린지에 추가할 항목 : " + chg.toString());
 
             // 썸네일
             chg.setChgimage(file.getBytes());
