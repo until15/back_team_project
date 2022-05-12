@@ -20,11 +20,11 @@ public class PoseServiceImpl implements PoseService{
 
     // 자세등록
     @Override
-    public int poseInsert(PoseCHG pose) {
+    public long poseInsert(PoseCHG pose) {
         try {
-            pRepository.save(pose);
+            PoseCHG pose1 =  pRepository.save(pose);
 
-            return 1;
+            return pose1.getPno();
             
         } catch (Exception e) {
             e.printStackTrace();
