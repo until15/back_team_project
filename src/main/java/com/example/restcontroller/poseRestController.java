@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -171,9 +172,16 @@ public class poseRestController {
         try {
             Pageable pageable = PageRequest.of(page-1, PAGECNT);
             List<PoseCHG> list = pService.poseSelectList(pose.getPstep(), pageable, title);
+            
+            // 검색어가 포함된 전체 개수
+            long title2 = pRepository.countByPstepEqualsAndPnameContaining(pose.getPstep(), title);
+            // 전체 개수
+            // Page<PoseCHG> pageable2 = pRepository.findAll(pageable);
             if(!list.isEmpty()){
                 map.put("status", 200);
                 map.put("result", list);
+                // map.put("total", pageable2.getTotalElements());
+                map.put("titleTotal", title2);
             }
             
         } catch (Exception e) {

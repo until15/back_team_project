@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface PoseRepository extends JpaRepository<PoseCHG, Long> {
 
     // 검색어가 포함된 전체 개수
-    long countByPnameContaining(String title);
+    long countByPstepEqualsAndPnameContaining(int step, String title);
 
     PoseCHGProjection findByPno(Long Pno);
 
