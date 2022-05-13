@@ -123,6 +123,29 @@ public class ConfirmServiceImpl implements ConfirmService {
 		}
 	}
 
+	// 인증글 1개 조회 (성공 여부 판별용)
+	@Override
+	public ConfirmCHG selectSuccessOne(long no) {
+		try {
+			
+			return cfRepository.findById(no).orElse(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// 성공 유무 별로 인증글 조회 (페이지네이션)
+	@Override
+	public List<ConfirmProjection> whetherSuccessCFM(long chgno, int no, Pageable page) {
+		try {
+			return cfRepository.findByJoinchg_challengechg_chgnoAndCfsuccess(chgno, no, page);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	
 	
 }

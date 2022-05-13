@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
 import com.example.entity.JoinSelectOne;
@@ -53,45 +54,61 @@ public class JoinRestController {
 			String userSubject = jwtUtil.extractUsername(token);
 			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
-			// 추출된 결과값을 JSONObject 형태로 파싱
+			// 추출된 결과값을 JSONObject 형태로 변환
 	        JSONObject jsonObject = new JSONObject(userSubject);
-	        String email = jsonObject.getString("username");
+	        // JSONObject 형태를 파싱해서 사용
+	        String email = jsonObject.getString("username");	// 회원 아이디
+	        long rank = jsonObject.getLong("userrank");		// 회원 등급
 	        
 	        System.out.println(email);
+	        System.out.println(rank);
 			
 			// member 엔티티에 아이디 담기
 			MemberCHG memail = new MemberCHG();
 			memail.setMemail(email);
 			
-			System.out.println("아이디 : " + memail);
+//			System.out.println("아이디 : " + memail);
+			
+			// 등급을 조회하기 위해 첼린지 번호로 조회
+			ChallengeProjection chg = chgRepository.findByChgno(chgno);
+//			System.out.println("첼린지 번호로 난이도 조회 : " + chg.getChglevel().toString());
 			
 			// challenge 엔티티에 첼린지 번호 담기
 			ChallengeCHG challenge = new ChallengeCHG();
 			challenge.setChgno(chgno);
 			
-			System.out.println(challenge);
+//			System.out.println(challenge);
 			
 			// 참가 엔티티에 아이디와 첼린지 번호 담기
 			JoinCHG join = new JoinCHG();
 			join.setMemberchg(memail);
 			join.setChallengechg(challenge);
 			
-			System.out.println(join);	// join엔티티에 담겨있는 값 확인
+//			System.out.println(join);	// join엔티티에 담겨있는 값 확인
 			
 			// 아이디와 첼린지 번호 동시에 일치하는 지 확인
 			JoinCHG duplicate = jService.duplicateJoin(chgno, email);
-			System.out.println(duplicate);
+//			System.out.println(duplicate);
 			
+			// 기존에 가입한 첼린지가 아닐 때 참가 가능
 			if(duplicate == null) {
-				int ret = jService.challengeJoin(join);
-				if (ret == 1) {
-					// 참가할 때마다 첼린지 인원수 1씩 증가
-					int ret1 = chgRepository.increaseCnt(chgno);
-					System.out.println(ret1);
-					
-					// 새로 참가하기는 200
-					map.put("status", 200);
+				// 회원 등급과 난이도가 일치할 때 참가 가능
+				if (rank >= chg.getChglevel()) {
+				
+					int ret = jService.challengeJoin(join);
+					if (ret == 1) {
+						// 참가할 때마다 첼린지 인원수 1씩 증가
+						int ret1 = chgRepository.increaseCnt(chgno);
+						System.out.println(ret1);
+						
+						// 새로 참가하기는 200
+						map.put("status", 200);
+					}
 				}
+				else {
+					map.put("error", "애송아 레벨이 낮다");
+				}
+				
 			}else {
 				// 이미 참여했으면 0
 				map.put("status", 0);

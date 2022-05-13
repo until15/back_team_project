@@ -16,8 +16,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="RtnRunCHG")
 @SequenceGenerator(name = "SEQ_RTNRUN", sequenceName = "SEQ_RTNRUN_RUNNO", allocationSize = 1, initialValue = 1)
