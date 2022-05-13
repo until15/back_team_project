@@ -31,7 +31,8 @@ public class CommunityServiceImpl implements CommuniryService {
     @Override
     public List<CommunityCHGProjection> selectBoardList(Pageable page, String btitle) {
         try {
-            List<CommunityCHGProjection> list = cRepository.findByBtitleContainingOrderByBnoDesc(btitle, page);
+            List<CommunityCHGProjection> list = cRepository
+                    .findByBtitleContainingOrderByBnoDesc(btitle, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();

@@ -59,7 +59,7 @@ public class BimgServiceImpl implements BimgService {
     @Override
     public int deleteBimgOne(long bimgno) {
         try {
-            bRepository.deleteByBimgnoOrderByCommunitychg_bno(bimgno);
+            bRepository.deleteById(bimgno);
             return 1;
 
         } catch (Exception e) {

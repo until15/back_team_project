@@ -197,7 +197,7 @@ public class BimgRestController {
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> imgUpdatePUT(@ModelAttribute BimgCHG bimg,
-            @RequestParam(name = "file", required = false) MultipartFile file,
+            @RequestParam(name = "mimage", required = false) MultipartFile file,
             @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {

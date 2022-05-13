@@ -17,6 +17,7 @@ import com.example.service.UserDetailsServiceImpl;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -48,6 +49,9 @@ public class CommunityRestController {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Value("${board.page.count}")
+    int PAGECNT;
 
     // 게시글 등록
     // 127.0.0.1:9090/ROOT/api/community/insert
@@ -94,15 +98,20 @@ public class CommunityRestController {
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> boardSelectListGET(@RequestParam(name = "page", defaultValue = "1") int page,
+    public Map<String, Object> boardSelectListGET(
+            @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "btitle", defaultValue = "") String btitle) {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            Pageable pageable = PageRequest.of(page - 1, 10);
+            Pageable pageable = PageRequest.of(page - 1, PAGECNT);
             List<CommunityCHGProjection> list = cService.selectBoardList(pageable, btitle);
+
+            long total = cRepository.countByBtitleContaining(btitle);
+
             if (list != null) {
                 map.put("status", 200);
+                map.put("pages", (total - 1) / PAGECNT + 1);
                 map.put("result", list);
             }
 
