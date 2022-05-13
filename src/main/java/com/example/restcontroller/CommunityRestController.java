@@ -109,10 +109,10 @@ public class CommunityRestController {
 
             long total = cRepository.countByBtitleContaining(btitle);
 
-            if (list != null) {
+            if (!list.isEmpty()) {
                 map.put("status", 200);
-                map.put("pages", (total - 1) / PAGECNT + 1);
                 map.put("result", list);
+                map.put("total", total);
             }
 
         } catch (Exception e) {
