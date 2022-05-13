@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public interface PoseService {
 
     // 자세 등록
-    public int poseInsert(PoseCHG pose);
+    public long poseInsert(PoseCHG pose);
 
     // 자세 1개 조회
     public PoseCHG poseSelectOne(Long pno);

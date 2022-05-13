@@ -14,4 +14,6 @@ public interface VideoRepository extends JpaRepository<VideoCHG, Long> {
 
     List<VideoCHGProjection> findByPosechg_pnoOrderByVnoDesc(long pno);
 
+    VideoCHG findByPosechg_pnoEquals(long pno);
+
 }

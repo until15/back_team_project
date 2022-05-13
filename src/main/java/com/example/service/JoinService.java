@@ -24,14 +24,20 @@ public interface JoinService {
     // 챌린지 포기
     public int challengeGiveUp(JoinCHG join);
     
+    // 검색어가 포함된 항목의 객수
+ 	public long selectCount(String email, String title);
+    
     // 참여했던 첼린지 전체 조회 (페이지네이션)
     public List<JoinProjection> joinChallengeAllList(String memail, String title, Pageable page);
 	
 	// 진행 중인 첼린지 조회
 	public List<JoinProjection> joinChallengeList(String memail, int state);
 	
+	// 진행 상태 별 첼린지 갯수
+	public long selectStateCount(String memail, int state);
+	
 	// 진행 상태 별 첼린지 조회 (페이지네이션)
 	public List<JoinProjection> joinStateList(String memail, int state, Pageable page);
 	
-	
+
 }

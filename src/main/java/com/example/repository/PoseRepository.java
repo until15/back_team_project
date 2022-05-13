@@ -2,6 +2,7 @@ package com.example.repository;
 
 import java.util.List;
 
+import com.example.entity.MemberCHGProjection;
 import com.example.entity.PoseCHG;
 import com.example.entity.PoseCHGProjection;
 
