@@ -287,11 +287,11 @@ public class JoinRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(token);
+//			System.out.println(token);
 			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
@@ -304,7 +304,7 @@ public class JoinRestController {
 
 			// 아이디와 참가 변수를 전달해서 진행중 인 첼린지만 조회
 			List<JoinProjection> list = jService.joinChallengeList(email, state);
-			System.out.println(list);
+//			System.out.println(list);
 			
 			map.put("result", list);
 			map.put("status", 200);
