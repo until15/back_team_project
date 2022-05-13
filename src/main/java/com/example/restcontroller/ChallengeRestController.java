@@ -9,18 +9,13 @@ import java.util.Map;
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
-import com.example.entity.LikeCHG;
 import com.example.entity.MemberCHG;
-import com.example.entity.RoutineCHG;
-import com.example.entity.RtnRunCHG;
-import com.example.entity.RtnSeqCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
 import com.example.service.ChallengeService;
 import com.example.service.JoinService;
-import com.example.service.RoutineService;
 import com.example.service.RtnRunService;
 
 import org.json.JSONObject;
@@ -395,4 +390,13 @@ public class ChallengeRestController {
         }
         return map;
     }
+    
+    ////////////////////////////////////////////////////////////
+    // 메인화면
+    
+    // 인기 별 리스트
+    
+    // 난이도 별 리스트
+    
+    //
 }
