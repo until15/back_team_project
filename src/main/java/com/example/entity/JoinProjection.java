@@ -26,7 +26,7 @@ public interface JoinProjection {
 	// 첼린지 제목
 	@Value("#{target.challengechg.chgtitle}")
 	String getChallengechgChgtitle();
-	
+
 	// 참가자 이메일
 	@Value("#{target.memberchg.memail}")
 	String getMemberchgMemail();

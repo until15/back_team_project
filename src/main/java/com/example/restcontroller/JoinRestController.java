@@ -180,7 +180,7 @@ public class JoinRestController {
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> joinStateListGET(
 			@RequestHeader(name="token") String token,
-			@RequestParam(name ="chgstate", defaultValue = "") int state,
+			@RequestParam(name ="chgstate", defaultValue = "1") int state,
 			@RequestParam(name="page", defaultValue ="1") int page){
 		
 		Map<String, Object> map = new HashMap<>();
@@ -299,10 +299,10 @@ public class JoinRestController {
 	        
 	        System.out.println(email);
 			
-			// 참가상태 변수 : 3 => 진행중
+			// 참가상태 변수 : 1 => 진행중
 			int state = 1;
 
-			// 아이디와 참가 변수를 전달해서 진행중 인 첼린지만 조회
+			// 아이디와 참가 변수를 전달해서 진행 중인 첼린지만 조회
 			List<JoinProjection> list = jService.joinChallengeList(email, state);
 //			System.out.println(list);
 			
