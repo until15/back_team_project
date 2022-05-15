@@ -185,7 +185,7 @@ public class JoinRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-//			System.out.println(state);
+			// System.out.println(state);
 //			System.out.println(token);
 //			System.out.println(page);
 			
