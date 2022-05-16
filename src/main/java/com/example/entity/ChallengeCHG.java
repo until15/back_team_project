@@ -53,9 +53,6 @@ import lombok.ToString;
 			+ " FROM "
 			+ " CHALLENGECHG) "
 			+ " WHERE CHGNO BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC",
-
-
-
 	resultSetMapping = "resultmap_challenge_dto"
 )
 @SqlResultSetMapping(
@@ -73,8 +70,6 @@ import lombok.ToString;
 			@ColumnResult(name = "CHGEND", type = Timestamp.class),
 			@ColumnResult(name = "RECRUITSTART", type = Timestamp.class),
 			@ColumnResult(name = "RECRUITEND", type = Timestamp.class),
-
-			// 오류 : Could not locate appropriate constructor on class
 			@ColumnResult(name = "RECSTATE", type = int.class),
 			@ColumnResult(name = "CHGCNT", type = Long.class),
 			@ColumnResult(name = "CHGFEE", type = Long.class),

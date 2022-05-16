@@ -25,10 +25,8 @@ public class ChallengeDTO {
     private Timestamp chgend;
     private Timestamp recruitstart;
     private Timestamp recruitend;
-
-    // 오류 : Could not locate appropriate constructor on class
-    private int recstate = 1;
-    private Long chgcnt = 1L;
+    private int recstate;
+    private Long chgcnt;
     private Long chgfee;
     private byte[] chgimage;
 	private Long chgisize;
