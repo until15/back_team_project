@@ -14,5 +14,7 @@ public interface RoutineRepository extends JpaRepository<RoutineCHG, Long>{
     List<RoutineCHG> findByMemberchg_memailEqualsOrderByRtnnoDesc(String memail);
 
     List<RoutineCHG> findByRtnnoIn(List<RoutineCHG> rtnnos);
+
+    List<RoutineCHG> findByMemberchg_memailAndRtnseq(String memail, long rtnseq);
     
 }
