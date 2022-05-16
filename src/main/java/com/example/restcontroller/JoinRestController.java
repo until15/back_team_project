@@ -1,27 +1,37 @@
 package com.example.restcontroller;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.CHGImgView;
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
+import com.example.entity.JoinCHGView;
 import com.example.entity.JoinProjection;
 import com.example.entity.JoinSelectOne;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
+import com.example.repository.ChgImageRepository;
+import com.example.repository.JoinningRepository;
 import com.example.service.JoinService;
 
 @RestController
@@ -33,6 +43,15 @@ public class JoinRestController {
 	@Autowired ChallengeRepository chgRepository;
 	
 	@Autowired JwtUtil jwtUtil;
+	
+	@Autowired ResourceLoader rLoader;
+	
+	@Autowired JoinningRepository jingRepository;
+	
+	@Autowired ChgImageRepository chgIRepository;
+	
+	@Value("${default.image}")
+    String DEFAULT_IMAGE;
 	
 	// 참가하기
 	// 127.0.0.1:9090/ROOT/api/join/insert?chgno=
@@ -303,9 +322,20 @@ public class JoinRestController {
 			int state = 1;
 
 			// 아이디와 참가 변수를 전달해서 진행 중인 첼린지만 조회
-			List<JoinProjection> list = jService.joinChallengeList(email, state);
+//			List<JoinProjection> list = jService.joinChallengeList(email, state);
 //			System.out.println(list);
 			
+			// 진행 중인 첼린지 썸네일 포함 9개만 조회
+			List<JoinCHGView> list = jingRepository.selectJoinningCHG(email, state);
+			
+			// URL화 시킨 이미지를 배열에 담기
+			String[] imgs = new String[list.size()];
+			for (int i=0;i<list.size();i++) {
+				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+			}
+			System.out.println("이미지 url : " + imgs.toString());
+			
+			map.put("images", imgs);
 			map.put("result", list);
 			map.put("status", 200);
 			
@@ -316,6 +346,46 @@ public class JoinRestController {
 		
 		return map; 
 	}
+	
+	// 진행 중인 첼린지 썸네일 조회
+	// 127.0.0.1:9090/ROOT/api/join/thumbnail?chgno=
+	@RequestMapping(value="/thumbnail", 
+			method = {RequestMethod.GET},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<byte[]> selectImageGET(
+    		@RequestParam(name = "chgno") long chgno){
+    	try {
+    		// 이미지를 한개 조회
+    		CHGImgView chgImage = chgIRepository.findByChgno(chgno);
+    		
+    		System.out.println("이미지 조회 : " + chgImage.getChgisize());
+    		// 썸네일 이미지가 있을 때
+    		if (chgImage.getChgisize() > 0) {
+    			HttpHeaders header = new HttpHeaders();
+                if (chgImage.getChgitype().equals("image/jpeg")) {
+                    header.setContentType(MediaType.IMAGE_JPEG);
+                } else if (chgImage.getChgitype().equals("image/png")) {
+                    header.setContentType(MediaType.IMAGE_PNG);
+                } else if (chgImage.getChgitype().equals("image/gif")) {
+                    header.setContentType(MediaType.IMAGE_GIF);
+                }
+                ResponseEntity<byte[]> response = new ResponseEntity<>(chgImage.getChgimage(), header, HttpStatus.OK);
+                return response;
+                
+			} else {	// 썸네일 이미지가 없을 때
+                InputStream is = rLoader.getResource(DEFAULT_IMAGE).getInputStream();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                ResponseEntity<byte[]> response = new ResponseEntity<>(is.readAllBytes(), headers, HttpStatus.OK);
+                return response;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+            return null;
+		}
+    }
+	
 	
 	
 	// 내가 참여했던 첼린지 전체 조회 (페이지네이션)
