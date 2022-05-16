@@ -31,5 +31,4 @@ public interface JoinProjection {
 	@Value("#{target.memberchg.memail}")
 	String getMemberchgMemail();
 
-	
 }
