@@ -156,5 +156,30 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
     }
 
+    // 챌린지 난이도 목록
+    @Override
+    public List<ChallengeCHG> chgLevelSelectList(Pageable page, String challenge) {
+        try {
+            List<ChallengeCHG> list = chgRepository.findByChglevelContainingOrderByChglevelDesc(challenge, page);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    // 챌린지 인기 목록
+    @Override
+    public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge) {
+        try {
+            List<ChallengeCHG> list = chgRepository.findByChglikeContainingOrderByChglikeDesc(challenge, page);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }
