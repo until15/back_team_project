@@ -422,6 +422,29 @@ public class ChallengeRestController {
 
 
     // 난이도 별 리스트
+    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
+    @RequestMapping(
+        value    = "/levelselectlist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> levelSelectlistGET(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "level", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Pageable pageable = PageRequest.of(page - 1, 10);
+            List<ChallengeCHG> list = chgService.chgLevelSelectList(pageable, challenge);
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
     
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
     //
 }

@@ -160,7 +160,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public List<ChallengeCHG> chgLevelSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChglevelContainingOrderByChglevelDesc(challenge, page);
+            List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChglevelDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,7 +173,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChglikeContainingOrderByChglikeDesc(challenge, page);
+            List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChglikeDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();

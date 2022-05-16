@@ -35,10 +35,10 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     List<ChallengeCHG> findByChglevelOrderByChglevelDesc(long chglevel, Pageable page);
 
     // 챌린지 인기 리스트
-    List<ChallengeCHG> findByChglikeContainingOrderByChglikeDesc(String challenge, Pageable page);
+    List<ChallengeCHG> findByChgtitleContainingOrderByChglikeDesc(String challenge, Pageable page);
 
     // 챌린지 난이도 리스트
-    List<ChallengeCHG> findByChglevelContainingOrderByChglevelDesc(String challenge, Pageable page);
+    List<ChallengeCHG> findByChgtitleContainingOrderByChglevelDesc(String challenge, Pageable page);
     
     
     // 첼린지 신규 조회
