@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.MemberCHG;
+import com.example.entity.MemberCHGProjection;
 import com.example.entity.RoutineCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
 import com.example.service.RoutineService;
 
@@ -29,6 +31,7 @@ public class RoutineRestController {
     @Autowired JwtUtil jwtUtil;
     @Autowired RoutineService rService;
 
+    @Autowired MemberRepository mRepository;
     @Autowired RoutineRepository rRepository;
 
     @Value("${board.page.count}") int PAGECNT;
@@ -70,6 +73,7 @@ public class RoutineRestController {
             int ret = rService.RoutineInsertBatch(list);
             if(ret == 1){
                 map.put("status", 200);
+                map.put("result", list);
             }
 
         } catch (Exception e) {
@@ -95,7 +99,7 @@ public class RoutineRestController {
             JSONObject jsonObject = new JSONObject(username);
             String email = jsonObject.getString("username");
             System.out.println(email);
-
+            
             List<RoutineCHG> list = rService.RoutineSelectlist(email);
             for(int i=0; i<routine.length; i++){
                 if(email.equals(routine[i].getMemberchg().getMemail())){
@@ -106,6 +110,10 @@ public class RoutineRestController {
                     obj.setRtnset(routine[i].getRtnset());
                     obj.setRtnname(routine[i].getRtnname());
                     obj.setPosechg(routine[i].getPosechg());
+
+                    MemberCHG member = new MemberCHG();
+                    member.setMemail(email);
+                    obj.setMemberchg(member);
                         
                     list.add(obj);
                     System.out.println(list);
@@ -130,7 +138,8 @@ public class RoutineRestController {
     @RequestMapping(value="/selectlist.json", method = {RequestMethod.GET},
     consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> RoutineselectlistGET(
-        @RequestHeader(name="token") String token
+        @RequestHeader(name="token") String token,
+        @RequestParam(name="no") long rtnseq
     ){  
         Map<String, Object> map = new HashMap<>();
         try {
@@ -141,10 +150,14 @@ public class RoutineRestController {
             String email = jsonObject.getString("username");
             System.out.println(email);
 
-            List<RoutineCHG> list = rService.RoutineSelectlist(email);
-            if(!list.isEmpty()){
+            List<RoutineCHG> list2 = rRepository.findByMemberchg_memailAndRtnseq(email, rtnseq);
+            // List<RoutineCHG> list = rService.RoutineSelectlist(email);
+            MemberCHGProjection member = mRepository.findByMemail(list2.get(0).getMemberchg().getMemail());
+            map.put("userEmail", member);
+
+            if(!list2.isEmpty()){
                 map.put("status", 200);
-                map.put("result", list);
+                map.put("result", list2);
             }
             
         } catch (Exception e) {

@@ -26,7 +26,7 @@ public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
 	// 참여했던 첼린지 전체 조회 (페이지네이션 : 첼린지 제목, 페이지별)
 	List<JoinProjection> findByMemberchg_memailEqualsAndChallengechg_chgtitleContainingOrderByJnoDesc(String em, String title, Pageable page);
 	
-	// 진행 중인 첼린지 리스트 조회
+	// 진행 중인 첼린지 리스트 조회 (썸네일 포함)
 	List<JoinProjection> findByMemberchg_memailAndChgstate(String em, int state);
 	
 	// 참여한 첼린지 1개 상세 조회
