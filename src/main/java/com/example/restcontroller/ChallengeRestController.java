@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeDTO;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
+import com.example.entity.RoutineCHG;
+import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.MemberRepository;
@@ -48,9 +51,6 @@ public class ChallengeRestController {
 
     @Autowired 
     RoutineRepository rtnRepository;
-
-    @Autowired 
-    RtnRunService rtnService;
     
     @Autowired
     JoinService jService;
@@ -98,7 +98,7 @@ public class ChallengeRestController {
     public Map<String, Object> insertChallengePOST(
     		@ModelAttribute ChallengeCHG chg1,	// 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
-            // @RequestParam(name = "rtn") long routine,
+            @RequestParam(name = "rtn") Long runseq,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
         System.out.println("토큰 : " + token);
         System.out.println("썸네일 : " + file);
@@ -122,30 +122,41 @@ public class ChallengeRestController {
             // 멤버 레벨
             MemberCHG member1 = mRepository.findById(email).orElse(null);
             System.out.println(member1.getMrank());
-
             
+            // 챌린지 엔티티
             ChallengeCHG chg = new ChallengeCHG();
+            
+            RtnRunCHG rtn = new RtnRunCHG();
+            
+            rtn.setRunseq(runseq);
+
+            RoutineCHG rtn1 = rtnRepository.findById(runseq).orElse(null);
+            
+            
             
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
             chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
-            
-            
+                
             // Tiemstamp 타입의 형식에 맞게 전달해야함 => yyyy-mm-dd 00:00:00
             chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
-            chg.setChgstart(chg1.getRecruitend());   // 챌린지 시작일 = 모집 마감일
-            chg.setChgend(chg1.getChgend()); 	     // 챌린지 종료일 (임의 지정)
-            chg.setChgtitle(chg1.getChgtitle());	 // 첼린지 제목
-            chg.setChgintro(chg1.getChgintro()); 	 // 첼린지 소개글
-            chg.setChgcontent(chg1.getChgcontent()); // 첼린지 내용
-            chg.setChgfee(chg1.getChgfee()); 	     // 첼린지 참가비
+            chg.setChgstart(chg1.getRecruitend());   // 시작일 = 모집 마감일
+            chg.setChgend(chg1.getChgend()); 	     // 종료일 (임의 지정)
+            chg.setChgtitle(chg1.getChgtitle());	 // 제목
+            chg.setChgintro(chg1.getChgintro()); 	 // 소개글
+            chg.setChgcontent(chg1.getChgcontent()); // 내용
+            chg.setChgfee(chg1.getChgfee()); 	     // 참가비
             chg.setChglevel(member1.getMrank());
-          //  chg.setChglevel(chg1.getChglevel());     // 챌린지 레벨
+            // chg.setChglevel(chg1.getChglevel());  // 챌린지 레벨
             chg.setMemberchg(member);	             // 첼린지 생성자
+
+            // 루틴이 안 불러와짐 
+            chg.setChgroutine(rtn.getRunseq());
+            
+            // 루틴
             
 
-
-            // 루틴
+            
             // RtnRunCHG rtn = new RtnRunCHG(); 
             // RtnSeqCHG rtn = new RtnSeqCHG();
             // RtnSeqCHG routine = rtnService.RtnRunSelectlist(runseq);
@@ -333,7 +344,7 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 인기순 조회 
+    // 챌린지 인기별 조회 
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike
     @RequestMapping(
         value    = "/selectlistlike", 
@@ -362,7 +373,7 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 난이도 별 조회 
+    // 챌린지 난이도별 조회 
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlevel
     @RequestMapping(
         value    = "/selectlistlevel", 
@@ -394,7 +405,7 @@ public class ChallengeRestController {
     ////////////////////////////////////////////////////////////
     // 메인화면
     
-    // 인기 별 리스트
+    // 챌린지 인기 목록(페이지네이션)
     // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
     @RequestMapping(
         value    = "/likeselectlist", 
@@ -421,7 +432,7 @@ public class ChallengeRestController {
     }
 
 
-    // 난이도 별 리스트
+    // 챌린지 난이도 목록(페이지네이션)
     // 127.0.0.1:9090/ROOT/api/challenge/levelselectlist
     @RequestMapping(
         value    = "/levelselectlist", 
@@ -446,5 +457,29 @@ public class ChallengeRestController {
         }
         return map;
     }
-    //
+    
+
+    // 챌린지 좋아요 목록 내림차순 (9개표시)
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlikelist
+    @RequestMapping(
+        value    = "/selectlikelist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectLikeListGET(
+            @RequestParam(name = "like", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<ChallengeDTO> list = chgService.selectLikeChg(challenge);
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
 }
