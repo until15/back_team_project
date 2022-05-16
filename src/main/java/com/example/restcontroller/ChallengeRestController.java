@@ -422,7 +422,7 @@ public class ChallengeRestController {
 
 
     // 난이도 별 리스트
-    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
+    // 127.0.0.1:9090/ROOT/api/challenge/levelselectlist
     @RequestMapping(
         value    = "/levelselectlist", 
         method   = { RequestMethod.GET }, 
