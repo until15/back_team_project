@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.MemberCHG;
+import com.example.entity.MemberCHGProjection;
 import com.example.jwt.JwtUtil;
 import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
@@ -69,10 +70,14 @@ public class MemberRestController {
 		member.setMrole(member.getMrole()); // 권한 설정
 
 		// 프로필 이미지
-		member.setMprofile(file.getBytes()); // 프로필 이미지
-		member.setMpname(file.getOriginalFilename()); // 이미지 이름
-		member.setMpsize(file.getSize()); // 이미지 사이즈
-		member.setMptype(file.getContentType()); // 이미지 타입
+		if (file != null) {
+			if (!file.isEmpty()) {
+				member.setMprofile(file.getBytes()); // 프로필 이미지
+				member.setMpname(file.getOriginalFilename()); // 이미지 이름
+				member.setMpsize(file.getSize()); // 이미지 사이즈
+				member.setMptype(file.getContentType()); // 이미지 타입
+			}
+		}
 
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -227,7 +232,7 @@ public class MemberRestController {
 	// 127.0.0.1:9090/ROOT/api/member/deletemember
 	@RequestMapping(value = "/deletemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> selectMemberOneGET(@RequestHeader(name = "token") String token,
+	public Map<String, Object> deleteMemberOnePUT(@RequestHeader(name = "token") String token,
 			@RequestBody MemberCHG member) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -340,6 +345,50 @@ public class MemberRestController {
 			if (list != null) {
 				map.put("status", 200);
 				map.put("result", list);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+
+		return map;
+	}
+
+	// 중복체크
+	// 127.0.0.1:9090/ROOT/api/member/emailcheck
+	@RequestMapping(value = "/emailcheck", method = { RequestMethod.GET }, consumes = {
+			MediaType.ALL_VALUE }, produces = {
+					MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> emailCheckGET(@RequestParam(name = "memail") String memail) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			MemberCHGProjection member1 = mRepository.findByMemail(memail);
+			if (member1 != null) {
+				map.put("result", member1);
+				map.put("status", 200);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+
+		return map;
+	}
+
+	// 중복체크
+	// 127.0.0.1:9090/ROOT/api/member/checkmid
+	@RequestMapping(value = "/checkmid", method = { RequestMethod.GET }, consumes = {
+			MediaType.ALL_VALUE }, produces = {
+					MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> checkmidGET(@RequestParam(name = "mid") String mid) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			MemberCHGProjection member1 = mRepository.findByMid(mid);
+			if (member1 != null) {
+				map.put("result", member1);
+				map.put("status", 200);
 			}
 
 		} catch (Exception e) {

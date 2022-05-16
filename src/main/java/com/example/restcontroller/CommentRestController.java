@@ -8,6 +8,7 @@ import com.example.entity.CommentCHG;
 import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.CommentRepository;
 import com.example.service.CommentService;
 import com.example.service.CommuniryService;
 
@@ -33,6 +34,9 @@ public class CommentRestController {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
+    CommentRepository cRepository;
 
     // 댓글 등록
     // 127.0.0.1:9090/ROOT/api/comment/insert

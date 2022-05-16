@@ -34,6 +34,8 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     public int updatePwMember(@Param(value = "memail") String memail, @Param(value = "mpw") String mpw);
 
     // memberprojection
-    MemberCHGProjection findByMemail(String email);
+    MemberCHGProjection findByMemail(String memail);
+
+    MemberCHGProjection findByMid(String mid);
 
 }

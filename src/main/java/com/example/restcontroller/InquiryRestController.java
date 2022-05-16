@@ -15,6 +15,7 @@ import com.example.service.InquiryService;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -37,6 +38,8 @@ public class InquiryRestController {
     InquiryRepository iRepository;
     @Autowired
     InquiryimgRepository imRepository;
+    @Value("${board.page.count}")
+    int PAGECNT;
 
     // 문의등록
     // 127.0.0.1:9090/ROOT/api/Inquiry/insert
@@ -84,9 +87,13 @@ public class InquiryRestController {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            Pageable pageable = PageRequest.of(page - 1, 10);
+            Pageable pageable = PageRequest.of(page - 1, PAGECNT);
             List<InquiryCHG> list = iService.selectInquiryList(pageable, qtitle);
+
+            long total = iRepository.countByQtitleContaining(qtitle);
+
             if (list != null) {
+                map.put("total", total);
                 map.put("status", 200);
                 map.put("result", list);
             }

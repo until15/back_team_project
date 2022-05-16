@@ -17,6 +17,8 @@ public interface CommentRepository extends JpaRepository<CommentCHG, Long> {
 
     List<CommentCHG> findByCommunitychg_bnoOrderByCmtnoDesc(long bno);
 
+    CommentCHG findByMemberchg_memailContaining(String memail);
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "DELETE FROM COMMUNITYCHG WHERE CMTNO =:cmtno", nativeQuery = true)
