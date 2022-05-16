@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -18,16 +22,71 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 
 //첼린지 인증 엔티티
 @Data
 @Entity
-@Table(name = "ChallengeCHG")
+@Table(name = "CHALLENGECHG")
 @SequenceGenerator(name="SEQ_CHG_NO",
 		sequenceName = "SEQ_CHG_NO", 
 		allocationSize = 1, 
 		initialValue = 1)
+
+// native작성
+@NamedNativeQuery(
+	name  = "challenge_dto",
+	query = "SELECT * FROM "
+			+ " (SELECT ROW_NUMBER() OVER (ORDER BY CHGNO ASC) "
+			+ " CHGNO, CHGLIKE, CHGLEVEL, CHGTITLE, CHGINTRO, CHGCONTENT, "
+			+ " CHGSTART, CHGEND, RECRUITSTART, RECRUITEND, "
+			+ " RECSTATE, CHGCNT, CHGFEE, "
+			+ " CHGIMAGE, CHGISIZE, CHGITYPE, CHGINAME "
+			+ " FROM "
+			+ " CHALLENGECHG) "
+			+ " WHERE CHGNO BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC",
+
+
+
+	resultSetMapping = "resultmap_challenge_dto"
+)
+@SqlResultSetMapping(
+	name = "resultmap_challenge_dto",
+	classes = @ConstructorResult(
+		targetClass = ChallengeDTO.class,
+		columns = {
+			@ColumnResult(name = "CHGNO", type = Long.class),
+			@ColumnResult(name = "CHGLIKE", type = Long.class),
+			@ColumnResult(name = "CHGLEVEL", type = Long.class),
+			@ColumnResult(name = "CHGTITLE", type = String.class),
+			@ColumnResult(name = "CHGINTRO", type = String.class),
+			@ColumnResult(name = "CHGCONTENT", type = String.class),
+			@ColumnResult(name = "CHGSTART", type = Timestamp.class),
+			@ColumnResult(name = "CHGEND", type = Timestamp.class),
+			@ColumnResult(name = "RECRUITSTART", type = Timestamp.class),
+			@ColumnResult(name = "RECRUITEND", type = Timestamp.class),
+
+			// 오류 : Could not locate appropriate constructor on class
+			@ColumnResult(name = "RECSTATE", type = int.class),
+			@ColumnResult(name = "CHGCNT", type = Long.class),
+			@ColumnResult(name = "CHGFEE", type = Long.class),
+			@ColumnResult(name = "CHGIMAGE", type = byte[].class),
+			@ColumnResult(name = "CHGISIZE", type = Long.class),
+			@ColumnResult(name = "CHGITYPE", type = String.class),
+			@ColumnResult(name = "CHGINAME", type = String.class)
+		}
+	)
+)
 public class ChallengeCHG {
+	
 
 	// 챌린지번호
 	@Id
@@ -95,7 +154,7 @@ public class ChallengeCHG {
 	private Long chglevel = 1L;
 
 	// 루틴
-	//private Long chgroutine;
+	private Long chgroutine;
 	
 	// 첼린지 생성한 사람
     @ManyToOne

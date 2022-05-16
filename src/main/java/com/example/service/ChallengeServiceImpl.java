@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeDTO;
 import com.example.repository.ChallengeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         return null;
     }
 
-    // 인기순 조회
+    // 인기별 조회
     @Override
     public List<ChallengeCHG> likeSelectList(Pageable page, long chglike) {
         try {
@@ -156,7 +157,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
     }
 
-    // 챌린지 난이도 목록
+    // 챌린지 난이도 목록(리스트)
     @Override
     public List<ChallengeCHG> chgLevelSelectList(Pageable page, String challenge) {
         try {
@@ -169,11 +170,22 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
 
-    // 챌린지 인기 목록
+    // 챌린지 인기 목록(리스트)
     @Override
     public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge) {
         try {
             List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChglikeDesc(challenge, page);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ChallengeDTO> selectLikeChg(String challenge) {
+        try {
+            List<ChallengeDTO> list = chgRepository.selectLikeCHG(challenge);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
