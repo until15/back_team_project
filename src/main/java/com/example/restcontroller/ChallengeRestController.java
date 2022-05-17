@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.example.entity.CHGImgView;
 import com.example.entity.ChallengeCHG;
-import com.example.entity.ChallengeDTO;
+import com.example.entity.ChallengeCHGView;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
@@ -18,6 +18,7 @@ import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.ChgImageRepository;
+import com.example.repository.ChgViewRepository;
 import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
 import com.example.service.ChallengeService;
@@ -55,6 +56,9 @@ public class ChallengeRestController {
     
     @Autowired
     ChallengeRepository chgRepository;
+
+    @Autowired
+    ChgViewRepository cvRepository;
 
     @Autowired 
     RoutineRepository rtnRepository;
@@ -215,6 +219,7 @@ public class ChallengeRestController {
         return map;
     }
 
+
     // 챌린지 수정
     // 127.0.0.1:9090/ROOT/api/challenge/updateone
     // {"chgno" : 1, "chgtitle" : "aaa2", "chgintro" : "bbb2", "chgcontent" :
@@ -267,6 +272,7 @@ public class ChallengeRestController {
         return map;
     }
 
+
     // 챌린지 삭제
     // 127.0.0.1:9090/ROOT/api/challenge/delete?chgno=1
     @RequestMapping(
@@ -307,6 +313,7 @@ public class ChallengeRestController {
         return map;
     }
 
+
     // 챌린지 1개 조회
     // 127.0.0.1:9090/ROOT/api/challenge/selectone?chgno=챌린지번호
     // Params => key:chgno, values:챌린지번호
@@ -330,6 +337,7 @@ public class ChallengeRestController {
         }
         return map;
     }
+
 
     // 챌린지 목록 (검색어 + 페이지네이션)
     // 127.0.0.1:9090/ROOT/api/challenge/selectlist?page=1&challenge
@@ -357,6 +365,7 @@ public class ChallengeRestController {
         return map;
     }
 
+
     // 챌린지 인기별 조회 
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike
     @RequestMapping(
@@ -379,6 +388,33 @@ public class ChallengeRestController {
                 map.put("result", list);
             }
             
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+
+    // 챌린지 인기 목록(페이지네이션)
+    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
+    @RequestMapping(
+        value    = "/likeselectlist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> likeSelectlistGET(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "like", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Pageable pageable = PageRequest.of(page - 1, 10);
+            List<ChallengeCHG> list = chgService.chgLikeSelectList(pageable, challenge);
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
+    
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
@@ -415,35 +451,6 @@ public class ChallengeRestController {
         return map;
     }
     
-    ////////////////////////////////////////////////////////////
-    // 메인화면
-    
-    // 챌린지 인기 목록(페이지네이션)
-    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
-    @RequestMapping(
-        value    = "/likeselectlist", 
-        method   = { RequestMethod.GET }, 
-        consumes = { MediaType.ALL_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> likeSelectlistGET(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "like", defaultValue = "") String challenge) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeCHG> list = chgService.chgLikeSelectList(pageable, challenge);
-            if (list != null) {
-                map.put("status", 200);
-                map.put("result", list);
-            }
-    
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
-
 
     // 챌린지 난이도 목록(페이지네이션)
     // 127.0.0.1:9090/ROOT/api/challenge/levelselectlist
@@ -470,9 +477,12 @@ public class ChallengeRestController {
         }
         return map;
     }
+
+
+    ////////////////////////////////////////////////////////////// ↓ 메 인 화 면 ↓ //////////////////////////////////////////////////////////////
     
 
-    // 챌린지 좋아요 목록 내림차순 (9개표시)
+    // 챌린지 인기 목록 내림차순 (9개표시)
     // 127.0.0.1:9090/ROOT/api/challenge/selectlikelist
     @RequestMapping(
         value    = "/selectlikelist", 
@@ -480,10 +490,10 @@ public class ChallengeRestController {
         consumes = { MediaType.ALL_VALUE }, 
         produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectLikeListGET(
-            @RequestParam(name = "like", defaultValue = "") String chgtitle) {
+            @RequestParam(name = "like", defaultValue = "") String challenge) {
         Map<String, Object> map = new HashMap<>();
         try {
-            List<ChallengeDTO> list = chgRepository.selectLikeCHG(chgtitle);
+            List<ChallengeCHGView> list = cvRepository.selectLikeCHG(challenge);
             // URL화 시킨 이미지를 배열에 담기
 			String[] imgs = new String[list.size()];
 			for (int i=0;i<list.size();i++) {
@@ -501,6 +511,38 @@ public class ChallengeRestController {
         }
         return map;
     }
+
+    
+    // 챌린지 난이도 목록 내림차순 (9개표시)
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlevellist
+    @RequestMapping(
+        value    = "/selectlevellist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectLevelListGET(
+            @RequestParam(name = "level", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<ChallengeCHGView> list = cvRepository.selectLevelCHG(challenge);
+            // URL화 시킨 이미지를 배열에 담기
+			String[] imgs = new String[list.size()];
+			for (int i=0;i<list.size();i++) {
+				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+			}
+			System.out.println("이미지 url : " + imgs.toString());
+			
+			map.put("images", imgs);
+			map.put("result", list);
+			map.put("status", 200);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
 
     // 썸네일 조회
 	// 127.0.0.1:9090/ROOT/api/challenge/thumbnail?chgno=

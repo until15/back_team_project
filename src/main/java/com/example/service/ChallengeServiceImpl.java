@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.ChallengeCHG;
-import com.example.entity.ChallengeDTO;
 import com.example.repository.ChallengeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,17 +180,5 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
         return null;
     }
-
-    @Override
-    public List<ChallengeDTO> selectLikeChg(String chgtitle) {
-        try {
-            List<ChallengeDTO> list = chgRepository.selectLikeCHG(chgtitle);
-            return list;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
 }

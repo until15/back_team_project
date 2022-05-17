@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.ChallengeCHG;
-import com.example.entity.ChallengeDTO;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,8 +30,6 @@ public interface ChallengeService {
 
     // 챌린지 인기 목록(리스트)
     public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge);
-
-    public List<ChallengeDTO> selectLikeChg(String chgtitle);
 
     // 챌린지 수정
     public int challengeUpdateOne(ChallengeCHG challenge);
