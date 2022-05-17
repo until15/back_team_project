@@ -3,12 +3,17 @@ package com.example.service;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.entity.CfImageCHG;
 import com.example.entity.ConfirmCHG;
 import com.example.entity.ConfirmProjection;
+import com.example.repository.CfImageRepository;
 import com.example.repository.ConfirmRepository;
 
 @Service
@@ -16,13 +21,17 @@ public class ConfirmServiceImpl implements ConfirmService {
 
 	@Autowired ConfirmRepository cfRepository;
 	
+	@Autowired CfImageRepository cfiRepository;
+	
+	@Autowired EntityManagerFactory emf;
+	
 	// 인증 등록
 	@Override
-	public int ConfirmInsert(ConfirmCHG confirm) {
+	public long ConfirmInsert(ConfirmCHG confirm) {
 		try {
-			cfRepository.save(confirm);
+			ConfirmCHG confirm1 = cfRepository.save(confirm);
 			
-			return 1;
+			return confirm1.getCfno();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
@@ -143,6 +152,27 @@ public class ConfirmServiceImpl implements ConfirmService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	// 인증하기 이미지 추가 (일괄)
+	@Override
+	public int ConfirmImage(List<CfImageCHG> list) {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			
+			for (CfImageCHG cfImg : list) {
+                em.persist(cfImg);
+            }
+			
+            em.getTransaction().commit();
+			
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			return 0;
 		}
 	}
 
