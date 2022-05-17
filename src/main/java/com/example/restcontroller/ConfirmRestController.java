@@ -565,8 +565,8 @@ public class ConfirmRestController {
 			@RequestParam(name = "file", required = false) MultipartFile[] file) throws IOException{
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println("인증번호 : " + cfno);	// 인증 번호
-			System.out.println("이미지 파일 : " + file);	// 이미지 데이터
+			// System.out.println("인증번호 : " + cfno);	// 인증 번호
+			// System.out.println("이미지 파일 : " + file);	// 이미지 데이터
 			
 			// 이미지가 여러개 들어가기 위한 List
 			List<CfImageCHG> list = new ArrayList<>();
@@ -591,7 +591,7 @@ public class ConfirmRestController {
 			
 			// 이미지 디비에 넣기
 			int ret = cfService.ConfirmImage(list);
-			System.out.println("이미지 추가 성공적: " + ret);
+			// System.out.println("이미지 추가 성공적: " + ret);
 			if (ret == 1) {
 				map.put("status", 200);				
 			} else {
