@@ -32,7 +32,7 @@ public interface ChallengeService {
     // 챌린지 인기 목록(리스트)
     public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge);
 
-    public List<ChallengeDTO> selectLikeChg(String challenge);
+    public List<ChallengeDTO> selectLikeChg(String chgtitle);
 
     // 챌린지 수정
     public int challengeUpdateOne(ChallengeCHG challenge);

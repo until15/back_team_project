@@ -65,7 +65,9 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     		nativeQuery = true)
     int increaseCnt(@Param(value="no") long chgno);
     
+
+
     // 챌린지 인기 목록 내림차순 (9개표시)
-	@Query(name = "challenge_dto", nativeQuery = true)
-	public List<ChallengeDTO> selectLikeCHG(@Param("") String challenge );
+	@Query(name = "challenge_like_dto", nativeQuery = true)
+	List<ChallengeDTO> selectLikeCHG(String chgtitle );
 }

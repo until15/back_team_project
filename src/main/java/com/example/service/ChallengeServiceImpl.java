@@ -183,9 +183,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<ChallengeDTO> selectLikeChg(String challenge) {
+    public List<ChallengeDTO> selectLikeChg(String chgtitle) {
         try {
-            List<ChallengeDTO> list = chgRepository.selectLikeCHG(challenge);
+            List<ChallengeDTO> list = chgRepository.selectLikeCHG(chgtitle);
             return list;
         } catch (Exception e) {
             e.printStackTrace();

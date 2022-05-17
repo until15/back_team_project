@@ -36,27 +36,24 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "CHALLENGECHG")
-@SequenceGenerator(name="SEQ_CHG_NO",
-		sequenceName = "SEQ_CHG_NO", 
-		allocationSize = 1, 
-		initialValue = 1)
+@SequenceGenerator(name="SEQ_CHG_NO", sequenceName = "SEQ_CHG_NO", allocationSize = 1, initialValue = 1)
 
-// native작성
+// 인기순 목록 
 @NamedNativeQuery(
-	name  = "challenge_dto",
+	name  = "challenge_like_dto",
 	query = "SELECT * FROM "
 			+ " (SELECT ROW_NUMBER() OVER (ORDER BY CHGNO ASC) "
-			+ " CHGNO, CHGLIKE, CHGLEVEL, CHGTITLE, CHGINTRO, CHGCONTENT, "
-			+ " CHGSTART, CHGEND, RECRUITSTART, RECRUITEND, "
-			+ " RECSTATE, CHGCNT, CHGFEE, "
-			+ " CHGIMAGE, CHGISIZE, CHGITYPE, CHGINAME "
+			+ " CHGNO, CHGLIKE, CHGLEVEL, CHGTITLE, "
+			+ " CHGINTRO, CHGCONTENT, CHGCNT, CHGFEE "
+			//+ " CHGSTART, CHGEND, " 
+			//+ " RECRUITSTART, RECRUITEND, "
+			//+ " RECSTATE," 
 			+ " FROM "
-			+ " CHALLENGECHG) "
-			+ " WHERE CHGNO BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC",
-	resultSetMapping = "resultmap_challenge_dto"
+			+ " CHALLENGECHG) WHERE CHGNO BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC",
+	resultSetMapping = "resultmap_challenge_like_dto"
 )
 @SqlResultSetMapping(
-	name = "resultmap_challenge_dto",
+	name    = "resultmap_challenge_like_dto",
 	classes = @ConstructorResult(
 		targetClass = ChallengeDTO.class,
 		columns = {
@@ -66,20 +63,18 @@ import lombok.ToString;
 			@ColumnResult(name = "CHGTITLE", type = String.class),
 			@ColumnResult(name = "CHGINTRO", type = String.class),
 			@ColumnResult(name = "CHGCONTENT", type = String.class),
-			@ColumnResult(name = "CHGSTART", type = Timestamp.class),
-			@ColumnResult(name = "CHGEND", type = Timestamp.class),
-			@ColumnResult(name = "RECRUITSTART", type = Timestamp.class),
-			@ColumnResult(name = "RECRUITEND", type = Timestamp.class),
-			@ColumnResult(name = "RECSTATE", type = int.class),
 			@ColumnResult(name = "CHGCNT", type = Long.class),
-			@ColumnResult(name = "CHGFEE", type = Long.class),
-			@ColumnResult(name = "CHGIMAGE", type = byte[].class),
-			@ColumnResult(name = "CHGISIZE", type = Long.class),
-			@ColumnResult(name = "CHGITYPE", type = String.class),
-			@ColumnResult(name = "CHGINAME", type = String.class)
+			@ColumnResult(name = "CHGFEE", type = Long.class)
+			//@ColumnResult(name = "CHGSTART", type = Timestamp.class),
+			//@ColumnResult(name = "CHGEND", type = Timestamp.class),
+			//@ColumnResult(name = "RECRUITSTART", type = Timestamp.class),
+			//@ColumnResult(name = "RECRUITEND", type = Timestamp.class),
+			//@ColumnResult(name = "RECSTATE", type = int.class),
 		}
 	)
 )
+
+
 public class ChallengeCHG {
 	
 
