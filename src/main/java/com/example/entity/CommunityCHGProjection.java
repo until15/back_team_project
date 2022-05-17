@@ -18,4 +18,7 @@ public interface CommunityCHGProjection {
     @Value("#{target.memberchg.memail}")
     String getMemail();
 
+    @Value("#{target.memberchg.mid}")
+    String getMid();
+
 }

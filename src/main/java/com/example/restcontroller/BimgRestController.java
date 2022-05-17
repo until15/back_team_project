@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
-import com.example.entity.BimgCHGProjection;
 import com.example.entity.CommunityCHG;
-import com.example.entity.CommunityCHGProjection;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.BimgRepository;
@@ -27,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -19,8 +19,15 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
 
     long countByMemailContaining(String memail);
 
-    @Transactional
-    @Query(value = "SELECT * FROM MEMBERCHG WHERE MEMAIL =:memail", nativeQuery = true)
+    // memberprojection
+    MemberCHGProjection findByMemail(String memail);
+
+    // Containing 입력값 포함된 것 전부
+    MemberCHGProjection findByMid(String mid);
+
+    MemberCHGProjection findByMpw(String mpw);
+
+    @Query(value = "SELECT FROM MEMBERCHG WHERE MEMAIL =:memail", nativeQuery = true)
     public MemberCHG selectOneMember(@Param(value = "memail") String memail);
 
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
@@ -32,10 +39,5 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE MEMBERCHG SET MPW=:mpw WHERE MEMAIL=:memail", nativeQuery = true)
     public int updatePwMember(@Param(value = "memail") String memail, @Param(value = "mpw") String mpw);
-
-    // memberprojection
-    MemberCHGProjection findByMemail(String memail);
-
-    MemberCHGProjection findByMid(String mid);
 
 }

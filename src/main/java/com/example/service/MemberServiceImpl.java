@@ -17,7 +17,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 가입
     @Override
-    public int MemberInsertOne(MemberCHG member) {
+    public int memberInsertOne(MemberCHG member) {
         try {
             mRepository.save(member);
             return 1;
@@ -29,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 1명 조회 (사용자 프로필 확인)
     @Override
-    public MemberCHG MemberSelectOne(String memail) {
+    public MemberCHG memberSelectOne(String memail) {
         try {
             MemberCHG member = mRepository.findById(memail).orElse(null);
             return member;
@@ -42,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 목록 (관리자용)
     @Override
-    public List<MemberCHG> MemberSelectList(Pageable page, String memail) {
+    public List<MemberCHG> memberSelectList(Pageable page, String memail) {
         try {
             List<MemberCHG> list = mRepository.findByMemailContainingOrderByMemailDesc(memail, page);
             return list;
@@ -55,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 정보 수정
     @Override
-    public int MemberUpdate(MemberCHG member) {
+    public int memberUpdate(MemberCHG member) {
         try {
             mRepository.save(member);
             return 1;
@@ -68,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 암호 수정
     @Override
-    public long MemberUpdatePw(String memail, String mpw) {
+    public long memberUpdatePw(String memail, String mpw) {
         try {
             mRepository.updatePwMember(memail, mpw);
             return 1;
@@ -80,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 탈퇴 (update)
     @Override
-    public int MemberLeave(MemberCHG member) {
+    public int memberLeave(MemberCHG member) {
         try {
             mRepository.save(member);
             return 1;
@@ -93,7 +93,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 수 구하기
     @Override
-    public long MemberCountSelect(String memail) {
+    public long memberCountSelect(String memail) {
         try {
             long count = mRepository.countByMemailContaining(memail);
             return count;
@@ -106,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 프로필 이미지 가져오기
     @Override
-    public MemberCHG MemberProfileSelect(String memail) {
+    public MemberCHG memberProfileSelect(String memail) {
         try {
             MemberCHG member = mRepository.findById(memail).orElse(null);
             return member;
@@ -120,7 +120,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 프로필 이미지 수정
     @Override
-    public int MemberProfileUpdate(MemberCHG member) {
+    public int memberProfileUpdate(MemberCHG member) {
         try {
             mRepository.save(member);
             return 1;
@@ -128,6 +128,17 @@ public class MemberServiceImpl implements MemberService {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    @Override
+    public MemberCHG memberSelectMemail(String memail) {
+        try {
+            MemberCHG member = mRepository.findById(memail).orElse(null);
+            return member;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

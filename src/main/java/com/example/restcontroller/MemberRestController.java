@@ -63,7 +63,7 @@ public class MemberRestController {
 	@RequestMapping(value = "/join", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> joinPOST(@ModelAttribute MemberCHG member, @AuthenticationPrincipal User user,
-			@RequestParam(name = "mimage") MultipartFile file) throws IOException {
+			@RequestParam(name = "mimage", required = false) MultipartFile file) throws IOException {
 		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 
 		member.setMpw(bcpe.encode(member.getMpw())); // 비밀번호 설정
@@ -78,13 +78,14 @@ public class MemberRestController {
 				member.setMptype(file.getContentType()); // 이미지 타입
 			}
 		}
-
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int ret = mService.MemberInsertOne(member);
+			int ret = mService.memberInsertOne(member);
+
 			if (ret == 1) {
 				map.put("status", 200);
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", 0);
@@ -159,7 +160,7 @@ public class MemberRestController {
 			String username = jsonObject.getString("username");
 
 			System.out.println(username);
-			MemberCHG member1 = mService.MemberSelectOne(username);
+			MemberCHG member1 = mService.memberSelectOne(username);
 			// 닉네임
 			member1.setMid(member.getMid());
 			// // 이름
@@ -181,7 +182,7 @@ public class MemberRestController {
 				}
 			}
 
-			int ret = mService.MemberUpdate(member1);
+			int ret = mService.memberUpdate(member1);
 			if (ret == 1) {
 				map.put("status", 200);
 			}
@@ -216,7 +217,7 @@ public class MemberRestController {
 			// 함호화 되지 않는 것과 암호화 된것 비교하기
 			if (bcpe.matches(member.getMpw(), user.getPassword())) {
 
-				mService.MemberUpdatePw(username, bcpe.encode(member.getMpw1()));
+				mService.memberUpdatePw(username, bcpe.encode(member.getMpw1()));
 				map.put("status", 200);
 			}
 
@@ -232,22 +233,20 @@ public class MemberRestController {
 	// 127.0.0.1:9090/ROOT/api/member/deletemember
 	@RequestMapping(value = "/deletemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> deleteMemberOnePUT(@RequestHeader(name = "token") String token,
-			@RequestBody MemberCHG member) {
+	public Map<String, Object> deleteMemberOnePUT(
+			@RequestBody MemberCHG member, @RequestParam(name = "memail") String memail,
+			@RequestParam(name = "mpw") String mpw) {
+		System.out.println("=====================================================" + member.getMstep());
+		System.out.println("=====================================================" + memail);
+		System.out.println("=====================================================" + mpw);
+
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
-
-			// 추출된 결과값을 JSONObject 형태로 파싱
-			JSONObject jsonObject = new JSONObject(userSubject);
-			String username = jsonObject.getString("username");
-
-			System.out.println(username);
-			MemberCHG member1 = mService.MemberSelectOne(username);
+			MemberCHG member1 = mService.memberSelectMemail(memail);
 			member1.setMstep(member.getMstep());
+			System.out.println("================================================" + member1.toString());
 
-			int ret = mService.MemberLeave(member1);
+			int ret = mService.memberLeave(member1);
 			if (ret == 1) {
 				map.put("status", 200);
 			}
@@ -278,7 +277,7 @@ public class MemberRestController {
 
 			System.out.println(username);
 
-			MemberCHG member1 = mService.MemberSelectOne(username);
+			MemberCHG member1 = mService.memberSelectOne(username);
 			String imgs = new String();
 			imgs = "/ROOT/api/member/profile?memail=" + username;
 
@@ -302,7 +301,7 @@ public class MemberRestController {
 			@RequestParam(name = "memail") String memail) throws IOException {
 		try {
 
-			MemberCHG member1 = mService.MemberSelectOne(memail);
+			MemberCHG member1 = mService.memberSelectOne(memail);
 
 			if (member1.getMpsize() > 0) {
 				HttpHeaders header = new HttpHeaders();
@@ -341,7 +340,7 @@ public class MemberRestController {
 		try {
 
 			Pageable pageable = PageRequest.of(page - 1, 10);
-			List<MemberCHG> list = mService.MemberSelectList(pageable, memeil);
+			List<MemberCHG> list = mService.memberSelectList(pageable, memeil);
 			if (list != null) {
 				map.put("status", 200);
 				map.put("result", list);
@@ -377,7 +376,7 @@ public class MemberRestController {
 		return map;
 	}
 
-	// 중복체크
+	// 닉네임 중복체크
 	// 127.0.0.1:9090/ROOT/api/member/checkmid
 	@RequestMapping(value = "/checkmid", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
@@ -385,9 +384,9 @@ public class MemberRestController {
 	public Map<String, Object> checkmidGET(@RequestParam(name = "mid") String mid) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			MemberCHGProjection member1 = mRepository.findByMid(mid);
-			if (member1 != null) {
-				map.put("result", member1);
+			MemberCHGProjection member = mRepository.findByMid(mid);
+			if (member != null) {
+				map.put("result", member);
 				map.put("status", 200);
 			}
 

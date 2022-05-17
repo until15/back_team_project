@@ -1,9 +1,9 @@
 package com.example.entity;
 
 public interface MemberCHGProjection {
-    
+
     String getMemail();
-    
+
     String getMid();
 
     String getMname();
@@ -18,9 +18,10 @@ public interface MemberCHGProjection {
 
     String getMphone();
 
-	String getMrole();
+    String getMrole();
 
-	Long getMrank();
+    Long getMrank();
 
-	int getMstep();
+    int getMstep();
+
 }
