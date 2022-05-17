@@ -11,10 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -22,15 +18,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
 
 //첼린지 인증 엔티티
 @Data
@@ -38,41 +25,7 @@ import lombok.ToString;
 @Table(name = "CHALLENGECHG")
 @SequenceGenerator(name="SEQ_CHG_NO", sequenceName = "SEQ_CHG_NO", allocationSize = 1, initialValue = 1)
 
-// 인기순 목록 
-@NamedNativeQuery(
-	name  = "challenge_like_dto",
-	query = "SELECT * FROM "
-			+ " (SELECT ROW_NUMBER() OVER (ORDER BY CHGNO ASC) "
-			+ " CHGNO, CHGLIKE, CHGLEVEL, CHGTITLE, "
-			+ " CHGINTRO, CHGCONTENT, CHGCNT, CHGFEE "
-			//+ " CHGSTART, CHGEND, " 
-			//+ " RECRUITSTART, RECRUITEND, "
-			//+ " RECSTATE," 
-			+ " FROM "
-			+ " CHALLENGECHG) WHERE CHGNO BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC",
-	resultSetMapping = "resultmap_challenge_like_dto"
-)
-@SqlResultSetMapping(
-	name    = "resultmap_challenge_like_dto",
-	classes = @ConstructorResult(
-		targetClass = ChallengeDTO.class,
-		columns = {
-			@ColumnResult(name = "CHGNO", type = Long.class),
-			@ColumnResult(name = "CHGLIKE", type = Long.class),
-			@ColumnResult(name = "CHGLEVEL", type = Long.class),
-			@ColumnResult(name = "CHGTITLE", type = String.class),
-			@ColumnResult(name = "CHGINTRO", type = String.class),
-			@ColumnResult(name = "CHGCONTENT", type = String.class),
-			@ColumnResult(name = "CHGCNT", type = Long.class),
-			@ColumnResult(name = "CHGFEE", type = Long.class)
-			//@ColumnResult(name = "CHGSTART", type = Timestamp.class),
-			//@ColumnResult(name = "CHGEND", type = Timestamp.class),
-			//@ColumnResult(name = "RECRUITSTART", type = Timestamp.class),
-			//@ColumnResult(name = "RECRUITEND", type = Timestamp.class),
-			//@ColumnResult(name = "RECSTATE", type = int.class),
-		}
-	)
-)
+
 
 
 public class ChallengeCHG {

@@ -6,7 +6,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.example.entity.ChallengeCHG;
-import com.example.entity.ChallengeDTO;
 import com.example.entity.ChallengeProjection;
 
 import org.springframework.data.domain.Pageable;
@@ -44,18 +43,16 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     // 챌린지 난이도 목록 (리스트)
     List<ChallengeCHG> findByChgtitleContainingOrderByChglevelDesc(String challenge, Pageable page);
     
-    
     // 첼린지 신규 조회
     List<ChallengeCHG> findByChgregdateOrderByChgregdateDesc(Date chgregdate, Pageable page);
 
-    
     // 생성자가 마지막으로 만든 첼린지 조회
     ChallengeProjection findTop1ByMemberchg_memailOrderByChgnoDesc(String em);
     
-//    @Query(value = 
-//			"SELECT MAX(CHGNO) FROM CHALLENGECHG WHERE MEMAIL=:em", 
-//			nativeQuery = true)
-//    long selectLastChallenge(@Param(value = "em") String email);
+    // @Query(value = 
+    // "SELECT MAX(CHGNO) FROM CHALLENGECHG WHERE MEMAIL=:em", 
+    // nativeQuery = true)
+    // long selectLastChallenge(@Param(value = "em") String email);
     
     // 첼린지에 가입할 때마다 인원수 1씩 증가
     @Transactional
@@ -65,9 +62,4 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     		nativeQuery = true)
     int increaseCnt(@Param(value="no") long chgno);
     
-
-
-    // 챌린지 인기 목록 내림차순 (9개표시)
-	@Query(name = "challenge_like_dto", nativeQuery = true)
-	List<ChallengeDTO> selectLikeCHG(String chgtitle );
 }
