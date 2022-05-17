@@ -1,9 +1,11 @@
 package com.example.restcontroller;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.entity.CfImageCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.ConfirmCHG;
 import com.example.entity.ConfirmProjection;
@@ -111,14 +115,14 @@ public class ConfirmRestController {
 			
 			// 유저가 등록한 인증글 중에 오늘날짜에 해당하는게 없을 경우에 인증 등록가능
 			if (todayConfirm == null) {
-				System.out.println("된다");
 				// 참가한 사람과 인증글 올릴 사람의 아이디가 일치하면 
 				if (join1.getMemberchgMemail().equals(email) ) {
 					
-					int ret = cfService.ConfirmInsert(confirm);
-					System.out.println(ret);
+					long ret = cfService.ConfirmInsert(confirm);
+//					System.out.println(ret);
 					
-					if (ret == 1) {
+					if (ret > 0) {
+						map.put("result", ret);
 						map.put("status", 200);
 					}
 
@@ -182,7 +186,7 @@ public class ConfirmRestController {
 					System.out.println(ret);
 					
 					if (ret == 1) {
-						map.put("status", 200);				
+						map.put("status", 200);
 					}
 				}
 			}
@@ -542,6 +546,58 @@ public class ConfirmRestController {
 			else {
 				map.put("status", 0);				
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+	
+	
+	// 인증 이미지 일괄 추가하기
+	// 127.0.0.1:9090/ROOT/api/confirm/cfimage.insert?cfno=
+	@RequestMapping(value="/cfimage.insert", 
+			method = {RequestMethod.POST},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> CFImagePOST(
+			@RequestParam(name = "cfno") long cfno,
+			@RequestParam(name = "file", required = false) MultipartFile[] file) throws IOException{
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println("인증번호 : " + cfno);	// 인증 번호
+			System.out.println("이미지 파일 : " + file);	// 이미지 데이터
+			
+			// 이미지가 여러개 들어가기 위한 List
+			List<CfImageCHG> list = new ArrayList<>();
+			
+			// 반복문을 사용해서 엔티티에 이미지 데이터 저장
+			for( int i=0;i<file.length;i++) {
+				
+				CfImageCHG cfImg = new CfImageCHG();
+				
+				
+				if (!file[i].isEmpty()) {
+					cfImg.setCfimage(file[i].getBytes());
+					cfImg.setCfimgname(file[i].getOriginalFilename());
+					cfImg.setCfimgtype(file[i].getContentType());
+					cfImg.setCfimgsize(file[i].getSize());
+					cfImg.setCfno(cfno);
+				}
+				
+				list.add(cfImg);
+			}
+//			System.out.println("리스트에 담긴 데이터 : " + list);
+			
+			// 이미지 디비에 넣기
+			int ret = cfService.ConfirmImage(list);
+			System.out.println("이미지 추가 성공적: " + ret);
+			if (ret == 1) {
+				map.put("status", 200);				
+			} else {
+				map.put("status", 0);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", -1);

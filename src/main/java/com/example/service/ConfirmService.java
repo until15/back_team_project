@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.entity.CfImageCHG;
 import com.example.entity.ConfirmCHG;
 import com.example.entity.ConfirmProjection;
 
@@ -13,7 +14,7 @@ import com.example.entity.ConfirmProjection;
 public interface ConfirmService {
 
 	// 인증하기
-	public int ConfirmInsert(ConfirmCHG confirm);
+	public long ConfirmInsert(ConfirmCHG confirm);
 	
 	// 오늘 날짜에 해당하는 인증글 조회
 	public ConfirmCHG todayConfirm(String email, long jno, Timestamp start, Timestamp end);
@@ -44,5 +45,8 @@ public interface ConfirmService {
 	
 	// 성공 유무 별로 인증글 조회 (페이지네이션)
 	public List<ConfirmProjection> whetherSuccessCFM(long chgno, int no, Pageable page);
+	
+	// 인증 이미지 추가
+	public int ConfirmImage(List<CfImageCHG> list);
 	
 }
