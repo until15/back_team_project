@@ -552,34 +552,40 @@ public class ChallengeRestController {
     produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<byte[]> selectImageGET(
         @RequestParam(name = "chgno") long chgno){
-    try {
-        // 이미지를 한개 조회
-        CHGImgView chgImage = chgIRepository.findByChgno(chgno);
-        
-        System.out.println("이미지 조회 : " + chgImage.getChgisize());
-        // 썸네일 이미지가 있을 때
-        if (chgImage.getChgisize() > 0) {
-            HttpHeaders header = new HttpHeaders();
-            if (chgImage.getChgitype().equals("image/jpeg")) {
-                header.setContentType(MediaType.IMAGE_JPEG);
-            } else if (chgImage.getChgitype().equals("image/png")) {
-                header.setContentType(MediaType.IMAGE_PNG);
-            } else if (chgImage.getChgitype().equals("image/gif")) {
-                header.setContentType(MediaType.IMAGE_GIF);
-            }
-            ResponseEntity<byte[]> response = new ResponseEntity<>(chgImage.getChgimage(), header, HttpStatus.OK);
-            return response;
+        try {
+            // 이미지를 한개 조회
+            CHGImgView chgImage = chgIRepository.findByChgno(chgno);
             
-        } else {	// 썸네일 이미지가 없을 때
-            InputStream is = rLoader.getResource(DEFAULT_IMAGE).getInputStream();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
-            ResponseEntity<byte[]> response = new ResponseEntity<>(is.readAllBytes(), headers, HttpStatus.OK);
-            return response;
+            System.out.println("이미지 조회 : " + chgImage.getChgisize());
+            // 썸네일 이미지가 있을 때
+            if (chgImage.getChgisize() > 0) {
+                HttpHeaders header = new HttpHeaders();
+                if (chgImage.getChgitype().equals("image/jpeg")) {
+                    header.setContentType(MediaType.IMAGE_JPEG);
+                } else if (chgImage.getChgitype().equals("image/png")) {
+                    header.setContentType(MediaType.IMAGE_PNG);
+                } else if (chgImage.getChgitype().equals("image/gif")) {
+                    header.setContentType(MediaType.IMAGE_GIF);
+                }
+                ResponseEntity<byte[]> response = new ResponseEntity<>(chgImage.getChgimage(), header, HttpStatus.OK);
+                return response;
+                
+            } else {	// 썸네일 이미지가 없을 때
+                InputStream is = rLoader.getResource(DEFAULT_IMAGE).getInputStream();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                ResponseEntity<byte[]> response = new ResponseEntity<>(is.readAllBytes(), headers, HttpStatus.OK);
+                return response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
     }
-    }
+    
+
+    // 마감된 챌린지 제외 조회 
+    
+
+
 }
