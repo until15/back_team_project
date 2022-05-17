@@ -28,23 +28,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/routine")
 public class RoutineRestController {
 
-    @Autowired JwtUtil jwtUtil;
-    @Autowired RoutineService rService;
+    @Autowired
+    JwtUtil jwtUtil;
+    @Autowired
+    RoutineService rService;
 
-    @Autowired MemberRepository mRepository;
-    @Autowired RoutineRepository rRepository;
+    @Autowired
+    MemberRepository mRepository;
+    @Autowired
+    RoutineRepository rRepository;
 
-    @Value("${board.page.count}") int PAGECNT;
+    @Value("${board.page.count}")
+    int PAGECNT;
 
-    //루틴 등록
-    //127.0.0.1:9090/ROOT/api/routine/insertbatch.json
-    //[{"rtnday":"테스트", "rtncnt" : 10, "rtnset" : 1, "rtnname" : "가나다", "posechg":{"pno":15}, "memberchg":{"memail":""}}, {"rtnday":"테스트", "rtncnt" : 10, "rtnset" : 1, "rtnname" : "가나다", "posechg":{"pno":15}, "memberchg":{"memail":""}}]
-    @RequestMapping(value="/insertbatch.json", method = {RequestMethod.POST},
-    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    // 루틴 등록
+    // 127.0.0.1:9090/ROOT/api/routine/insertbatch.json
+    // [{"rtnday":"테스트", "rtncnt" : 10, "rtnset" : 1, "rtnname" : "가나다",
+    // "posechg":{"pno":15}, "memberchg":{"memail":""}}, {"rtnday":"테스트", "rtncnt" :
+    // 10, "rtnset" : 1, "rtnname" : "가나다", "posechg":{"pno":15},
+    // "memberchg":{"memail":""}}]
+    @RequestMapping(value = "/insertbatch.json", method = { RequestMethod.POST }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineInsertPOST(
-        @RequestHeader(name="token") String token,
-        @RequestBody RoutineCHG[] routine
-    ){  
+            @RequestHeader(name = "token") String token,
+            @RequestBody RoutineCHG[] routine) {
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 아이디 추출
@@ -55,7 +62,7 @@ public class RoutineRestController {
             System.out.println(email);
 
             List<RoutineCHG> list = new ArrayList<>();
-            for(int i=0; i<routine.length; i++){
+            for (int i = 0; i < routine.length; i++) {
                 RoutineCHG obj = new RoutineCHG();
                 obj.setRtnday(routine[i].getRtnday());
                 obj.setRtncnt(routine[i].getRtncnt());
@@ -66,12 +73,12 @@ public class RoutineRestController {
                 MemberCHG member = new MemberCHG();
                 member.setMemail(email);
                 obj.setMemberchg(member);
-                
+
                 list.add(obj);
                 System.out.println(list);
             }
             int ret = rService.RoutineInsertBatch(list);
-            if(ret == 1){
+            if (ret == 1) {
                 map.put("status", 200);
                 map.put("result", list);
             }
@@ -84,14 +91,15 @@ public class RoutineRestController {
     }
 
     // 루틴 수정
-    //127.0.0.1:9090/ROOT/api/routine/updatebatch.json
-    // [{"rtnno" : 19, "rtnday":"수정123", "rtncnt" : 120, "rtnset" : 13, "rtnname" : "가나", "posechg":{"pno":15}, "memberchg":{"memail":"a@a.com"}}, {"rtnno" : 20, ...}]
-    @RequestMapping(value="/updatebatch.json", method = {RequestMethod.PUT},
-    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    // 127.0.0.1:9090/ROOT/api/routine/updatebatch.json
+    // [{"rtnno" : 70, "rtnday":"수정", "rtncnt" : 120, "rtnset" : 13, "rtnname" :
+    // "가나", "posechg":{"pno":15}},...]
+    @RequestMapping(value = "/updatebatch.json", method = { RequestMethod.PUT }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineUpdatePUT(
-        @RequestHeader(name="token") String token,
-        @RequestBody RoutineCHG[] routine
-    ){  
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "no") long rtnseq,
+            @RequestBody RoutineCHG[] routine) {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
@@ -99,10 +107,10 @@ public class RoutineRestController {
             JSONObject jsonObject = new JSONObject(username);
             String email = jsonObject.getString("username");
             System.out.println(email);
-            
-            List<RoutineCHG> list = rService.RoutineSelectlist(email);
-            for(int i=0; i<routine.length; i++){
-                if(email.equals(routine[i].getMemberchg().getMemail())){
+
+            List<RoutineCHG> list = rRepository.findByMemberchg_memailAndRtnseq(email, rtnseq);
+            for (int i = 0; i < routine.length; i++) {
+                if (email.equals(list.get(0).getMemberchg().getMemail())) {
                     RoutineCHG obj = new RoutineCHG();
                     obj.setRtnno(routine[i].getRtnno());
                     obj.setRtnday(routine[i].getRtnday());
@@ -114,16 +122,15 @@ public class RoutineRestController {
                     MemberCHG member = new MemberCHG();
                     member.setMemail(email);
                     obj.setMemberchg(member);
-                        
+
                     list.add(obj);
-                    System.out.println(list);
+                    // System.out.println(list2);
                 }
             }
             int ret = rService.RoutineUpdateBatch(list);
-            if(ret == 1){
+            if (ret == 1) {
                 map.put("status", 200);
-            }
-            else{
+            } else {
                 map.put("status", 0);
             }
         } catch (Exception e) {
@@ -133,14 +140,13 @@ public class RoutineRestController {
         return map;
     }
 
-    // 루틴 조회 
-    //127.0.0.1:9090/ROOT/api/routine/selectlist.json
-    @RequestMapping(value="/selectlist.json", method = {RequestMethod.GET},
-    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    // 루틴 조회
+    // 127.0.0.1:9090/ROOT/api/routine/selectlist.json
+    @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectlistGET(
-        @RequestHeader(name="token") String token,
-        @RequestParam(name="no") long rtnseq
-    ){  
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "no") long rtnseq) {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
@@ -150,16 +156,15 @@ public class RoutineRestController {
             String email = jsonObject.getString("username");
             System.out.println(email);
 
-            List<RoutineCHG> list2 = rRepository.findByMemberchg_memailAndRtnseq(email, rtnseq);
-            // List<RoutineCHG> list = rService.RoutineSelectlist(email);
-            MemberCHGProjection member = mRepository.findByMemail(list2.get(0).getMemberchg().getMemail());
+            List<RoutineCHG> list = rRepository.findByMemberchg_memailAndRtnseq(email, rtnseq);
+            MemberCHGProjection member = mRepository.findByMemail(list.get(0).getMemberchg().getMemail());
             map.put("userEmail", member);
 
-            if(!list2.isEmpty()){
+            if (!list.isEmpty()) {
                 map.put("status", 200);
-                map.put("result", list2);
+                map.put("result", list);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
@@ -168,15 +173,12 @@ public class RoutineRestController {
     }
 
     // 루틴 삭제
-    //127.0.0.1:9090/ROOT/api/routine/deletebatch.json
-    // {"memberchg":{"memail":""}}
-    @RequestMapping(value="/deletebatch.json", method = {RequestMethod.DELETE},
-    consumes = {MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    // 127.0.0.1:9090/ROOT/api/routine/deletebatch.json
+    @RequestMapping(value = "/deletebatch.json", method = { RequestMethod.DELETE }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineDeleteDELETE(
-        @RequestHeader(name="token") String token,
-        @RequestParam(name="no") Long[] rtnno,
-        @RequestBody RoutineCHG routine
-    ){  
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "no") Long[] rtnno) {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
@@ -185,22 +187,16 @@ public class RoutineRestController {
             String email = jsonObject.getString("username");
             System.out.println(email);
 
-            MemberCHG member = new MemberCHG();
-            member.setMemail(email);
-            routine.setMemberchg(member);
-
-            if(email.equals(routine.getMemberchg().getMemail())){
-                int ret = rService.RoutineDelete(rtnno);
-                if(ret == 1){
-                    map.put("status", 200);
-                }
+            int deleteRoutine = rRepository.deleteByMemberchg_memailAndRtnnoIn(email, rtnno);
+            if (deleteRoutine == rtnno.length) {
+                map.put("status", 200);
+            } else {
+                map.put("status", 0);
             }
-
-            map.put("status", 200);
-            
+            // System.out.println(deleteRoutine);
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status", 0);
+            map.put("status", -1);
         }
         return map;
     }

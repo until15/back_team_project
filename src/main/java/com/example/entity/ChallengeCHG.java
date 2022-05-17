@@ -22,12 +22,14 @@ import lombok.Data;
 //첼린지 인증 엔티티
 @Data
 @Entity
-@Table(name = "ChallengeCHG")
-@SequenceGenerator(name="SEQ_CHG_NO",
-		sequenceName = "SEQ_CHG_NO", 
-		allocationSize = 1, 
-		initialValue = 1)
+@Table(name = "CHALLENGECHG")
+@SequenceGenerator(name="SEQ_CHG_NO", sequenceName = "SEQ_CHG_NO", allocationSize = 1, initialValue = 1)
+
+
+
+
 public class ChallengeCHG {
+	
 
 	// 챌린지번호
 	@Id
@@ -95,7 +97,7 @@ public class ChallengeCHG {
 	private Long chglevel = 1L;
 
 	// 루틴
-	//private Long chgroutine;
+	private Long chgroutine;
 	
 	// 첼린지 생성한 사람
     @ManyToOne

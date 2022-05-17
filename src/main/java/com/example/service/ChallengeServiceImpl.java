@@ -89,7 +89,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         return null;
     }
 
-    // 인기순 조회
+    // 인기별 조회
     @Override
     public List<ChallengeCHG> likeSelectList(Pageable page, long chglike) {
         try {
@@ -156,7 +156,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
     }
 
-    // 챌린지 난이도 목록
+    // 챌린지 난이도 목록(리스트)
     @Override
     public List<ChallengeCHG> chgLevelSelectList(Pageable page, String challenge) {
         try {
@@ -169,7 +169,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
 
-    // 챌린지 인기 목록
+    // 챌린지 인기 목록(리스트)
     @Override
     public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge) {
         try {
@@ -180,6 +180,5 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
         return null;
     }
-
 
 }

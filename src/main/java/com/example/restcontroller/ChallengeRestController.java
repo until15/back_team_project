@@ -1,17 +1,24 @@
 package com.example.restcontroller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.entity.CHGImgView;
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeCHGView;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
+import com.example.entity.RoutineCHG;
+import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
+import com.example.repository.ChgImageRepository;
+import com.example.repository.ChgViewRepository;
 import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
 import com.example.service.ChallengeService;
@@ -21,9 +28,13 @@ import com.example.service.RtnRunService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -46,17 +57,23 @@ public class ChallengeRestController {
     @Autowired
     ChallengeRepository chgRepository;
 
-    @Autowired 
-    RoutineRepository rtnRepository;
+    @Autowired
+    ChgViewRepository cvRepository;
 
     @Autowired 
-    RtnRunService rtnService;
+    RoutineRepository rtnRepository;
     
     @Autowired
     JoinService jService;
 
     @Autowired
     MemberRepository mRepository;
+
+    @Autowired
+    ChgImageRepository chgIRepository;
+
+    @Autowired 
+    ResourceLoader rLoader;
 
     @Value("${default.image}")
     String DEFAULT_IMAGE;
@@ -98,7 +115,7 @@ public class ChallengeRestController {
     public Map<String, Object> insertChallengePOST(
     		@ModelAttribute ChallengeCHG chg1,	// 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
-            // @RequestParam(name = "rtn") long routine,
+            @RequestParam(name = "rtn") Long runseq,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
         System.out.println("토큰 : " + token);
         System.out.println("썸네일 : " + file);
@@ -122,30 +139,41 @@ public class ChallengeRestController {
             // 멤버 레벨
             MemberCHG member1 = mRepository.findById(email).orElse(null);
             System.out.println(member1.getMrank());
-
             
+            // 챌린지 엔티티
             ChallengeCHG chg = new ChallengeCHG();
+            
+            RtnRunCHG rtn = new RtnRunCHG();
+            
+            rtn.setRunseq(runseq);
+
+            RoutineCHG rtn1 = rtnRepository.findById(runseq).orElse(null);
+            
+            
             
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
             chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
-            
-            
+                
             // Tiemstamp 타입의 형식에 맞게 전달해야함 => yyyy-mm-dd 00:00:00
             chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
-            chg.setChgstart(chg1.getRecruitend());   // 챌린지 시작일 = 모집 마감일
-            chg.setChgend(chg1.getChgend()); 	     // 챌린지 종료일 (임의 지정)
-            chg.setChgtitle(chg1.getChgtitle());	 // 첼린지 제목
-            chg.setChgintro(chg1.getChgintro()); 	 // 첼린지 소개글
-            chg.setChgcontent(chg1.getChgcontent()); // 첼린지 내용
-            chg.setChgfee(chg1.getChgfee()); 	     // 첼린지 참가비
+            chg.setChgstart(chg1.getRecruitend());   // 시작일 = 모집 마감일
+            chg.setChgend(chg1.getChgend()); 	     // 종료일 (임의 지정)
+            chg.setChgtitle(chg1.getChgtitle());	 // 제목
+            chg.setChgintro(chg1.getChgintro()); 	 // 소개글
+            chg.setChgcontent(chg1.getChgcontent()); // 내용
+            chg.setChgfee(chg1.getChgfee()); 	     // 참가비
             chg.setChglevel(member1.getMrank());
-          //  chg.setChglevel(chg1.getChglevel());     // 챌린지 레벨
+            // chg.setChglevel(chg1.getChglevel());  // 챌린지 레벨
             chg.setMemberchg(member);	             // 첼린지 생성자
+
+            // 루틴이 안 불러와짐 
+            chg.setChgroutine(rtn.getRunseq());
+            
+            // 루틴
             
 
-
-            // 루틴
+            
             // RtnRunCHG rtn = new RtnRunCHG(); 
             // RtnSeqCHG rtn = new RtnSeqCHG();
             // RtnSeqCHG routine = rtnService.RtnRunSelectlist(runseq);
@@ -190,6 +218,7 @@ public class ChallengeRestController {
         }
         return map;
     }
+
 
     // 챌린지 수정
     // 127.0.0.1:9090/ROOT/api/challenge/updateone
@@ -243,6 +272,7 @@ public class ChallengeRestController {
         return map;
     }
 
+
     // 챌린지 삭제
     // 127.0.0.1:9090/ROOT/api/challenge/delete?chgno=1
     @RequestMapping(
@@ -283,6 +313,7 @@ public class ChallengeRestController {
         return map;
     }
 
+
     // 챌린지 1개 조회
     // 127.0.0.1:9090/ROOT/api/challenge/selectone?chgno=챌린지번호
     // Params => key:chgno, values:챌린지번호
@@ -306,6 +337,7 @@ public class ChallengeRestController {
         }
         return map;
     }
+
 
     // 챌린지 목록 (검색어 + 페이지네이션)
     // 127.0.0.1:9090/ROOT/api/challenge/selectlist?page=1&challenge
@@ -333,7 +365,8 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 인기순 조회 
+
+    // 챌린지 인기별 조회 
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike
     @RequestMapping(
         value    = "/selectlistlike", 
@@ -362,7 +395,34 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 난이도 별 조회 
+
+    // 챌린지 인기 목록(페이지네이션)
+    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
+    @RequestMapping(
+        value    = "/likeselectlist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> likeSelectlistGET(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "like", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Pageable pageable = PageRequest.of(page - 1, 10);
+            List<ChallengeCHG> list = chgService.chgLikeSelectList(pageable, challenge);
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 챌린지 난이도별 조회 
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlevel
     @RequestMapping(
         value    = "/selectlistlevel", 
@@ -391,37 +451,8 @@ public class ChallengeRestController {
         return map;
     }
     
-    ////////////////////////////////////////////////////////////
-    // 메인화면
-    
-    // 인기 별 리스트
-    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
-    @RequestMapping(
-        value    = "/likeselectlist", 
-        method   = { RequestMethod.GET }, 
-        consumes = { MediaType.ALL_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> likeSelectlistGET(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "like", defaultValue = "") String challenge) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeCHG> list = chgService.chgLikeSelectList(pageable, challenge);
-            if (list != null) {
-                map.put("status", 200);
-                map.put("result", list);
-            }
-    
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
 
-
-    // 난이도 별 리스트
+    // 챌린지 난이도 목록(페이지네이션)
     // 127.0.0.1:9090/ROOT/api/challenge/levelselectlist
     @RequestMapping(
         value    = "/levelselectlist", 
@@ -446,5 +477,115 @@ public class ChallengeRestController {
         }
         return map;
     }
-    //
+
+
+    ////////////////////////////////////////////////////////////// ↓ 메 인 화 면 ↓ //////////////////////////////////////////////////////////////
+    
+
+    // 챌린지 인기 목록 내림차순 (9개표시)
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlikelist
+    @RequestMapping(
+        value    = "/selectlikelist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectLikeListGET(
+            @RequestParam(name = "like", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<ChallengeCHGView> list = cvRepository.selectLikeCHG(challenge);
+            // URL화 시킨 이미지를 배열에 담기
+			String[] imgs = new String[list.size()];
+			for (int i=0;i<list.size();i++) {
+				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+			}
+			System.out.println("이미지 url : " + imgs.toString());
+			
+			map.put("images", imgs);
+			map.put("result", list);
+			map.put("status", 200);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    
+    // 챌린지 난이도 목록 내림차순 (9개표시)
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlevellist
+    @RequestMapping(
+        value    = "/selectlevellist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectLevelListGET(
+            @RequestParam(name = "level", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<ChallengeCHGView> list = cvRepository.selectLevelCHG(challenge);
+            // URL화 시킨 이미지를 배열에 담기
+			String[] imgs = new String[list.size()];
+			for (int i=0;i<list.size();i++) {
+				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+			}
+			System.out.println("이미지 url : " + imgs.toString());
+			
+			map.put("images", imgs);
+			map.put("result", list);
+			map.put("status", 200);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+
+    // 썸네일 조회
+	// 127.0.0.1:9090/ROOT/api/challenge/thumbnail?chgno=
+	@RequestMapping(value="/thumbnail", 
+    method = {RequestMethod.GET},	// POST로 받음
+    consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+    produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<byte[]> selectImageGET(
+        @RequestParam(name = "chgno") long chgno){
+        try {
+            // 이미지를 한개 조회
+            CHGImgView chgImage = chgIRepository.findByChgno(chgno);
+            
+            System.out.println("이미지 조회 : " + chgImage.getChgisize());
+            // 썸네일 이미지가 있을 때
+            if (chgImage.getChgisize() > 0) {
+                HttpHeaders header = new HttpHeaders();
+                if (chgImage.getChgitype().equals("image/jpeg")) {
+                    header.setContentType(MediaType.IMAGE_JPEG);
+                } else if (chgImage.getChgitype().equals("image/png")) {
+                    header.setContentType(MediaType.IMAGE_PNG);
+                } else if (chgImage.getChgitype().equals("image/gif")) {
+                    header.setContentType(MediaType.IMAGE_GIF);
+                }
+                ResponseEntity<byte[]> response = new ResponseEntity<>(chgImage.getChgimage(), header, HttpStatus.OK);
+                return response;
+                
+            } else {	// 썸네일 이미지가 없을 때
+                InputStream is = rLoader.getResource(DEFAULT_IMAGE).getInputStream();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG);
+                ResponseEntity<byte[]> response = new ResponseEntity<>(is.readAllBytes(), headers, HttpStatus.OK);
+                return response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+
+    // 마감된 챌린지 제외 조회 
+    
+
+
 }
