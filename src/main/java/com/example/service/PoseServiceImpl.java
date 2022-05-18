@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.PoseCHG;
-import com.example.entity.PoseVideoVIEW;
 import com.example.entity.VideoCHG;
 import com.example.repository.PoseRepository;
 import com.example.repository.VideoRepository;

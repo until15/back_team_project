@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.InquiryCHG;
-import com.example.entity.InquiryCHGProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
