@@ -119,9 +119,10 @@ public class CommentRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String memail = jsonObject.getString("username");
 
+            CommentCHG comment = cRepository.findByMemberchg_memailAndCmtnoEqualsOrderByCmtnoDesc(memail, cmtno);
             // System.out.println(memail);
 
-            int ret = cService.deleteComment(cmtno);
+            int ret = cService.deleteComment(comment.getCmtno());
             if (ret == 1) {
                 map.put("status", 200);
             }

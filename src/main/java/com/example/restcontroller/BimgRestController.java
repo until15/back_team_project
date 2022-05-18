@@ -78,7 +78,6 @@ public class BimgRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
             // System.out.println(username);
-
             MemberCHG member = new MemberCHG();
             member.setMemail(username);
             // 게시판 엔티티에 추가
@@ -240,10 +239,11 @@ public class BimgRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
             // System.out.println(username);
+            BimgCHG bimg = bRepository.findByMemberchg_memailAndBimgnoOrderByBimgnoDesc(username, bimgno);
 
             // 게시판 번호 불러옴
 
-            int ret = bService.deleteBimgOne(bimgno);
+            int ret = bService.deleteBimgOne(bimg.getBimgno());
             if (ret == 1) {
                 map.put("status", 200);
             }

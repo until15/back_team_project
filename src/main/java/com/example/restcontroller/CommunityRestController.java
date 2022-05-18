@@ -173,9 +173,9 @@ public class CommunityRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
 
-            System.out.println(username);
+            CommunityCHG community = cRepository.findByMemberchg_memailAndBnoEqualsOrderByBnoDesc(username, bno);
 
-            int ret = cService.boardDeleteOne(bno);
+            int ret = cService.boardDeleteOne(community.getBno());
             if (ret == 1) {
                 map.put("status", 200);
             }
