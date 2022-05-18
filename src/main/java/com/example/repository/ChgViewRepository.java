@@ -19,7 +19,7 @@ public interface ChgViewRepository extends JpaRepository<ChallengeCHGView, Long>
                 + " RECRUITSTART, RECRUITEND, CHGREGDATE, "
                 + " RECSTATE " 
                 + " FROM "
-                + " CHALLENGECHG) WHERE CHGNO BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC", 
+                + " CHALLENGECHG) WHERE CHGLIKE BETWEEN 1 AND 9 ORDER BY CHGLIKE DESC", 
         nativeQuery = true
     )
     public List<ChallengeCHGView> selectLikeCHG(String challenge);
