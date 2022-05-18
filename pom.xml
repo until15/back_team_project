@@ -17,7 +17,21 @@
 		<java.version>11</java.version>
 	</properties>
 
+	<!-- JitPack 을 통해 maven설정 -->
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+		<!-- 결제 연동 -->
+		<dependency>
+			<groupId>com.github.iamport</groupId>
+			<artifactId>iamport-rest-client-java</artifactId>
+			<version>0.2.14</version>
+		</dependency>
 
 		<!--자동생성-->
 		<dependency>
