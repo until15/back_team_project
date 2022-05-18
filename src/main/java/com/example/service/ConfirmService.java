@@ -49,4 +49,10 @@ public interface ConfirmService {
 	// 인증 이미지 추가
 	public int ConfirmImage(List<CfImageCHG> list);
 	
+	// 인증 이미지 조회
+	public CfImageCHG selectProveImage(long cfino);
+	
+	// 인증번호로 인증이미지 번호 조회
+	public List<Long> selectCFImageNo(long cfno);
+	
 }

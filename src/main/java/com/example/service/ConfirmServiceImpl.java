@@ -176,6 +176,30 @@ public class ConfirmServiceImpl implements ConfirmService {
 		}
 	}
 
+	// 인증 이미지 조회
+	@Override
+	public CfImageCHG selectProveImage(long cfino) {
+		try {
+			
+			return cfiRepository.findByCfimgno(cfino);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// 인증 이미지번호 조회
+	@Override
+	public List<Long> selectCFImageNo(long cfno) {
+		try {
+			List<Long> cfimgno = cfiRepository.selectCFImageNo(cfno);
+			return cfimgno;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	
 	
 }
