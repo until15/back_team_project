@@ -60,7 +60,9 @@ public class MemberController {
         member.setMpsize(file.getSize()); // 이미지 사이즈
         member.setMptype(file.getContentType()); // 이미지 타입
 
+        mService.MemberInsertOne(member);
         mService.memberInsertOne(member);
+        
 
         return "redirect:/member/login";
     }

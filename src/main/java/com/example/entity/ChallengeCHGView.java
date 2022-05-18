@@ -16,10 +16,10 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "CHALLENGE_VIEW")
+@Table(name = "CHG_VIEW")
 public class ChallengeCHGView {
     
-    	// 참가 번호
+    // 참가 번호
 	@Id
     @Column(name = "CHGNO") // 컬럼명
 	private Long chgno;
