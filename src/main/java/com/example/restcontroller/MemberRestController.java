@@ -234,21 +234,29 @@ public class MemberRestController {
 	@RequestMapping(value = "/deletemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> deleteMemberOnePUT(
-			@RequestBody MemberCHG member, @RequestParam(name = "memail") String memail,
-			@RequestParam(name = "mpw") String mpw) {
-		System.out.println("=====================================================" + member.getMstep());
-		System.out.println("=====================================================" + memail);
-		System.out.println("=====================================================" + mpw);
-
+			@RequestBody MemberCHG member, @RequestHeader(name = "token") String token) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			MemberCHG member1 = mService.memberSelectMemail(memail);
-			member1.setMstep(member.getMstep());
-			System.out.println("================================================" + member1.toString());
 
-			int ret = mService.memberLeave(member1);
-			if (ret == 1) {
-				map.put("status", 200);
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String username = jsonObject.getString("username");
+
+			MemberCHG member1 = mService.memberSelectOne(username);
+			member1.setMstep(member.getMstep());
+			member1.setMid(member.getMid());
+
+			UserDetails user = userDetailsService.loadUserByUsername(username);
+			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+			// 함호화 되지 않는 것과 암호화 된것 비교하기
+			if (bcpe.matches(member.getMpw(), user.getPassword())) {
+				int ret = mService.memberLeave(member1);
+				if (ret == 1) {
+					map.put("status", 200);
+				}
 			}
 
 		} catch (Exception e) {

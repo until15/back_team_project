@@ -83,12 +83,19 @@ public class InquiryRestController {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> inquirySelectListGET(@RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "qtitle", defaultValue = "") String qtitle) {
+            @RequestParam(name = "qtitle", defaultValue = "") String qtitle,
+            @RequestHeader(name = "token") String token) {
         Map<String, Object> map = new HashMap<>();
         try {
 
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+
             Pageable pageable = PageRequest.of(page - 1, PAGECNT);
-            List<InquiryCHG> list = iService.selectInquiryList(pageable, qtitle);
+            List<InquiryCHG> list = iService.selectListInquiry(username, pageable, qtitle);
 
             long total = iRepository.countByQtitleContaining(qtitle);
 
@@ -104,35 +111,6 @@ public class InquiryRestController {
         }
 
         return map;
-    }
-
-    // 문의 게시판 리스트
-    // 127.0.0.1:9090/ROOT/api/Inquiry/selectlistone
-    @RequestMapping(value = "/selectlistone", method = { RequestMethod.GET }, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> buyselectListGET(
-            @RequestHeader(name = "token") String token) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            String userSubject = jwtUtil.extractUsername(token);
-            // System.out.println("토큰에 담긴 전보 : " + userSubject);
-
-            JSONObject jsonObject = new JSONObject(userSubject);
-            String username = jsonObject.getString("username");
-            // System.out.println(username);
-
-            List<InquiryCHGProjection> list = iService.selectListInquiry(username);
-
-            map.put("result", list);
-            map.put("status", 200);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-
-        return map;
-
     }
 
     // 문의 게시글 1개 조회
