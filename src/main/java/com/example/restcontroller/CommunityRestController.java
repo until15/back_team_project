@@ -8,9 +8,11 @@ import com.example.entity.BimgCHGProjection;
 import com.example.entity.CommunityCHG;
 import com.example.entity.CommunityCHGProjection;
 import com.example.entity.MemberCHG;
+import com.example.entity.MemberCHGProjection;
 import com.example.jwt.JwtUtil;
 import com.example.repository.BimgRepository;
 import com.example.repository.CommunityRepository;
+import com.example.repository.MemberRepository;
 import com.example.service.CommentService;
 import com.example.service.CommuniryService;
 import com.example.service.UserDetailsServiceImpl;
@@ -46,6 +48,9 @@ public class CommunityRestController {
 
     @Autowired
     UserDetailsServiceImpl uImpl;
+
+    @Autowired
+    MemberRepository mRepository;
 
     @Autowired
     JwtUtil jwtUtil;
@@ -137,6 +142,8 @@ public class CommunityRestController {
 
             // 저장되있는 이미지 목록 불러옴
             List<BimgCHGProjection> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
+            MemberCHGProjection member = mRepository.findByMemail(ret.getMemail());
+            map.put("useremail", member);
 
             // 배열 형태로 반복문 돌림
             String[] imgs = new String[list.size()];
