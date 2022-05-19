@@ -145,6 +145,34 @@ public class RoutineRestController {
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectlistGET(
+            @RequestHeader(name = "token") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String username = jwtUtil.extractUsername(token);
+            System.out.println("token : " + username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
+
+            List<RoutineCHG> list = rService.RoutineSelectlist(email);
+            if (!list.isEmpty()) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }   
+
+    // 루틴 상세 조회
+    // 127.0.0.1:9090/ROOT/api/routine/selectone.json
+    @RequestMapping(value = "/selectone.json", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> RoutineselectOneGET(
             @RequestHeader(name = "token") String token,
             @RequestParam(name = "no") long rtnseq) {
         Map<String, Object> map = new HashMap<>();

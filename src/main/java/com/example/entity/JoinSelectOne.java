@@ -55,5 +55,9 @@ public interface JoinSelectOne {
 	// 참가자 이메일
 	@Value("#{target.memberchg.memail}")
 	String getMemberchgMemail();
+
+	// 참가자 연락처
+	@Value("#{target.memberchg.mphone}")
+	String getMemberchgMphone();
 	
 }
