@@ -13,8 +13,6 @@ import com.example.entity.ChallengeCHGView;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
-import com.example.entity.RoutineCHG;
-import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.ChgImageRepository;
@@ -23,7 +21,6 @@ import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
 import com.example.service.ChallengeService;
 import com.example.service.JoinService;
-import com.example.service.RtnRunService;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +33,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -115,7 +111,7 @@ public class ChallengeRestController {
     public Map<String, Object> insertChallengePOST(
     		@ModelAttribute ChallengeCHG chg1,	// 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
-            @RequestParam(name = "rtn") Long runseq,
+            //@RequestParam(name = "rtn") Long runseq,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
         System.out.println("토큰 : " + token);
         System.out.println("썸네일 : " + file);
@@ -143,11 +139,11 @@ public class ChallengeRestController {
             // 챌린지 엔티티
             ChallengeCHG chg = new ChallengeCHG();
             
-            RtnRunCHG rtn = new RtnRunCHG();
+            //RtnRunCHG rtn = new RtnRunCHG();
             
-            rtn.setRunseq(runseq);
+            //rtn.setRunseq(runseq);
 
-            RoutineCHG rtn1 = rtnRepository.findById(runseq).orElse(null);
+            //RoutineCHG rtn1 = rtnRepository.findById(runseq).orElse(null);
             
             
             
@@ -168,7 +164,7 @@ public class ChallengeRestController {
             chg.setMemberchg(member);	             // 첼린지 생성자
 
             // 루틴이 안 불러와짐 
-            chg.setChgroutine(rtn.getRunseq());
+            //chg.setChgroutine(rtn.getRunseq());
             
             // 루틴
             
@@ -230,7 +226,7 @@ public class ChallengeRestController {
         consumes = { MediaType.ALL_VALUE }, 
         produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateChallengePUT(
-            @RequestBody ChallengeCHG chg,
+            @ModelAttribute ChallengeCHG chg,
             @RequestHeader(name = "token") String token,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
         System.out.println("토큰 : " + token);
@@ -257,10 +253,11 @@ public class ChallengeRestController {
             challenge.setChgcontent(chg.getChgcontent());
 
             // 썸네일 변경
-            chg.setChgimage(file.getBytes());
-            chg.setChginame(file.getOriginalFilename());
-            chg.setChgisize(file.getSize());
-            chg.setChgitype(file.getContentType());
+            
+            challenge.setChgimage(file.getBytes());
+            challenge.setChginame(file.getOriginalFilename());
+            challenge.setChgisize(file.getSize());
+            challenge.setChgitype(file.getContentType());
             
             // 저장
             chgService.challengeUpdateOne(challenge);
@@ -497,7 +494,7 @@ public class ChallengeRestController {
             // URL화 시킨 이미지를 배열에 담기
 			String[] imgs = new String[list.size()];
 			for (int i=0;i<list.size();i++) {
-				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+				imgs[i] = "/ROOT/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
 			}
 			System.out.println("이미지 url : " + imgs.toString());
 			
@@ -535,7 +532,7 @@ public class ChallengeRestController {
 			map.put("images", imgs);
 			map.put("result", list);
 			map.put("status", 200);
-    
+            
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);

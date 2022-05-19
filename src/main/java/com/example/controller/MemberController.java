@@ -61,6 +61,8 @@ public class MemberController {
         member.setMptype(file.getContentType()); // 이미지 타입
 
         mService.memberInsertOne(member);
+        mService.memberInsertOne(member);
+        
 
         return "redirect:/member/login";
     }

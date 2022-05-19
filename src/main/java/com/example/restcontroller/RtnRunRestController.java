@@ -5,10 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.entity.MemberCHG;
-import com.example.entity.RoutineCHG;
 import com.example.entity.RtnRunCHG;
-import com.example.entity.RtnRunNumDto;
 import com.example.jwt.JwtUtil;
 import com.example.repository.RoutineRepository;
 import com.example.repository.RtnRunRepository;
@@ -17,7 +14,6 @@ import com.example.service.RtnRunService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;

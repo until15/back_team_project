@@ -1,7 +1,5 @@
 package com.example.service;
 
-import com.example.entity.ChatCHG;
-
 import org.springframework.stereotype.Service;
 
 @Service

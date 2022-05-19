@@ -3,7 +3,6 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.InquiryCHG;
-import com.example.entity.InquiryCHGProjection;
 import com.example.repository.InquiryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
