@@ -349,12 +349,44 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeCHG> list = chgService.challengeSelectList(pageable, challenge);
+            List<ChallengeProjection> list = chgService.challengeSelectList(pageable, challenge);
+            long total = chgRepository.countByChgtitleContaining(challenge);
             if (list != null) {
+                map.put("total", total);
                 map.put("status", 200);
                 map.put("result", list);
             }
     
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+
+    // 챌린지 작성자 별 조회 
+    // 127.0.0.1:9090/ROOT/api/challenge/memberselectlist
+    @RequestMapping(
+        value    = "/memberselectlist", 
+        method   = { RequestMethod.GET }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> memberSelectListGET(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "member", defaultValue = "") MemberCHG memberchg,
+            @RequestParam(name = "challenge", defaultValue = "") String challenge) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Pageable pageable = PageRequest.of(page - 1, 10);
+
+            List<ChallengeProjection> list = chgService.memberSelectList(pageable, memberchg);
+
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
@@ -378,7 +410,7 @@ public class ChallengeRestController {
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
 
-            List<ChallengeCHG> list = chgService.likeSelectList(pageable, chglike);
+            List<ChallengeProjection> list = chgService.likeSelectList(pageable, chglike);
 
             if (list != null) {
                 map.put("status", 200);
@@ -406,8 +438,12 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeCHG> list = chgService.chgLikeSelectList(pageable, challenge);
+            List<ChallengeProjection> list = chgService.chgLikeSelectList(pageable, challenge);
+
+            long total = chgRepository.countByChgtitleContaining(challenge);
+
             if (list != null) {
+                map.put("total", total);
                 map.put("status", 200);
                 map.put("result", list);
             }
@@ -434,7 +470,7 @@ public class ChallengeRestController {
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
 
-            List<ChallengeCHG> list = chgService.levelSelectList(pageable, chglevel);
+            List<ChallengeProjection> list = chgService.levelSelectList(pageable, chglevel);
 
             if (list != null) {
                 map.put("status", 200);
@@ -462,7 +498,7 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeCHG> list = chgService.chgLevelSelectList(pageable, challenge);
+            List<ChallengeProjection> list = chgService.chgLevelSelectList(pageable, challenge);
             if (list != null) {
                 map.put("status", 200);
                 map.put("result", list);
@@ -492,13 +528,18 @@ public class ChallengeRestController {
         try {
             List<ChallengeCHGView> list = cvRepository.selectLikeCHG(challenge);
             // URL화 시킨 이미지를 배열에 담기
-			String[] imgs = new String[list.size()];
+			//String[] imgs = new String[list.size()];
 			for (int i=0;i<list.size();i++) {
-				imgs[i] = "/ROOT/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
+
+                ChallengeCHGView obj = list.get(i);
+                // System.out.println("테스트 번호 : "+obj.getChgno());
+                obj.setImgurl("/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
+
+				//imgs[i] = "/ROOT/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
 			}
-			System.out.println("이미지 url : " + imgs.toString());
+			//System.out.println("이미지 url : " + imgs.toString());
 			
-			map.put("images", imgs);
+			//map.put("images", imgs);
 			map.put("result", list);
 			map.put("status", 200);
     
@@ -522,14 +563,11 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             List<ChallengeCHGView> list = cvRepository.selectLevelCHG(challenge);
-            // URL화 시킨 이미지를 배열에 담기
-			String[] imgs = new String[list.size()];
 			for (int i=0;i<list.size();i++) {
-				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+                ChallengeCHGView obj = list.get(i);
+                System.out.println("테스트 번호 : "+obj.getChgno());
+                obj.setImgurl("/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
 			}
-			System.out.println("이미지 url : " + imgs.toString());
-			
-			map.put("images", imgs);
 			map.put("result", list);
 			map.put("status", 200);
             
@@ -549,11 +587,12 @@ public class ChallengeRestController {
     produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<byte[]> selectImageGET(
         @RequestParam(name = "chgno") long chgno){
+            System.out.println("챌린지 번호" + chgno);
         try {
             // 이미지를 한개 조회
             CHGImgView chgImage = chgIRepository.findByChgno(chgno);
             
-            System.out.println("이미지 조회 : " + chgImage.getChgisize());
+            //System.out.println("이미지 조회 : " + chgImage.getChgisize());
             // 썸네일 이미지가 있을 때
             if (chgImage.getChgisize() > 0) {
                 HttpHeaders header = new HttpHeaders();

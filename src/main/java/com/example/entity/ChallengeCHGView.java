@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -61,6 +62,10 @@ public class ChallengeCHGView {
 	  
 	// 난이도
 	private Long chglevel = 1L;
+
+	// 이미지 URL 임시변수
+	@Transient
+	private String imgurl;
 
     // 생성일자
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")

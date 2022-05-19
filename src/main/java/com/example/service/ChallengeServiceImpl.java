@@ -3,6 +3,8 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.ChallengeCHG;
+import com.example.entity.ChallengeProjection;
+import com.example.entity.MemberCHG;
 import com.example.repository.ChallengeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +68,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 챌린지 목록
     @Override
-    public List<ChallengeCHG> challengeSelectList(Pageable page, String challenge) {
+    public List<ChallengeProjection> challengeSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChgnoDesc(challenge, page);
+            List<ChallengeProjection> list = chgRepository.findByChgtitleContainingOrderByChgnoDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,9 +80,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 난이도별 조회
     @Override
-    public List<ChallengeCHG> levelSelectList(Pageable page, long chglevel) {
+    public List<ChallengeProjection> levelSelectList(Pageable page, long chglevel) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChglevelOrderByChglevelDesc(chglevel, page);
+            List<ChallengeProjection> list = chgRepository.findByChglevelOrderByChglevelDesc(chglevel, page);
             return list;
         }
         catch(Exception e) {
@@ -91,9 +93,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 인기별 조회
     @Override
-    public List<ChallengeCHG> likeSelectList(Pageable page, long chglike) {
+    public List<ChallengeProjection> likeSelectList(Pageable page, long chglike) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChglikeOrderByChglikeDesc(chglike, page);
+            List<ChallengeProjection> list = chgRepository.findByChglikeOrderByChglikeDesc(chglike, page);
             return list;
         }
         catch(Exception e) {
@@ -158,9 +160,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 챌린지 난이도 목록(리스트)
     @Override
-    public List<ChallengeCHG> chgLevelSelectList(Pageable page, String challenge) {
+    public List<ChallengeProjection> chgLevelSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChglevelDesc(challenge, page);
+            List<ChallengeProjection> list = chgRepository.findByChgtitleContainingOrderByChglevelDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,11 +173,24 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 챌린지 인기 목록(리스트)
     @Override
-    public List<ChallengeCHG> chgLikeSelectList(Pageable page, String challenge) {
+    public List<ChallengeProjection> chgLikeSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeCHG> list = chgRepository.findByChgtitleContainingOrderByChglikeDesc(challenge, page);
+            List<ChallengeProjection> list = chgRepository.findByChgtitleContainingOrderByChglikeDesc(challenge, page);
             return list;
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // 작성자 별 조회
+    @Override
+    public List<ChallengeProjection> memberSelectList(Pageable page, MemberCHG memberchg) {
+        try {
+            List<ChallengeProjection> list = chgRepository.findByMemberchgOrderByMemberchgDesc(memberchg, page);
+            return list;
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
         return null;
