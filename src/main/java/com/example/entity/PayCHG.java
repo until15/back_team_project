@@ -34,11 +34,6 @@ public class PayCHG {
     @JoinColumn(name = "jno")
     private JoinCHG join;
 
-    // 멤버 uemail FK
-    @ManyToOne
-    @JoinColumn(name = "memail")
-    private MemberCHG member;
-
     // 결제 수단
     private String pmethod;
 
