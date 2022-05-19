@@ -7,8 +7,10 @@ import java.util.Map;
 import com.example.entity.CommentCHG;
 import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
+import com.example.entity.MemberCHGProjection;
 import com.example.jwt.JwtUtil;
 import com.example.repository.CommentRepository;
+import com.example.repository.MemberRepository;
 import com.example.service.CommentService;
 import com.example.service.CommuniryService;
 
@@ -31,6 +33,9 @@ public class CommentRestController {
 
     @Autowired
     CommuniryService coService;
+
+    @Autowired
+    MemberRepository mRepository;
 
     @Autowired
     JwtUtil jwtUtil;

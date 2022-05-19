@@ -83,19 +83,21 @@ public class BimgRestController {
             // 게시판 엔티티에 추가
             bimg.setMemberchg(member);
 
+            map.put(("status"), 200);
+            map.put("result", 0);
+
             if (file != null) {
                 if (!file.isEmpty()) {
                     bimg.setBimage(file.getBytes());
                     bimg.setBimgname(file.getOriginalFilename());
                     bimg.setBimgsize(file.getSize());
                     bimg.setBimgtype(file.getContentType());
-                }
-            }
 
-            int ret = bService.insertBimg(bimg);
-            if (ret == 1) {
-                map.put("result", bimg);
-                map.put(("status"), 200);
+                    int ret = bService.insertBimg(bimg);
+                    if (ret == 1) {
+                        map.put("result", bimg);
+                    }
+                }
             }
 
         } catch (Exception e) {

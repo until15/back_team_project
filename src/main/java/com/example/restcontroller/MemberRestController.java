@@ -234,20 +234,31 @@ public class MemberRestController {
 	@RequestMapping(value = "/deletemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> deleteMemberOnePUT(
-			@RequestBody MemberCHG member, @RequestHeader(name = "token") String token) {
+			@ModelAttribute MemberCHG member, @RequestHeader(name = "token") String token,
+			@RequestParam(name = "mimage", required = false) MultipartFile file) throws IOException {
+		System.out.println("=================================================" + file);
 		Map<String, Object> map = new HashMap<>();
 		try {
 
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
-
-			// 추출된 결과값을 JSONObject 형태로 파싱
 			JSONObject jsonObject = new JSONObject(userSubject);
 			String username = jsonObject.getString("username");
 
 			MemberCHG member1 = mService.memberSelectOne(username);
-			member1.setMstep(member.getMstep());
-			member1.setMid(member.getMid());
+			System.out.println("===============================================" + member1);
+			member1.setMstep(1);
+			member1.setMid("탈퇴한 아이디");
+			member1.setMphone(null);
+			member1.setMbirth(null);
+			member1.setMweight(null);
+			member1.setMheight(null);
+			member1.setMgender(null);
+			member1.setMrank(null);
+
+			member1.setMpname(null);
+			member1.setMprofile(null);
+			member1.setMpsize(0L);
+			member1.setMptype(null);
 
 			UserDetails user = userDetailsService.loadUserByUsername(username);
 			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
