@@ -16,6 +16,11 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
+import lombok.ToString;
+
+
+
 @Service
 public class PayServiceImpl implements PayService{
 
@@ -25,6 +30,21 @@ public class PayServiceImpl implements PayService{
     @Value("${imp_secret}")
     private String impSecret;
 
+
+    // 결제 금액을 가져오기 위한 클래스 생성
+    @Getter
+    @ToString
+    private class Response {
+        private payAmount response;
+    }
+
+    @Getter
+    @ToString
+    private class payAmount {
+        private int amount;
+    }
+
+    // 토큰 발급
     @Override
     public String getToken() throws IOException {
         try {
@@ -35,9 +55,11 @@ public class PayServiceImpl implements PayService{
  
 			httpcon.setRequestMethod("POST");
 			httpcon.setRequestProperty("Content-type", "application/json");
-			// httpcon.setRequestProperty("Accept", "application/json");
             httpcon.setDoInput(true);
 			httpcon.setDoOutput(true);
+
+            // System.out.println("impKey===============" + impKey);
+            // System.out.println("imp_secret===========" + impSecret);
 			
             JsonObject json = new JsonObject();
 			json.addProperty("imp_key", impKey);
@@ -48,19 +70,26 @@ public class PayServiceImpl implements PayService{
 			bw.write(json.toString());
 			bw.flush();
 			bw.close();
+
+            // System.out.println("PayServiceImpl 버퍼writer=============" + bw);
  
 			BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "utf-8"));
+
+            // System.out.println("PayServiceImpl 버퍼reader=============" + br);
  
 			Gson gson = new Gson();
- 
+            
+            // Json 문자열을 Object 클래스로 변환
 			String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
 			
-			System.out.println(response);
+			// System.out.println("PayServiceImpl response=========" + response);
  
 			String token = gson.fromJson(response, Map.class).get("access_token").toString();
  
 			br.close();
 			httpcon.disconnect();
+
+            // System.out.println("ServiceImpl token===============" + token);
  
 			return token;
             
@@ -70,10 +99,67 @@ public class PayServiceImpl implements PayService{
         }
     }
 
+    // 결제 토큰을 사용하여 결제 금액 조회
     @Override
     public int paySelectOne(String imp_uid, String access_token) {
-        // TODO Auto-generated method stub
-        return 0;
+        try {
+            URL url = new URL("https://api.iamport.kr/payments/" + imp_uid);
+
+            HttpsURLConnection httpConn = null;
+         
+            httpConn = (HttpsURLConnection) url.openConnection();
+         
+            httpConn.setRequestMethod("GET");
+            httpConn.setRequestProperty("Authorization", access_token);
+            httpConn.setDoOutput(true);
+         
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
+            
+            Gson gson = new Gson();
+            
+            Response response = gson.fromJson(br.readLine(), Response.class);
+            
+            br.close();
+            httpConn.disconnect();
+            
+            return response.getResponse().getAmount();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // 결제 취소
+    @Override
+    public void payCancle(String imp_uid, String access_token, int amount, String Emessage) throws IOException{
+        
+        URL url = new URL("https://api.iamport.kr/payments/cancel");
+        
+        HttpsURLConnection httpConn = null;
+        httpConn = (HttpsURLConnection) url.openConnection();
+
+        httpConn.setRequestMethod("POST");
+        httpConn.setRequestProperty("Authorization", access_token);
+        httpConn.setRequestProperty("Content-type", "application/json");
+        httpConn.setDoOutput(true);
+
+        JsonObject json = new JsonObject();
+ 
+		json.addProperty("imp_uid", imp_uid);
+		json.addProperty("amount", amount);
+        json.addProperty("Emessage", Emessage);
+ 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(httpConn.getOutputStream()));
+ 
+		bw.write(json.toString());
+		bw.flush();
+		bw.close();
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
+ 
+		br.close();
+		httpConn.disconnect();
     }
     
 }
