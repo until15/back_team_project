@@ -23,6 +23,12 @@ public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
 
     CommunityCHGProjection findByBno(Long bno);
 
+    // 이전글 ex)20 이면 작은것중에서 가장 큰것 1개 19...
+    CommunityCHGProjection findTopByBnoLessThanOrderByBnoDesc(long bno);
+
+    // 다음글 ex)20이면 큰것중에서 가장 작은것 1개 21...
+    CommunityCHGProjection findTopByBnoGreaterThanOrderByBnoDesc(long bno);
+
     CommunityCHG findByMemberchg_memailAndBnoEqualsOrderByBnoDesc(String memail, long bno);
 
     // findBy 컬럼명 ContainingOrderBy컬럼명Desc
