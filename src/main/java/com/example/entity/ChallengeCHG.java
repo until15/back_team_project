@@ -97,7 +97,7 @@ public class ChallengeCHG {
 	private Long chglevel = 1L;
 
 	// 루틴
-	private Long chgroutine;
+	//private Long chgroutine;
 	
 	// 첼린지 생성한 사람
     @ManyToOne

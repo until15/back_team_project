@@ -1,5 +1,8 @@
 package com.example.entity;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Value;
 
 // 첼린지 조회에 필요한 항목만
@@ -7,9 +10,32 @@ public interface ChallengeProjection {
 
 	// 첼린지 번호
 	Long getChgno();
+
+	String getChgtitle();
+
+	String getChgintro();
+
+	String getChgcontent();
+
+	Timestamp getChgstart();
+	  
+	Timestamp getChgend();
+	  
+	Timestamp getRecruitstart();
+
+	Timestamp getRecruitend();
 	
-	// 첼린지 난이도
+	int getRecstate();
+	  
+	Long getChgcnt();
+	 
+	Long getChgfee();
+
 	Long getChglevel();
+
+	Long getChglike();
+
+	Date chgregdate();
 	
 	// 회원 아이디
 	@Value("#{target.memberchg.memail}")
