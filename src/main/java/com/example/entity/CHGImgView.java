@@ -20,6 +20,7 @@ public class CHGImgView {
 	
 	// 이미지
 	@Lob
+	@Column(nullable = true)
 	private byte[] chgimage;
 	
 	// 이미지크기

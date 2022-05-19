@@ -6,15 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.entity.CHGImgView;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
 import com.example.entity.JoinSelectOne;
+import com.example.repository.ChgImageRepository;
 import com.example.repository.JoinRepository;
 
 @Service
 public class JoinServiceImpl implements JoinService{
 
 	@Autowired JoinRepository jRepository;
+	@Autowired ChgImageRepository ciRepository;
 	
 	// 첼린지 참가
 	@Override
@@ -128,6 +131,19 @@ public class JoinServiceImpl implements JoinService{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+
+	// 이미지 한개 조회 ( 테스트 )
+	@Override
+	public CHGImgView selectOneImg(long chgno) {
+		try {
+			CHGImgView img = ciRepository.findById(chgno).orElse(null);
+			return img;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 

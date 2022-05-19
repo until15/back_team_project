@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.entity.CHGImgView;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
 import com.example.entity.JoinSelectOne;
@@ -39,5 +40,7 @@ public interface JoinService {
 	// 진행 상태 별 첼린지 조회 (페이지네이션)
 	public List<JoinProjection> joinStateList(String memail, int state, Pageable page);
 	
+	// 이미지 한개 조회 ( 테스트 )
+	public CHGImgView selectOneImg(long chgno);
 
 }

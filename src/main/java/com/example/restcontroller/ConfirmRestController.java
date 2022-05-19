@@ -661,7 +661,7 @@ public class ConfirmRestController {
 		return map;
 	}
 	
-	// 인증 이미지 조회 ( 이미지 URL화 )
+	// 인증 이미지 조회
 	// 127.0.0.1:9090/ROOT/api/confirm/cfimages.json?cfimgno=
 	@RequestMapping(value="/cfimages.json", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -700,7 +700,7 @@ public class ConfirmRestController {
 		}
 	}
 	
-	// 인증이미지 조회용 (인증 번호로 인증 이미지 번호 조회)
+	// 인증이미지 URL (인증 번호로 인증 이미지 번호 조회)
 	// 127.0.0.1:9090/ROOT/api/confirm/selectimages?cfno=
 	@RequestMapping(value = "/selectimages",
 			method = {RequestMethod.GET}, 
@@ -715,13 +715,21 @@ public class ConfirmRestController {
 			List<Long> list = cfService.selectCFImageNo(cfno);
 //			System.out.println("리스트 : " + list.get(1));
 			
-			// URL화 시킨 이미지를 배열에 담기
+			// 이미지 URL
 			String[] imgs = new String[list.size()];
 			for (int i=0;i<list.size();i++) {
-				imgs[i] = "/ROOT/api/confirm/cfimages.json?cfimgno=" + list.get(i);
+				
+				if(list.get(i) == null) {
+					imgs[i] = "";
+				}
+				else {
+					imgs[i] = "/ROOT/api/confirm/cfimages.json?cfimgno=" + list.get(i);					
+				}
 			}
-			System.out.println("이미지 url : " + imgs.toString());
+			System.out.println("이미지 url : " + imgs.length);
 			
+			
+//			map.put("result", list);
 			map.put("status", 200);
 			map.put("images", imgs);
 			

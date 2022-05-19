@@ -1,5 +1,6 @@
 package com.example.restcontroller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -332,9 +334,10 @@ public class JoinRestController {
 			String[] imgs = new String[list.size()];
 			for (int i=0;i<list.size();i++) {
 				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+				list.get(i).setJimgurl(imgs[i]);
 			}
 			System.out.println("이미지 url : " + imgs.toString());
-			
+						
 			map.put("images", imgs);
 			map.put("result", list);
 			map.put("status", 200);
@@ -347,19 +350,20 @@ public class JoinRestController {
 		return map; 
 	}
 	
-	// 진행 중인 첼린지 썸네일 조회
+	// 썸네일 조회
 	// 127.0.0.1:9090/ROOT/api/join/thumbnail?chgno=
 	@RequestMapping(value="/thumbnail", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<byte[]> selectImageGET(
-    		@RequestParam(name = "chgno") long chgno){
+    		@RequestParam(name = "chgno") long chgno) throws IOException, NullPointerException{
     	try {
     		// 이미지를 한개 조회
-    		CHGImgView chgImage = chgIRepository.findByChgno(chgno);
+//    		CHGImgView chgImage = chgIRepository.findById(chgno).orElse(null);
+    		CHGImgView chgImage = jService.selectOneImg(chgno);
     		
-    		System.out.println("이미지 조회 : " + chgImage.getChgisize());
+//    		System.out.println("이미지 조회 : " + chgImage.getChgisize());
     		// 썸네일 이미지가 있을 때
     		if (chgImage.getChgisize() > 0) {
     			HttpHeaders header = new HttpHeaders();

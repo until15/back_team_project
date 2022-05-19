@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 
 //참가 테이블
@@ -48,6 +50,7 @@ public class JoinCHG {
 	private Date jregdate;
 
     // 챌린지 테이블
+	@JsonBackReference
     @ManyToOne
     @JoinColumn(name = "chgno")
     private ChallengeCHG challengechg;

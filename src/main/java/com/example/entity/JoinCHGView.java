@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
@@ -54,5 +55,9 @@ public class JoinCHGView {
 	  
 	// 난이도
 	private Long chglevel = 1L;
+	
+	// 이미지
+	@Transient
+	private String jimgurl;
 	
 }
