@@ -518,34 +518,30 @@ public class ConfirmRestController {
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> whethersuccessPUT(
-			@RequestParam(name = "chgno") long chgno,
 			@RequestParam(name = "cfno") long cfno,
-			@RequestHeader(name = "token") String token,
 			@RequestBody ConfirmCHG confirm){
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(chgno);	// 첼린지 번호
-			System.out.println(token);	// 토큰
 			System.out.println(cfno); 	// 인증글 번호
 			System.out.println(confirm);	// 성공 여부
 			
 			// 토큰에서 정보 추출
-			String userSubject = jwtUtil.extractUsername(token);
+//			String userSubject = jwtUtil.extractUsername(token);
 //			System.out.println("토큰에 담긴 전보 : " + userSubject);
 	
 			// 추출된 결과값을 JSONObject 형태로 파싱
-	        JSONObject jsonObject = new JSONObject(userSubject);
-	        String email = jsonObject.getString("username");	// 로그인 한 아이디
-	        
-	        System.out.println("토큰에서 아이디 추출 : " + email);
+//	        JSONObject jsonObject = new JSONObject(userSubject);
+//	        String email = jsonObject.getString("username");	// 로그인 한 아이디
+//	        
+//	        System.out.println("토큰에서 아이디 추출 : " + email);
 			
 	        // 번호로 해당 첼린지 조회
-			ChallengeProjection chg = chgRepository.findByChgno(chgno);
+//			ChallengeProjection chg = chgRepository.findByChgno(chgno);
 //			System.out.println("생성자 아이디 : " + chg.getMemberchgMemail());	// 첼린지 생성자
-			
-			// 생성자와 회원이 동일 할 때
-			if (chg.getMemberchgMemail().equals(email)) {
+//			
+//			// 생성자와 회원이 동일 할 때
+//			if (chg.getMemberchgMemail().equals(email)) {
 				
 				// 인증 번호로 조회
 				ConfirmCHG cfm = cfService.selectSuccessOne(cfno);
@@ -557,7 +553,7 @@ public class ConfirmRestController {
 				if (ret == 1) {	
 					map.put("status", 200);
 				}
-			}
+//			}
 			else {	
 				map.put("status", 0);
 			}
