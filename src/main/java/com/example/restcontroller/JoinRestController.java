@@ -1,6 +1,5 @@
 package com.example.restcontroller;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,12 +25,13 @@ import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinCHGView;
+import com.example.entity.JoinOneView;
 import com.example.entity.JoinProjection;
-import com.example.entity.JoinSelectOne;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.ChgImageRepository;
+import com.example.repository.JoinOneRepository;
 import com.example.repository.JoinningRepository;
 import com.example.service.JoinService;
 
@@ -57,6 +56,9 @@ public class JoinRestController {
 
 	@Autowired
 	ChgImageRepository chgIRepository;
+	
+	@Autowired
+	JoinOneRepository joRepository;
 
 	@Value("${default.image}")
 	String DEFAULT_IMAGE;
@@ -270,9 +272,11 @@ public class JoinRestController {
 			System.out.println(email);
 
 			// 아이디와 번호가 동시에 일치하는 것 조회
-			JoinSelectOne join = jService.selectOneCHG(email, jno);
-			System.out.println(join);
+//			JoinSelectOne join = jService.selectOneCHG(email, jno);
+//			System.out.println(join);
 
+			JoinOneView join = joRepository.findByMemailAndJno(email, jno);
+			
 			if (join != null) {
 				map.put("result", join);
 				map.put("status", 200);
