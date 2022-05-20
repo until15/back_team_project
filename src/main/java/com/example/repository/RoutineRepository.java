@@ -5,7 +5,9 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.example.entity.RoutineCHG;
+import com.example.entity.RoutineCHGProjection;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +15,20 @@ import org.springframework.stereotype.Repository;
 public interface RoutineRepository extends JpaRepository<RoutineCHG, Long> {
 
     // 루틴 조회
-    List<RoutineCHG> findByMemberchg_memailEqualsOrderByRtnnoDesc(String memail);
+    List<RoutineCHGProjection> findByMemberchg_memailEqualsOrderByRtnnoDesc(String memail, Pageable page);
+
+    // 이메일이 포함된 전체개수
+    long countByMemberchg_memailContaining(String email);
 
     List<RoutineCHG> findByRtnnoIn(List<RoutineCHG> rtnnos);
 
+    // 루틴 개별 수정용 조회
+    RoutineCHG findByMemberchg_memailAndRtnnoEquals(String memail, long rtnno);
+
+    // 루틴 개별 조회
+    RoutineCHGProjection findByRtnnoEquals(long rtnno);
+
+    // 루틴 상세 조회
     List<RoutineCHG> findByMemberchg_memailAndRtnseq(String memail, long rtnseq);
 
     @Transactional
