@@ -144,10 +144,19 @@ public class CommunityRestController {
             List<BimgCHGProjection> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
             MemberCHGProjection member = mRepository.findByMemail(ret.getMemail());
             map.put("useremail", member);
-            CommunityCHGProjection prev = cRepository.findTopByBnoLessThanOrderByBnoDesc(bno);
-            map.put("prev1", prev);
-            CommunityCHGProjection next = cRepository.findTopByBnoGreaterThanOrderByBnoDesc(bno);
-            map.put("next2", next);
+            CommunityCHGProjection prev = cRepository.findTop1ByBnoLessThanOrderByBnoDesc(bno);
+            if (prev != null) {
+                map.put("prev1", prev);
+            } else {
+                map.put("prev1", 0);
+            }
+
+            CommunityCHGProjection next = cRepository.findTop1ByBnoGreaterThanOrderByBnoDesc(bno);
+            if (next != null) {
+                map.put("next2", next);
+            } else {
+                map.put("next2", 0);
+            }
 
             // 배열 형태로 반복문 돌림
             String[] imgs = new String[list.size()];
