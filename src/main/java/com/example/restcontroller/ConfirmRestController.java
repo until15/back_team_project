@@ -32,12 +32,15 @@ import com.example.entity.CfImageCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.ConfirmCHG;
 import com.example.entity.ConfirmProjection;
+import com.example.entity.ConfirmView;
 import com.example.entity.JoinCHG;
 import com.example.entity.JoinProjection;
 import com.example.entity.MemberCHG;
 import com.example.entity.ProveCHGView;
 import com.example.jwt.JwtUtil;
+import com.example.repository.CfmViewRepository;
 import com.example.repository.ChallengeRepository;
+import com.example.repository.ConfirmRepository;
 import com.example.repository.JoinRepository;
 import com.example.repository.ProveRepository;
 import com.example.service.ConfirmService;
@@ -53,6 +56,8 @@ public class ConfirmRestController {
 	@Autowired ChallengeRepository chgRepository;	// 첼린지 저장소
 	@Autowired ProveRepository pRepository;	// 인증 저장소
 	@Autowired ResourceLoader rLoader;
+	@Autowired ConfirmRepository cfRepository;
+	@Autowired CfmViewRepository cfmVRepository;
 	
 	// 디폴트 이미지
 	@Value("${default.image}")
@@ -368,13 +373,22 @@ public class ConfirmRestController {
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println("페이지네이션 : " + pageRequest);
 			
+//			long total = cfRepository.countByJoinchg_challengechg_chgno(chgno);
+			
 			// 첼린지 번호에 해당하는 인증글 전체 조회
-			List<ConfirmProjection> cfmFromChg = cfService.confirmFromChallenge(chgno ,pageRequest);
-			System.out.println(cfmFromChg);
+//			List<ConfirmProjection> cfmFromChg = cfService.confirmFromChallenge(chgno ,pageRequest);
+//			System.out.println(cfmFromChg);
+			
+			// 게시글 전체 갯수
+			long total = cfmVRepository.countByChgno(chgno);
+			
+			// 첼린지 번호에 해당하는 인증글 전체 조회
+			List<ConfirmView> list = cfmVRepository.findByChgnoOrderByCcregdateDesc(chgno, pageRequest);
 			
 			// 조회한 값이 있을 때 반환 
-			if(!cfmFromChg.isEmpty()) {
-				map.put("result", cfmFromChg);
+			if(!list.isEmpty()) {
+				map.put("result", list);
+				map.put("pages", (total-1)/5+1);
 				map.put("status", 200);				
 			}
 			else {

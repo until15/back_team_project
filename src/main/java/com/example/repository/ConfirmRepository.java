@@ -33,6 +33,7 @@ public interface ConfirmRepository extends JpaRepository<ConfirmCHG, Long>{
 	List<ConfirmProjection> findByMemberchg_memailAndCfcommentContainingOrderByCfnoDesc(String email, String text, Pageable page);
 	
 	// 인증글 개수
+	long countByJoinchg_challengechg_chgno(long no);
 	
 	// 첼린지 내 인증글 전체 조회 (페이지네이션)
 	List<ConfirmProjection> findByJoinchg_challengechg_chgno(long no, Pageable page);
