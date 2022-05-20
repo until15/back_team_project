@@ -8,6 +8,7 @@ import java.util.Map;
 import com.example.entity.MemberCHG;
 import com.example.entity.MemberCHGProjection;
 import com.example.entity.RoutineCHG;
+import com.example.entity.RoutineCHGProjection;
 import com.example.jwt.JwtUtil;
 import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
@@ -16,6 +17,8 @@ import com.example.service.RoutineService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -90,13 +93,48 @@ public class RoutineRestController {
         return map;
     }
 
+
+    // 루틴 개별 수정
+    // 127.0.0.1:9090/ROOT/api/routine/update.json
+    @RequestMapping(value = "/update.json", method = { RequestMethod.PUT }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> RoutineUpdatePUT(
+        @RequestHeader(name = "token") String token,
+        @RequestParam(name = "no") long rtnno,
+        @RequestBody RoutineCHG routine) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String username = jwtUtil.extractUsername(token);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
+
+            RoutineCHG routinechg = rRepository.findByMemberchg_memailAndRtnnoEquals(email, rtnno);
+            routinechg.setRtnday(routine.getRtnday());
+            routinechg.setRtncnt(routine.getRtncnt());
+            routinechg.setRtnset(routine.getRtnset());
+            routinechg.setPosechg(routine.getPosechg());
+
+            int ret = rService.RoutineUpdate(routinechg);
+            if(ret == 1){
+                map.put("status", 200);
+            }
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
     // 루틴 수정
     // 127.0.0.1:9090/ROOT/api/routine/updatebatch.json
     // [{"rtnno" : 70, "rtnday":"수정", "rtncnt" : 120, "rtnset" : 13, "rtnname" :
     // "가나", "posechg":{"pno":15}},...]
     @RequestMapping(value = "/updatebatch.json", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> RoutineUpdatePUT(
+    public Map<String, Object> RoutineUpdateBatchPUT(
             @RequestHeader(name = "token") String token,
             @RequestParam(name = "no") long rtnseq,
             @RequestBody RoutineCHG[] routine) {
@@ -141,11 +179,12 @@ public class RoutineRestController {
     }
 
     // 루틴 조회
-    // 127.0.0.1:9090/ROOT/api/routine/selectlist.json
+    // 127.0.0.1:9090/ROOT/api/routine/selectlist.json?page=
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectlistGET(
-            @RequestHeader(name = "token") String token) {
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "page", defaultValue = "1") int page) {
         Map<String, Object> map = new HashMap<>();
         try {
             String username = jwtUtil.extractUsername(token);
@@ -155,10 +194,16 @@ public class RoutineRestController {
             String email = jsonObject.getString("username");
             System.out.println(email);
 
-            List<RoutineCHG> list = rService.RoutineSelectlist(email);
+            Pageable pageable = PageRequest.of(page-1, PAGECNT);
+            List<RoutineCHGProjection> list = rService.RoutineSelectlist(email, pageable);
+
+            // 전체 개수
+            long total = rRepository.countByMemberchg_memailContaining(email);
+
             if (!list.isEmpty()) {
                 map.put("status", 200);
                 map.put("result", list);
+                map.put("total", total);
             }
 
         } catch (Exception e) {
@@ -166,7 +211,37 @@ public class RoutineRestController {
             map.put("status", 0);
         }
         return map;
-    }   
+    }
+    
+    // 루틴 개별 조회
+    // 127.0.0.1:9090/ROOT/api/routine/selectoneDt.json
+    @RequestMapping(value = "/selectoneDt.json", method = { RequestMethod.GET }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> RoutineselectOneDtGET(
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "no") long rtnno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String username = jwtUtil.extractUsername(token);
+            System.out.println("token : " + username);
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(username);
+            String email = jsonObject.getString("username");
+            System.out.println(email);
+
+            RoutineCHGProjection routine = rRepository.findByRtnnoEquals(rtnno);
+            if(routine != null){
+                map.put("status", 200);
+                map.put("result", routine);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
 
     // 루틴 상세 조회
     // 127.0.0.1:9090/ROOT/api/routine/selectone.json
