@@ -277,7 +277,12 @@ public class JoinRestController {
 
 			JoinOneView join = joRepository.findByMemailAndJno(email, jno);
 			
-			if (join != null) {
+			String thumbnail = "/ROOT/api/join/thumbnail?chgno="+join.getChgno();
+			
+			System.out.println(join.getJregdate());
+			
+			if (!join.equals(null)) {
+				map.put("image", thumbnail);
 				map.put("result", join);
 				map.put("status", 200);
 			} else {
@@ -347,7 +352,7 @@ public class JoinRestController {
 
 
 
-	// 진행 중인 첼린지 썸네일 조회
+	// 썸네일 조회
 	// 127.0.0.1:9090/ROOT/api/join/thumbnail?chgno=
 	@RequestMapping(value = "/thumbnail", method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
