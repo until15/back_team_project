@@ -510,8 +510,7 @@ public class ConfirmRestController {
 	
 	
 	// 생성자가 인증 성공 여부 판별하기
-	// 127.0.0.1:9090/ROOT/api/confirm/whethercfm.json?chgno=&cfno=
-	// Headers -> token :
+	// 127.0.0.1:9090/ROOT/api/confirm/whethercfm.json?cfno=
 	// Body -> {"cfsuccess" : "1"}
 	@RequestMapping(value="/whethercfm.json", 
 			method = {RequestMethod.PUT},	// POST로 받음
@@ -545,7 +544,7 @@ public class ConfirmRestController {
 				
 				// 인증 번호로 조회
 				ConfirmCHG cfm = cfService.selectSuccessOne(cfno);
-				System.out.println("인증글 조회 : " + cfm);
+//				System.out.println("인증글 조회 : " + cfm);
 				
 				cfm.setCfsuccess(confirm.getCfsuccess()); 	// 성공 여부
 				
