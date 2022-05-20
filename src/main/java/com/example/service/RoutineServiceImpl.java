@@ -6,11 +6,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.example.entity.RoutineCHG;
+import com.example.entity.RoutineCHGProjection;
 import com.example.entity.RtnSeqCHG;
 import com.example.repository.RoutineRepository;
 import com.example.repository.RtnSeqRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -95,10 +97,36 @@ public class RoutineServiceImpl implements RoutineService{
 
     // 루틴 조회
     @Override
-    public List<RoutineCHG> RoutineSelectlist(String memail) {
+    public List<RoutineCHGProjection> RoutineSelectlist(String memail, Pageable page) {
         try {
-           List<RoutineCHG> routine = rRepository.findByMemberchg_memailEqualsOrderByRtnnoDesc(memail);
+           List<RoutineCHGProjection> routine = rRepository.findByMemberchg_memailEqualsOrderByRtnnoDesc(memail, page);
            return routine;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // 루틴 개별 수정
+    @Override
+    public int RoutineUpdate(RoutineCHG routine) {
+        try {
+            rRepository.save(routine);
+            return 1;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // 루틴 개별 조회
+    @Override
+    public RoutineCHG RoutineSelectOne(String memail, Long rtnno) {
+        try {
+            RoutineCHG routine = rRepository.findByMemberchg_memailAndRtnnoEquals(memail, rtnno);
+            return routine;
+            
         } catch (Exception e) {
             e.printStackTrace();
             return null;
