@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -25,7 +26,12 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     // Containing 입력값 포함된 것 전부
     MemberCHGProjection findByMid(String mid);
 
+    MemberCHGProjection findByMemailAndMid(String memail, String mid);
+
     MemberCHGProjection findByMpw(String mpw);
+
+    @Query(value = "SELECT MID FROM MEMBERCHG WHERE MID NOT IN (=:mid)", nativeQuery = true)
+    public MemberCHGProjection selectMidOne(@Param(value = "mid") String mid);
 
     @Query(value = "SELECT FROM MEMBERCHG WHERE MEMAIL =:memail", nativeQuery = true)
     public MemberCHG selectOneMember(@Param(value = "memail") String memail);

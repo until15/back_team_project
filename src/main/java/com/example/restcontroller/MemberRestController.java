@@ -13,6 +13,7 @@ import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
 import com.example.service.UserDetailsServiceImpl;
 
+import org.aspectj.weaver.Member;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -400,21 +401,58 @@ public class MemberRestController {
 	@RequestMapping(value = "/checkmid", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> checkmidGET(@RequestParam(name = "mid") String mid,
-			@RequestHeader(name = "token") String token) {
+	public Map<String, Object> checkmidGET(@RequestParam(name = "mid") String mid) {
 		Map<String, Object> map = new HashMap<>();
 		try {
+
+			MemberCHGProjection member = mRepository.findByMid(mid);
+			if (member != null) {
+				map.put("status", 200);
+			} else {
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+
+		return map;
+	}
+
+	// 닉네임 정보수정 중복체크
+	// 127.0.0.1:9090/ROOT/api/member/checkmidone
+	@RequestMapping(value = "/checkmidone", method = { RequestMethod.GET }, consumes = {
+			MediaType.ALL_VALUE }, produces = {
+					MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> checkMidOneGET(
+			@RequestParam(name = "mid") String mid, @RequestHeader(name = "token") String token) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
+			// System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 			JSONObject jsonObject = new JSONObject(userSubject);
 			String username = jsonObject.getString("username");
 
-			MemberCHGProjection member = mRepository.findByMid(username);
-			if (member != null) {
-				map.put("result", member);
+			MemberCHGProjection member2 = mRepository.findByMemail(username);
+			MemberCHGProjection member1 = mRepository.findByMid(mid);
+
+			if (member2.getMemail() == member1.getMemail()) {
+				System.out.println("=====================" + member2.getMemail());
+				map.put("result1", username);
+				map.put("result", member1.getMemail());
 				map.put("status", 200);
+
+			} else if (member2.getMemail() != member1.getMemail()) {
+				map.put("result1", username);
+				map.put("result", member1.getMemail());
+				map.put("status", 1);
+			} else {
+
+				map.put("status", 0);
 			}
 
 		} catch (Exception e) {
