@@ -400,10 +400,18 @@ public class MemberRestController {
 	@RequestMapping(value = "/checkmid", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> checkmidGET(@RequestParam(name = "mid") String mid) {
+	public Map<String, Object> checkmidGET(@RequestParam(name = "mid") String mid,
+			@RequestHeader(name = "token") String token) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			MemberCHGProjection member = mRepository.findByMid(mid);
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String username = jsonObject.getString("username");
+
+			MemberCHGProjection member = mRepository.findByMid(username);
 			if (member != null) {
 				map.put("result", member);
 				map.put("status", 200);
