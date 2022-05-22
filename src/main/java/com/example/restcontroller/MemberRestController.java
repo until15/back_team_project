@@ -182,7 +182,6 @@ public class MemberRestController {
 					member1.setMptype(file.getContentType());
 				}
 			}
-
 			int ret = mService.memberUpdate(member1);
 			if (ret == 1) {
 				map.put("status", 200);

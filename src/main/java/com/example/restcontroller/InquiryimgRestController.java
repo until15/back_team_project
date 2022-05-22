@@ -69,6 +69,8 @@ public class InquiryimgRestController {
             member.setMemail(username);
             // 게시판 엔티티에 추가
             inquiryimg.setMemberchg(member);
+            map.put(("status"), 200);
+            map.put(("result"), 1);
 
             if (file != null) {
                 if (!file.isEmpty()) {
@@ -76,13 +78,12 @@ public class InquiryimgRestController {
                     inquiryimg.setQimgname(file.getOriginalFilename());
                     inquiryimg.setQimgsize(file.getSize());
                     inquiryimg.setQimgtype(file.getContentType());
-                }
-            }
 
-            int ret = inService.insertQimg(inquiryimg);
-            if (ret == 1) {
-                map.put("result", inquiryimg);
-                map.put(("status"), 200);
+                    int ret = inService.insertQimg(inquiryimg);
+                    if (ret == 1) {
+                        map.put("result", inquiryimg);
+                    }
+                }
             }
 
         } catch (Exception e) {
