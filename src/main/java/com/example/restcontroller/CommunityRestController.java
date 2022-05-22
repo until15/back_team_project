@@ -151,7 +151,7 @@ public class CommunityRestController {
                 map.put("prev1", 0);
             }
 
-            CommunityCHGProjection next = cRepository.findTop1ByBnoGreaterThanOrderByBnoDesc(bno);
+            CommunityCHGProjection next = cRepository.findTop1ByBnoGreaterThanOrderByBnoAsc(bno);
             if (next != null) {
                 map.put("next2", next);
             } else {

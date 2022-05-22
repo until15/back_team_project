@@ -27,7 +27,7 @@ public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
     CommunityCHGProjection findTop1ByBnoLessThanOrderByBnoDesc(long bno);
 
     // 다음글 ex)20이면 큰것중에서 가장 작은것 1개 21...
-    CommunityCHGProjection findTop1ByBnoGreaterThanOrderByBnoDesc(long bno);
+    CommunityCHGProjection findTop1ByBnoGreaterThanOrderByBnoAsc(long bno);
 
     CommunityCHG findByMemberchg_memailAndBnoEqualsOrderByBnoDesc(String memail, long bno);
 
