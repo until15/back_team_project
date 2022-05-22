@@ -451,8 +451,7 @@ public class MemberRestController {
 				map.put("result", member1.getMemail());
 				map.put("status", 1);
 			} else {
-
-				map.put("status", 0);
+				map.put("status", 2);
 			}
 
 		} catch (Exception e) {
