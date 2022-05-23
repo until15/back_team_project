@@ -19,9 +19,7 @@ public interface RoutineRepository extends JpaRepository<RoutineCHG, Long> {
 
     // 이메일이 포함된 전체개수
     long countByMemberchg_memailContaining(String email);
-
-    List<RoutineCHG> findByRtnnoIn(List<RoutineCHG> rtnnos);
-
+    
     // 루틴 개별 수정용 조회
     RoutineCHG findByMemberchg_memailAndRtnnoEquals(String memail, long rtnno);
 
@@ -31,7 +29,12 @@ public interface RoutineRepository extends JpaRepository<RoutineCHG, Long> {
     // 루틴 상세 조회
     List<RoutineCHG> findByMemberchg_memailAndRtnseq(String memail, long rtnseq);
 
+    // 루틴 전체 삭제
     @Transactional
     int deleteByMemberchg_memailAndRtnnoIn(String memail, Long[] rtnno);
+
+    // 루틴 개별 삭제
+    @Transactional
+    int deleteByMemberchg_memailAndRtnno(String memail, Long rtnno);
 
 }
