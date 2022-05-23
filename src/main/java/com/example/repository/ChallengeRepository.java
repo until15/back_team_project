@@ -66,4 +66,11 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
     		nativeQuery = true)
     int increaseCnt(@Param(value="no") long chgno);
     
+    // 첼린지 기간 일 수
+    @Query(value = 
+    		"SELECT CHGDAYCNT FROM CHALLENGECHG WHERE CHGNO=:no",
+    		nativeQuery = true)
+    Long challengeDayCount(@Param(value = "no") long chgno);
+    
+
 }

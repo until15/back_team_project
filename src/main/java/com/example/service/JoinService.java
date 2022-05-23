@@ -42,5 +42,8 @@ public interface JoinService {
 	
 	// 이미지 한개 조회 ( 테스트 )
 	public CHGImgView selectOneImg(long chgno);
+	
+	// 달성률 업데이트
+	public int challengeSuccessRate(JoinCHG join);
 
 }
