@@ -17,6 +17,8 @@ public interface CommentRepository extends JpaRepository<CommentCHG, Long> {
 
     List<CommentCHG> findByCommunitychg_bnoOrderByCmtnoDesc(long bno);
 
+    List<CommentCHG> findBycmtnoOrderByCmtnoDesc(long bno);
+
     CommentCHG findByMemberchg_memailContaining(String memail);
 
     CommentCHG findByMemberchg_memailAndCmtnoEqualsOrderByCmtnoDesc(String memail, long cmtno);

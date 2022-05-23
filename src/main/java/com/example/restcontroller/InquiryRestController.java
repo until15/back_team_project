@@ -11,6 +11,7 @@ import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.InquiryRepository;
 import com.example.repository.InquiryimgRepository;
+import com.example.repository.IqcommentRepository;
 import com.example.service.InquiryService;
 
 import org.json.JSONObject;
@@ -32,12 +33,19 @@ public class InquiryRestController {
 
     @Autowired
     InquiryService iService;
+
     @Autowired
     JwtUtil jwtUtil;
+
     @Autowired
     InquiryRepository iRepository;
+
     @Autowired
     InquiryimgRepository imRepository;
+
+    @Autowired
+    IqcommentRepository iqRepository;
+
     @Value("${board.page.count}")
     int PAGECNT;
 
@@ -202,6 +210,34 @@ public class InquiryRestController {
 
             iService.inquiryUpdateOne(inquiry1);
             map.put("status", 200);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 127.0.0.1:9090/ROOT/api/community/updatecom
+    @RequestMapping(value = "/updatecom", method = { RequestMethod.PUT }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> updateCom(@RequestParam(name = "qno") long qno,
+            @RequestHeader(name = "token") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+
+            int ret = iService.inquiryUpdateCom(qno);
+            System.out.println(ret);
+            if (ret == 1) {
+                map.put("status", 200);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

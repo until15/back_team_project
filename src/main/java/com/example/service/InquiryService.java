@@ -27,4 +27,7 @@ public interface InquiryService {
     // 게시물 삭제
     public int inquiryDeleteOne(long qno);
 
+    // 게시물 조회수 증가
+    public int inquiryUpdateCom(long qno);
+
 }

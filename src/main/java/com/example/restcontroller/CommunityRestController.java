@@ -260,7 +260,7 @@ public class CommunityRestController {
         return map;
     }
 
-    // 게시글 조회수증가(이거 사용)
+    // 게시글 조회수증가
     // 127.0.0.1:9090/ROOT/api/community/updatehit1
     @RequestMapping(value = "/updatehit1", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })

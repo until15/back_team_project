@@ -88,4 +88,16 @@ public class InquiryServiceImpl implements InquiryService {
         return null;
     }
 
+    @Override
+    public int inquiryUpdateCom(long qno) {
+        try {
+            iRepository.updateComOne(qno);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 }

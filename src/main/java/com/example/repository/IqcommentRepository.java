@@ -12,4 +12,5 @@ public interface IqcommentRepository extends JpaRepository<IqcommentCHG, Long> {
 
     List<IqcommentCHG> findByInquirychg_qnoOrderByIqcmtnoDesc(long qno);
 
+    List<IqcommentCHG> findByIqcmtno(long iqcmtno);
 }

@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,11 +38,13 @@ public class InquiryCHG {
     @Lob
     private String qcontent;
 
+    private Long com = 1L;
+
     // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
     @Column(name = "QREGDATE")
-    private Date qregdate;
+    private LocalDate qregdate;
 
     // 회원테이블
     @ManyToOne

@@ -69,9 +69,9 @@ public class BimgServiceImpl implements BimgService {
     }
 
     @Override
-    public List<BimgCHGProjection> selectimageList(long bno) {
+    public List<BimgCHGProjection> selectimageList(long bimgno) {
         try {
-            List<BimgCHGProjection> list = bRepository.findByCommunitychg_bnoOrderByBimgnoDesc(bno);
+            List<BimgCHGProjection> list = bRepository.findByBimgnoOrderByBimgnoDesc(bimgno);
 
             return list;
 

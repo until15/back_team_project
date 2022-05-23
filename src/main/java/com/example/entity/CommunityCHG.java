@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CommunityCHG {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
     @Column(name = "BREGDATE")
-    private Date bregdate;
+    private LocalDate bregdate;
 
     // 회원테이블
     @ManyToOne

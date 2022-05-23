@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BimgCHG;
+import com.example.entity.BimgCHGProjection;
 import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;

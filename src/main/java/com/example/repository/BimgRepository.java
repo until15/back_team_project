@@ -14,6 +14,8 @@ public interface BimgRepository extends JpaRepository<BimgCHG, Long> {
 
     List<BimgCHGProjection> findByCommunitychg_bnoOrderByBimgnoDesc(long bno);
 
+    List<BimgCHGProjection> findByBimgnoOrderByBimgnoDesc(long bimgno);
+
     BimgCHG findByMemberchg_memailAndBimgnoOrderByBimgnoDesc(String memail, long bimgno);
 
     @Modifying(clearAutomatically = true)

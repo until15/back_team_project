@@ -83,7 +83,7 @@ public class CommentRestController {
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertPOST(@RequestParam(name = "bno") long bno) {
+    public Map<String, Object> selectOnePOST(@RequestParam(name = "bno") long bno) {
         Map<String, Object> map = new HashMap<>();
         try {
 

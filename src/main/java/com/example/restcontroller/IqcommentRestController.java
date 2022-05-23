@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.InquiryCHG;
+import com.example.entity.InquiryCHGProjection;
 import com.example.entity.IqcommentCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
+import com.example.repository.InquiryRepository;
+import com.example.repository.IqcommentRepository;
 import com.example.service.InquiryService;
 import com.example.service.IqcommentService;
 
@@ -29,10 +32,16 @@ public class IqcommentRestController {
     IqcommentService iService;
 
     @Autowired
+    IqcommentRepository iRepository;
+
+    @Autowired
     InquiryService inService;
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
+    InquiryRepository inRepository;
 
     // 댓글 등록
     // 127.0.0.1:9090/ROOT/api/Iqcomment/insert
@@ -117,6 +126,39 @@ public class IqcommentRestController {
             int ret = iService.deleteIqcomment(iqcmtno);
             if (ret == 1) {
                 map.put("status", 200);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 127.0.0.1:9090/ROOT/api/Iqcomment/selectlist
+    @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> selectListGET(
+            @RequestHeader(name = "token") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            // 토큰에서 이메일 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String memail = jsonObject.getString("username");
+            // System.out.println(memail);
+            List<IqcommentCHG> list = iRepository.findAll();
+            for (int i = 0; i < list.size(); i++) {
+
+                if (list != null) {
+
+                    map.put("result", list);
+                    map.put("status", 200);
+                }
             }
 
         } catch (Exception e) {

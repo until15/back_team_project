@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,7 @@ public interface CommunityCHGProjection {
 
     Long getBhit();
 
-    Date getBregdate();
+    LocalDate getBregdate();
 
     @Value("#{target.memberchg.memail}")
     String getMemail();
