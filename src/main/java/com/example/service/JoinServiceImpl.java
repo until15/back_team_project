@@ -147,6 +147,19 @@ public class JoinServiceImpl implements JoinService{
 		}
 	}
 
+
+	// 달성률 업데이트
+	@Override
+	public int challengeSuccessRate(JoinCHG join) {
+		try {
+			jRepository.save(join);
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
 	
 	
 }

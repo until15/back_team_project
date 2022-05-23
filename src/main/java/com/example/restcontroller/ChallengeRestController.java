@@ -6,6 +6,9 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.example.entity.CHGImgView;
 import com.example.entity.ChallengeCHG;
@@ -106,13 +109,17 @@ public class ChallengeRestController {
     public Map<String, Object> insertChallengePOST(
             @ModelAttribute ChallengeCHG chg1, // 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
+<<<<<<< HEAD
             // @RequestParam(name = "rtn") Long runseq,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
+=======
+            @RequestParam(name = "cimage", required = false) MultipartFile file) throws IOException {
+>>>>>>> main
         System.out.println("토큰 : " + token);
         System.out.println("썸네일 : " + file);
         Map<String, Object> map = new HashMap<>();
-        try {
 
+        try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
             System.out.println("토큰에 담긴 정보 : " + userSubject);
@@ -120,8 +127,12 @@ public class ChallengeRestController {
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
+<<<<<<< HEAD
 
             System.out.println(email);
+=======
+            //System.out.println(email);
+>>>>>>> main
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
@@ -129,6 +140,7 @@ public class ChallengeRestController {
 
             // 멤버 레벨
             MemberCHG member1 = mRepository.findById(email).orElse(null);
+<<<<<<< HEAD
             System.out.println(member1.getMrank());
 
             // 챌린지 엔티티
@@ -140,16 +152,44 @@ public class ChallengeRestController {
 
             // RoutineCHG rtn1 = rtnRepository.findById(runseq).orElse(null);
 
+=======
+            //System.out.println(member1.getMrank());
+            
+            // 챌린지 엔티티
+            ChallengeCHG chg = new ChallengeCHG();
+   
+>>>>>>> main
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
             chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
 
             // Tiemstamp 타입의 형식에 맞게 전달해야함 => yyyy-mm-dd 00:00:00
+<<<<<<< HEAD
             chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
             chg.setChgstart(chg1.getRecruitend()); // 시작일 = 모집 마감일
             chg.setChgend(chg1.getChgend()); // 종료일 (임의 지정)
             chg.setChgtitle(chg1.getChgtitle()); // 제목
             chg.setChgintro(chg1.getChgintro()); // 소개글
+=======
+            // string to timestamp(vue에서)
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+
+            // 모집 마감일 (임의 지정)
+            Date chgrend = formatter.parse(chg1.getRecruitend1()); // postman 에서 null 값이 들어감 
+            Timestamp ts1=new Timestamp(chgrend.getTime()); 
+            chg.setRecruitend(ts1);
+
+            // 시작일 = 모집 마감일
+            chg.setChgstart(ts1);   
+            
+            // 종료일 (임의 지정)
+            Date chgend = formatter.parse(chg1.getChgend1());
+            Timestamp ts2=new Timestamp(chgend.getTime()); 
+            chg.setChgend(ts2); 	     
+
+            chg.setChgtitle(chg1.getChgtitle());	 // 제목
+            chg.setChgintro(chg1.getChgintro()); 	 // 소개글
+>>>>>>> main
             chg.setChgcontent(chg1.getChgcontent()); // 내용
             chg.setChgfee(chg1.getChgfee()); // 참가비
             chg.setChglevel(member1.getMrank());
@@ -159,6 +199,7 @@ public class ChallengeRestController {
             // 루틴이 안 불러와짐
             // chg.setChgroutine(rtn.getRunseq());
 
+<<<<<<< HEAD
             // 루틴
 
             // RtnRunCHG rtn = new RtnRunCHG();
@@ -166,6 +207,11 @@ public class ChallengeRestController {
             // RtnSeqCHG routine = rtnService.RtnRunSelectlist(runseq);
             // rtn.setSeq(routine);
             // rtn.setRunseq(routine);
+=======
+            //ChallengeCHG chgcount = chgRepository.findById()
+
+
+>>>>>>> main
 
             // 썸네일
             chg.setChgimage(file.getBytes());

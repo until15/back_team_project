@@ -275,6 +275,35 @@ public class RoutineRestController {
         return map;
     }
 
+    // 루틴 개별 삭제
+    // 127.0.0.1:9090/ROOT/api/routine/delete.json
+    @RequestMapping(value = "/delete.json", method = { RequestMethod.DELETE }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+public Map<String, Object> RoutineDeleteOneDELETE(
+        @RequestHeader(name = "token") String token,
+        @RequestParam(name = "no") Long rtnno) {
+    Map<String, Object> map = new HashMap<>();
+    try {
+        String username = jwtUtil.extractUsername(token);
+        // 추출된 결과값을 JSONObject 형태로 파싱
+        JSONObject jsonObject = new JSONObject(username);
+        String email = jsonObject.getString("username");
+        System.out.println(email);
+
+        int deleteRoutine = rRepository.deleteByMemberchg_memailAndRtnno(email, rtnno);
+        if (deleteRoutine == 1) {
+            map.put("status", 200);
+        } else {
+            map.put("status", 0);
+        }
+        // System.out.println(deleteRoutine);
+    } catch (Exception e) {
+        e.printStackTrace();
+        map.put("status", -1);
+    }
+    return map;
+}
+
     // 루틴 삭제
     // 127.0.0.1:9090/ROOT/api/routine/deletebatch.json
     @RequestMapping(value = "/deletebatch.json", method = { RequestMethod.DELETE }, consumes = {
