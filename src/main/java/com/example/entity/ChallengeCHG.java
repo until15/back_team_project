@@ -101,6 +101,9 @@ public class ChallengeCHG {
 	// 루틴
 	//private Long chgroutine;
 	
+	// 첼린지 기간 일 수
+	private Long chgdaycnt = 1L;
+	
 	// 첼린지 생성한 사람
     @ManyToOne
     @JoinColumn(name = "memail")

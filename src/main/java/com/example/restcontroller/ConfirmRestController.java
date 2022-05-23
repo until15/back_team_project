@@ -3,10 +3,12 @@ package com.example.restcontroller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.entity.CfImageCHG;
+import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.ConfirmCHG;
 import com.example.entity.ConfirmProjection;
@@ -44,6 +47,7 @@ import com.example.repository.ConfirmRepository;
 import com.example.repository.JoinRepository;
 import com.example.repository.ProveRepository;
 import com.example.service.ConfirmService;
+import com.example.service.JoinService;
 
 // 인증
 @RestController
@@ -58,10 +62,75 @@ public class ConfirmRestController {
 	@Autowired ResourceLoader rLoader;
 	@Autowired ConfirmRepository cfRepository;
 	@Autowired CfmViewRepository cfmVRepository;
+	@Autowired JoinService jService;
 	
 	// 디폴트 이미지
 	@Value("${default.image}")
     String DEFAULT_IMAGE;
+	
+	
+	// 달성률 증가
+	// 127.0.0.1:9090/ROOT/api/confirm/successrate.json?chgno=&jno=
+	@RequestMapping(value="/successrate.json", 
+			method = {RequestMethod.PUT},	// POST로 받음
+			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public Map<String, Object> successRatePOST(
+			@RequestParam(name = "chgno") long chgno,
+			@RequestParam(name = "jno") long jno){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println(chgno);
+			// 첼린지 번호에 해당하는 일 수 조회
+//			Long count = chgRepository.challengeDayCount(chgno);
+//			System.out.println(count);
+			
+			ChallengeCHG chg = chgRepository.findById(chgno).orElse(null);
+			System.out.println(chg.getChgstart());
+			System.out.println(chg.getChgend());
+			
+			Date start = new Date(chg.getChgstart().getTime());
+			Date end = new Date(chg.getChgend().getTime());
+			System.out.println("시작일 : " + start);
+			
+			long diffSec = (end.getTime() - start.getTime()) / 1000;
+			System.out.println("차이 : " + diffSec);
+			
+			System.out.println("시작일 : " + start);
+			System.out.println("종료일" + end);
+			
+			long diffDays = diffSec / (24*60*60);
+			System.out.println("차이 일 수 : " + diffDays);
+			
+			// 참가 번호에 해당하는 인증횟수 조회
+			long count = pRepository.countByJnoAndCfsuccess(jno, 1);
+			System.out.println("성공 인증 갯수 : " + count);			
+			
+			System.out.println("계산값 : "+ count/diffDays*100);
+			
+			// 달성률 계산
+			float successRate = (count/diffDays)*100;	// 여기서 틀림
+			System.out.println("달성률 : " + successRate);
+			
+			JoinCHG join = jRepository.findById(jno).orElse(null);
+			join.setChgrate(successRate);
+			
+//			System.out.println("달성률 적용 : "+ join.toString());
+			
+			int ret = jService.challengeSuccessRate(join);
+			if (ret == 1) {
+				
+				map.put("status", 200);
+			} else {
+				map.put("status", 0);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
 	
 	
 	// 인증하기
@@ -523,7 +592,7 @@ public class ConfirmRestController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			System.out.println(cfno); 	// 인증글 번호
-			System.out.println(confirm);	// 성공 여부
+			System.out.println("성공 여부 : " + confirm);	// 성공 여부
 			
 			// 토큰에서 정보 추출
 //			String userSubject = jwtUtil.extractUsername(token);

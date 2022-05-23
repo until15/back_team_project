@@ -17,4 +17,7 @@ public interface ProveRepository extends JpaRepository<ProveCHGView, Long>{
 	// 검색어가 포함된 항목 갯수
 	long countByMemailContaining(String em);
 	
+	// 성공한 인증 갯수
+	long countByJnoAndCfsuccess(long jno, int success);
+	
 }
