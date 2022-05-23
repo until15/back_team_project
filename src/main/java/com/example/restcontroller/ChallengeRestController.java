@@ -120,7 +120,6 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
 
         try {
-
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
             System.out.println("토큰에 담긴 정보 : " + userSubject);
@@ -128,8 +127,7 @@ public class ChallengeRestController {
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
-            
-            System.out.println(email);
+            //System.out.println(email);
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
@@ -137,7 +135,7 @@ public class ChallengeRestController {
 
             // 멤버 레벨
             MemberCHG member1 = mRepository.findById(email).orElse(null);
-            System.out.println(member1.getMrank());
+            //System.out.println(member1.getMrank());
             
             // 챌린지 엔티티
             ChallengeCHG chg = new ChallengeCHG();
@@ -151,7 +149,7 @@ public class ChallengeRestController {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 
             // 모집 마감일 (임의 지정)
-            Date chgrend = formatter.parse(chg1.getRecruitend1());
+            Date chgrend = formatter.parse(chg1.getRecruitend1()); // postman 에서 null 값이 들어감 
             Timestamp ts1=new Timestamp(chgrend.getTime()); 
             chg.setRecruitend(ts1);
 
@@ -170,6 +168,8 @@ public class ChallengeRestController {
             chg.setChglevel(member1.getMrank());
             // chg.setChglevel(chg1.getChglevel());  // 챌린지 레벨
             chg.setMemberchg(member);	             // 첼린지 생성자
+
+            //ChallengeCHG chgcount = chgRepository.findById()
 
 
 
