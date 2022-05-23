@@ -6,6 +6,9 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.example.entity.CHGImgView;
 import com.example.entity.ChallengeCHG;
@@ -111,11 +114,11 @@ public class ChallengeRestController {
     public Map<String, Object> insertChallengePOST(
     		@ModelAttribute ChallengeCHG chg1,	// 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
-            //@RequestParam(name = "rtn") Long runseq,
-            @RequestParam(name = "cimage") MultipartFile file) throws IOException {
+            @RequestParam(name = "cimage", required = false) MultipartFile file) throws IOException {
         System.out.println("토큰 : " + token);
         System.out.println("썸네일 : " + file);
         Map<String, Object> map = new HashMap<>();
+
         try {
 
             // 토큰에서 정보 추출
@@ -138,23 +141,28 @@ public class ChallengeRestController {
             
             // 챌린지 엔티티
             ChallengeCHG chg = new ChallengeCHG();
-            
-            //RtnRunCHG rtn = new RtnRunCHG();
-            
-            //rtn.setRunseq(runseq);
-
-            //RoutineCHG rtn1 = rtnRepository.findById(runseq).orElse(null);
-            
-            
-            
+   
             // 챌린지 생성일 = 모집 시작일
             // new Timestamp(System.currentTimeMillis()); => timeStamp to long
             chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
                 
             // Tiemstamp 타입의 형식에 맞게 전달해야함 => yyyy-mm-dd 00:00:00
-            chg.setRecruitend(chg1.getRecruitend()); // 모집 마감일 (임의 지정)
-            chg.setChgstart(chg1.getRecruitend());   // 시작일 = 모집 마감일
-            chg.setChgend(chg1.getChgend()); 	     // 종료일 (임의 지정)
+            // string to timestamp(vue에서)
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+
+            // 모집 마감일 (임의 지정)
+            Date chgrend = formatter.parse(chg1.getRecruitend1());
+            Timestamp ts1=new Timestamp(chgrend.getTime()); 
+            chg.setRecruitend(ts1);
+
+            // 시작일 = 모집 마감일
+            chg.setChgstart(ts1);   
+            
+            // 종료일 (임의 지정)
+            Date chgend = formatter.parse(chg1.getChgend1());
+            Timestamp ts2=new Timestamp(chgend.getTime()); 
+            chg.setChgend(ts2); 	     
+
             chg.setChgtitle(chg1.getChgtitle());	 // 제목
             chg.setChgintro(chg1.getChgintro()); 	 // 소개글
             chg.setChgcontent(chg1.getChgcontent()); // 내용
@@ -163,18 +171,7 @@ public class ChallengeRestController {
             // chg.setChglevel(chg1.getChglevel());  // 챌린지 레벨
             chg.setMemberchg(member);	             // 첼린지 생성자
 
-            // 루틴이 안 불러와짐 
-            //chg.setChgroutine(rtn.getRunseq());
-            
-            // 루틴
-            
 
-            
-            // RtnRunCHG rtn = new RtnRunCHG(); 
-            // RtnSeqCHG rtn = new RtnSeqCHG();
-            // RtnSeqCHG routine = rtnService.RtnRunSelectlist(runseq);
-            // rtn.setSeq(routine);
-            // rtn.setRunseq(routine);
 
             // 썸네일
             chg.setChgimage(file.getBytes());

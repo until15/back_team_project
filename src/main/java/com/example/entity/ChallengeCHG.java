@@ -13,8 +13,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
@@ -104,4 +106,16 @@ public class ChallengeCHG {
     @JoinColumn(name = "memail")
     private MemberCHG memberchg;
 	
+	// ---- vue에서 string to timestamp로 변환하기 위한 임시변수 ----
+	@Transient
+	private String chgstart1;
+
+	@Transient
+	private String chgend1;
+
+	@Transient
+	private String recruitstart1;
+
+	@Transient
+	private String recruitend1;
 }
