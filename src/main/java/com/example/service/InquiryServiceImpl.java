@@ -100,4 +100,17 @@ public class InquiryServiceImpl implements InquiryService {
         }
     }
 
+    @Override
+    public int inquiryTwoeCom(long qno) {
+        try {
+            iRepository.updateComTwo(qno);
+            return 1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
 }

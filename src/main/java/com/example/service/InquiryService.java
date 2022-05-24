@@ -30,4 +30,6 @@ public interface InquiryService {
     // 게시물 조회수 증가
     public int inquiryUpdateCom(long qno);
 
+    public int inquiryTwoeCom(long qno);
+
 }
