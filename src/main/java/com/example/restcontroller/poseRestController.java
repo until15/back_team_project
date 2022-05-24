@@ -167,22 +167,22 @@ public class poseRestController {
 
     // 자세 목록 (검색어 + 페이지네이션)
     // 127.0.0.1:9090/ROOT/api/pose/selectlist.json?page=1&title=
-    @RequestMapping(value = "/selectlist.json", method = { RequestMethod.POST }, consumes = {
+    @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(
-            @RequestBody PoseCHG pose,
+            @RequestParam(name="step", defaultValue = "1") int step,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "title", defaultValue = "") String title) {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, PAGECNT);
-            List<PoseCHG> list = pService.poseSelectList(pose.getPstep(), pageable, title);
+            List<PoseCHG> list = pService.poseSelectList(step, pageable, title);
 
             // 검색어가 포함된 전체 개수
-            long title2 = pRepository.countByPstepEqualsAndPnameContaining(pose.getPstep(), title);
+            long title2 = pRepository.countByPstepEqualsAndPnameContaining(step, title);
             // 전체 개수
             // Page<PoseCHG> pageable2 = pRepository.findAll(pageable);
-            if (!list.isEmpty()) {
+            if (list != null) {
                 map.put("status", 200);
                 map.put("result", list);
                 // map.put("total", pageable2.getTotalElements());

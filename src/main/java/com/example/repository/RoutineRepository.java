@@ -37,4 +37,8 @@ public interface RoutineRepository extends JpaRepository<RoutineCHG, Long> {
     @Transactional
     int deleteByMemberchg_memailAndRtnno(String memail, Long rtnno);
 
+    // 루틴 삭제 seq
+    @Transactional
+    int deleteByMemberchg_memailAndRtnseq(String memail, Long rtnseq);
+
 }
