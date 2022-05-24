@@ -456,7 +456,11 @@ public class ChallengeRestController {
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
             List<ChallengeProjection2> list = chgService.chgLevelSelectList(pageable, challenge);
+
+            long total = chgRepository.countByChgtitleContaining(challenge);
+
             if (list != null) {
+                map.put("total", total);
                 map.put("status", 200);
                 map.put("result", list);
             }

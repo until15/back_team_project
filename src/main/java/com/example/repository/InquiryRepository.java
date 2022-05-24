@@ -20,7 +20,7 @@ public interface InquiryRepository extends JpaRepository<InquiryCHG, Long> {
     long countByQtitleContaining(String qtitle);
 
     // 고객용 주문내역
-    List<InquiryCHG> findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(String memail, String qtitle,
+    List<InquiryCHGProjection> findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(String memail, String qtitle,
             Pageable page);
 
     InquiryCHGProjection findByQno(long qno);

@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.InquiryCHG;
+import com.example.entity.InquiryCHGProjection;
 import com.example.repository.InquiryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,9 +77,10 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public List<InquiryCHG> selectListInquiry(String memail, Pageable page, String btitle) {
+    public List<InquiryCHGProjection> selectListInquiry(String memail, Pageable page, String btitle) {
         try {
-            List<InquiryCHG> list = iRepository.findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(memail, btitle,
+            List<InquiryCHGProjection> list = iRepository.findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(
+                    memail, btitle,
                     page);
             return list;
 

@@ -103,7 +103,7 @@ public class InquiryRestController {
             String username = jsonObject.getString("username");
 
             Pageable pageable = PageRequest.of(page - 1, PAGECNT);
-            List<InquiryCHG> list = iService.selectListInquiry(username, pageable, qtitle);
+            List<InquiryCHGProjection> list = iService.selectListInquiry(username, pageable, qtitle);
 
             long total = iRepository.countByQtitleContaining(qtitle);
 
