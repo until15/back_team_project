@@ -218,6 +218,7 @@ public class InquiryRestController {
         return map;
     }
 
+    // com +
     // 127.0.0.1:9090/ROOT/api/Inquiry/updatecom
     @RequestMapping(value = "/updatecom", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -226,6 +227,27 @@ public class InquiryRestController {
         try {
 
             int ret = iService.inquiryUpdateCom(qno);
+            System.out.println(ret);
+            if (ret == 1) {
+                map.put("status", 200);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // com -
+    // 127.0.0.1:9090/ROOT/api/Inquiry/updatetwo
+    @RequestMapping(value = "/updatetwo", method = { RequestMethod.PUT }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> updateComTwo(@RequestParam(name = "qno") long qno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            int ret = iRepository.updateComTwo(qno);
             System.out.println(ret);
             if (ret == 1) {
                 map.put("status", 200);

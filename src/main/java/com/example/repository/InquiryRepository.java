@@ -34,4 +34,9 @@ public interface InquiryRepository extends JpaRepository<InquiryCHG, Long> {
     @Query(value = "UPDATE INQUIRYCHG SET COM=COM+1 WHERE QNO =:qno", nativeQuery = true)
     public int updateComOne(@Param(value = "qno") long qno);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE INQUIRYCHG SET COM=COM-1 WHERE QNO =:qno", nativeQuery = true)
+    public int updateComTwo(@Param(value = "qno") long qno);
+
 }
