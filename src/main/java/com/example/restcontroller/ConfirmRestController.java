@@ -3,7 +3,6 @@ package com.example.restcontroller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -86,45 +85,45 @@ public class ConfirmRestController {
 //			System.out.println(count);
 			
 			ChallengeCHG chg = chgRepository.findById(chgno).orElse(null);
-			System.out.println(chg.getChgstart());
-			System.out.println(chg.getChgend());
+//			System.out.println(chg.getChgstart());
+//			System.out.println(chg.getChgend());
 			
 			Date start = new Date(chg.getChgstart().getTime());
 			Date end = new Date(chg.getChgend().getTime());
-			System.out.println("시작일 : " + start);
+//			System.out.println("시작일 : " + start);
 			
 			long diffSec = (end.getTime() - start.getTime()) / 1000;
-			System.out.println("차이 : " + diffSec);
+//			System.out.println("차이 : " + diffSec);
 			
-			System.out.println("시작일 : " + start);
-			System.out.println("종료일" + end);
+//			System.out.println("시작일 : " + start);
+//			System.out.println("종료일" + end);
 			
 			long diffDays = diffSec / (24*60*60);
-			System.out.println("차이 일 수 : " + diffDays);
+//			System.out.println("차이 일 수 : " + diffDays);
 			
 			// 참가 번호에 해당하는 인증횟수 조회
 			long count = pRepository.countByJnoAndCfsuccess(jno, 1);
-			System.out.println("성공 인증 갯수 : " + count);			
-			
-			System.out.println("계산값 : "+ count/diffDays*100);
+//			System.out.println("성공 인증 갯수 : " + count);	
+//			
+//			System.out.println("계산값 : "+ (float)count/diffDays*100);
 			
 			// 달성률 계산
-			float successRate = (count/diffDays)*100;	// 여기서 틀림
-			System.out.println("달성률 : " + successRate);
+			float successRate = (float)count/diffDays*100;
+			// 달성률 소수 두번째 자리까지
+//			System.out.println("달성률 : " + Math.round(successRate*100)/100.0f);
 			
 			JoinCHG join = jRepository.findById(jno).orElse(null);
-			join.setChgrate(successRate);
-			
-//			System.out.println("달성률 적용 : "+ join.toString());
+			join.setChgrate(Math.round(successRate*100)/100.0f);
 			
 			int ret = jService.challengeSuccessRate(join);
+			
 			if (ret == 1) {
 				
 				map.put("status", 200);
+
 			} else {
 				map.put("status", 0);
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", -1);

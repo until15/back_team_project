@@ -63,10 +63,31 @@ public class JoinRestController {
 	@Value("${default.image}")
 	String DEFAULT_IMAGE;
 
+	
+	// 현재날짜에 해당하는 첼린지 조회
+	@RequestMapping(value = "/todaystart", 
+			method = { RequestMethod.GET }, // POST로 받음
+			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
+			produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> startChallengeGET(){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			
+			
+			map.put("status", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+
+		return map;
+	}
+	
 	// 참가하기
 	// 127.0.0.1:9090/ROOT/api/join/insert?chgno=
 	// Headers : token
-	@RequestMapping(value = "/insert", method = { RequestMethod.POST }, // POST로 받음
+	@RequestMapping(value = "/insert", 
+			method = { RequestMethod.POST }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
 			produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> insertJoinPOST(
@@ -117,6 +138,7 @@ public class JoinRestController {
 			// 아이디와 첼린지 번호 동시에 일치하는 지 확인
 			JoinCHG duplicate = jService.duplicateJoin(chgno, email);
 			// System.out.println(duplicate);
+			
 
 			// 기존에 가입한 첼린지가 아닐 때 참가 가능
 			if (duplicate == null) {
@@ -125,11 +147,16 @@ public class JoinRestController {
 
 					int ret = jService.challengeJoin(join);
 					if (ret == 1) {
+						
+						JoinOneView join1 = joRepository.findByMemailAndChgno(email, chgno);
+						System.out.println(join1.getJno());
+						
 						// 참가할 때마다 첼린지 인원수 1씩 증가
 						int ret1 = chgRepository.increaseCnt(chgno);
 						System.out.println(ret1);
 
 						// 새로 참가하기는 200
+						map.put("result", join1.getJno());
 						map.put("status", 200);
 					}
 				} else {
@@ -276,9 +303,9 @@ public class JoinRestController {
 //			System.out.println(join);
 
 			JoinOneView join = joRepository.findByMemailAndJno(email, jno);
-			
+
 			String thumbnail = "/ROOT/api/join/thumbnail?chgno="+join.getChgno();
-			
+
 			System.out.println(join.getJregdate());
 			
 			if (!join.equals(null)) {
