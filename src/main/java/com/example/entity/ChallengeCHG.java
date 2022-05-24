@@ -96,8 +96,8 @@ public class ChallengeCHG {
 	private Long chglevel = 1L;
 
 	// 루틴
-	// private Long chgroutine;
-
+	private Long chgroutine;
+	
 	// 첼린지 기간 일 수
 	private Long chgdaycnt = 1L;
 
