@@ -20,4 +20,7 @@ public interface InquiryCHGProjection {
     @Value("#{target.memberchg.memail}")
     String getMemail();
 
+    @Value("#{target.memberchg.mid}")
+    String getMid();
+
 }
