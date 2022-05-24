@@ -304,6 +304,31 @@ public Map<String, Object> RoutineDeleteOneDELETE(
     return map;
 }
 
+    // 루틴 seq 삭제
+    // 127.0.0.1:9090/ROOT/api/routine/deleteseq.json
+    @RequestMapping(value = "/deleteseq.json", method = { RequestMethod.DELETE }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+public Map<String, Object> RoutineDeleteseqDELETE(
+        @RequestHeader(name = "token") String token,
+        @RequestParam(name = "no") Long rtnseq) {
+    Map<String, Object> map = new HashMap<>();
+    try {
+        String username = jwtUtil.extractUsername(token);
+        // 추출된 결과값을 JSONObject 형태로 파싱
+        JSONObject jsonObject = new JSONObject(username);
+        String email = jsonObject.getString("username");
+        System.out.println(email);
+
+        rRepository.deleteByMemberchg_memailAndRtnseq(email, rtnseq);
+        map.put("status", 200);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        map.put("status", -1);
+    }
+    return map;
+}
+
     // 루틴 삭제
     // 127.0.0.1:9090/ROOT/api/routine/deletebatch.json
     @RequestMapping(value = "/deletebatch.json", method = { RequestMethod.DELETE }, consumes = {
