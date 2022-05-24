@@ -14,6 +14,7 @@ import com.example.entity.CHGImgView;
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeCHGView;
 import com.example.entity.ChallengeProjection;
+import com.example.entity.ChallengeProjection2;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
@@ -324,7 +325,7 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeProjection> list = chgService.challengeSelectList(pageable, challenge);
+            List<ChallengeProjection2> list = chgService.challengeSelectList(pageable, challenge);
             long total = chgRepository.countByChgtitleContaining(challenge);
             if (list != null) {
                 map.put("total", total);
@@ -401,7 +402,7 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeProjection> list = chgService.chgLikeSelectList(pageable, challenge);
+            List<ChallengeProjection2> list = chgService.chgLikeSelectList(pageable, challenge);
 
             long total = chgRepository.countByChgtitleContaining(challenge);
 
@@ -454,7 +455,7 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<ChallengeProjection> list = chgService.chgLevelSelectList(pageable, challenge);
+            List<ChallengeProjection2> list = chgService.chgLevelSelectList(pageable, challenge);
             if (list != null) {
                 map.put("status", 200);
                 map.put("result", list);

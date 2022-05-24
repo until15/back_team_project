@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
+import com.example.entity.ChallengeProjection2;
 import com.example.entity.MemberCHG;
 
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ChallengeService {
-    
+
     // 챌린지 등록
     public int insertChallengeOne(ChallengeCHG challenge);
 
@@ -19,7 +20,7 @@ public interface ChallengeService {
     public ChallengeCHG challengeSelectOne(long chgno);
 
     // 챌린지 목록 (페이지 1 2 3)
-    public List<ChallengeProjection> challengeSelectList(Pageable page, String challenge);
+    public List<ChallengeProjection2> challengeSelectList(Pageable page, String challenge);
 
     // 챌린지 작성자 별 조회
     public List<ChallengeProjection> memberSelectList(Pageable page, MemberCHG memberchg);
@@ -31,10 +32,10 @@ public interface ChallengeService {
     public List<ChallengeProjection> likeSelectList(Pageable page, long chglike);
 
     // 챌린지 난이도 목록(리스트)
-    public List<ChallengeProjection> chgLevelSelectList(Pageable page, String challenge);
+    public List<ChallengeProjection2> chgLevelSelectList(Pageable page, String challenge);
 
     // 챌린지 인기 목록(리스트)
-    public List<ChallengeProjection> chgLikeSelectList(Pageable page, String challenge);
+    public List<ChallengeProjection2> chgLikeSelectList(Pageable page, String challenge);
 
     // 챌린지 수정
     public int challengeUpdateOne(ChallengeCHG challenge);
@@ -48,7 +49,7 @@ public interface ChallengeService {
     // 챌린지 종료
     public int challengeEnd(ChallengeCHG challenge);
 
-    // 모집 시작일 
+    // 모집 시작일
     public int recruitStart(ChallengeCHG challenge);
 
     // 모집 마감일
@@ -59,8 +60,5 @@ public interface ChallengeService {
 
     // 썸네일 이미지 수정하기
     public int challengeImageUpdate(ChallengeCHG challenge);
-
-    
-
 
 }

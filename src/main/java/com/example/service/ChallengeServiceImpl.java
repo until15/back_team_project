@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
+import com.example.entity.ChallengeProjection2;
 import com.example.entity.MemberCHG;
 import com.example.repository.ChallengeRepository;
 
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChallengeServiceImpl implements ChallengeService {
 
-    @Autowired ChallengeRepository chgRepository;
-
+    @Autowired
+    ChallengeRepository chgRepository;
 
     // 챌린지 등록
     @Override
@@ -35,9 +36,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     public int challengeUpdateOne(ChallengeCHG challenge) {
         try {
             chgRepository.save(challenge);
-			return 1;
-        }
-        catch(Exception e) {
+            return 1;
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
@@ -46,12 +46,12 @@ public class ChallengeServiceImpl implements ChallengeService {
     // 챌린지 삭제
     @Override
     public int deleteChallenge(long chgno) {
-		try {
-			chgRepository.deleteById(chgno);
-			return 1;
-		} catch (Exception e) {
-			return 0;
-		}
+        try {
+            chgRepository.deleteById(chgno);
+            return 1;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     // 챌린지 1개 조회
@@ -59,8 +59,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     public ChallengeCHG challengeSelectOne(long chgno) {
         try {
             return chgRepository.findById(chgno).orElse(null);
-        }       
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -68,9 +67,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 챌린지 목록
     @Override
-    public List<ChallengeProjection> challengeSelectList(Pageable page, String challenge) {
+    public List<ChallengeProjection2> challengeSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeProjection> list = chgRepository.findByChgtitleContainingOrderByChgnoDesc(challenge, page);
+            List<ChallengeProjection2> list = chgRepository.findByChgtitleContainingOrderByChgnoDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,8 +83,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         try {
             List<ChallengeProjection> list = chgRepository.findByChglevelOrderByChglevelDesc(chglevel, page);
             return list;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -97,13 +95,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         try {
             List<ChallengeProjection> list = chgRepository.findByChglikeOrderByChglikeDesc(chglike, page);
             return list;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-        
 
     // 챌린지 시작
     @Override
@@ -122,13 +118,12 @@ public class ChallengeServiceImpl implements ChallengeService {
     public int recruitStart(ChallengeCHG challenge) {
         return 0;
     }
-    
+
     // 챌린지 모집 마감
     @Override
     public int recruitEnd(ChallengeCHG challenge) {
         return 0;
     }
-
 
     // 썸네일 이미지 가져오기
     @Override
@@ -143,7 +138,6 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
         return null;
     }
-
 
     // 썸네일 이미지 수정
     @Override
@@ -160,9 +154,10 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     // 챌린지 난이도 목록(리스트)
     @Override
-    public List<ChallengeProjection> chgLevelSelectList(Pageable page, String challenge) {
+    public List<ChallengeProjection2> chgLevelSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeProjection> list = chgRepository.findByChgtitleContainingOrderByChglevelDesc(challenge, page);
+            List<ChallengeProjection2> list = chgRepository.findByChgtitleContainingOrderByChglevelDesc(challenge,
+                    page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,12 +165,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         return null;
     }
 
-
     // 챌린지 인기 목록(리스트)
     @Override
-    public List<ChallengeProjection> chgLikeSelectList(Pageable page, String challenge) {
+    public List<ChallengeProjection2> chgLikeSelectList(Pageable page, String challenge) {
         try {
-            List<ChallengeProjection> list = chgRepository.findByChgtitleContainingOrderByChglikeDesc(challenge, page);
+            List<ChallengeProjection2> list = chgRepository.findByChgtitleContainingOrderByChglikeDesc(challenge, page);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,8 +183,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         try {
             List<ChallengeProjection> list = chgRepository.findByMemberchgOrderByMemberchgDesc(memberchg, page);
             return list;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
