@@ -21,8 +21,11 @@ public class JoinOneView {
 	@Column(name = "JNO")
 	private Long jno;
 	
-	// 참가 상태
+	// 첼린지 상태
 	private int recstate;
+	
+	// 진행 상태
+	private int chgstate;
 	
 	// 참여일자
 	private Date jregdate;

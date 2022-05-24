@@ -10,6 +10,6 @@ public interface JoinOneRepository extends JpaRepository<JoinOneView, Long> {
 
 	JoinOneView findByMemailAndJno(String em, long no);
 	
-	
-	
+	JoinOneView findByMemailAndChgno(String em, long no);
+
 }
