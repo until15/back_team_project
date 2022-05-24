@@ -103,13 +103,11 @@ public class ChallengeRestController {
     // headers => token:토큰
     // form-data : "chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
     // "chglevel" : 1,
-    // "chgend1" : yyyy-mm-dd 00:00:00, "recruitend1" : yyyy-mm-dd 00:00:00, "chfee" :
+    // "chgend1" : yyyy-mm-dd 00:00:00, "recruitend1" : yyyy-mm-dd 00:00:00, "chfee"
+    // :
     // 10000
-    @RequestMapping(
-        value    = "/insert", 
-        method   = { RequestMethod.POST }, 
-        consumes = { MediaType.ALL_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertChallengePOST(
             @ModelAttribute ChallengeCHG chg1, // 이미지와 같이 넣을 땐 ModelAttribute 사용
             @RequestHeader(name = "token") String token,
@@ -144,8 +142,8 @@ public class ChallengeRestController {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 
             // 모집 마감일 (임의 지정)
-            Date chgrend = formatter.parse(chg1.getRecruitend1()); 
-            Timestamp ts1=new Timestamp(chgrend.getTime()); 
+            Date chgrend = formatter.parse(chg1.getRecruitend1());
+            Timestamp ts1 = new Timestamp(chgrend.getTime());
             chg.setRecruitend(ts1);
 
             // 시작일 = 모집 마감일
@@ -153,18 +151,18 @@ public class ChallengeRestController {
 
             // 종료일 (임의 지정)
             Date chgend = formatter.parse(chg1.getChgend1());
-            Timestamp ts2=new Timestamp(chgend.getTime()); 
-            chg.setChgend(ts2); 	
-            
+            Timestamp ts2 = new Timestamp(chgend.getTime());
+            chg.setChgend(ts2);
+
             // 챌린지 시작일 종료일 차이
-            String date = chg1.getChgend1(); //날짜2
+            String date = chg1.getChgend1(); // 날짜2
             System.out.println("날짜2 : " + date);
 
-            Date start    = new Date(ts1.getTime()); // timeStamp
-            Date end      = new SimpleDateFormat("yyyy-MM-dd").parse(date); // string
-            long diffSec  = (start.getTime() - end.getTime()) / 1000; //초 차이
-            long diffDays = diffSec / (24*60*60); //일자수 차이  
-            //System.out.println(diffSec + "초 차이");
+            Date start = new Date(ts1.getTime()); // timeStamp
+            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(date); // string
+            long diffSec = (start.getTime() - end.getTime()) / 1000; // 초 차이
+            long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+            // System.out.println(diffSec + "초 차이");
             System.out.println(diffDays + "일 차이");
 
             chg.setChgtitle(chg1.getChgtitle()); // 제목

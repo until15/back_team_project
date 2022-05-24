@@ -250,6 +250,7 @@ public class InquiryRestController {
             int ret = iService.inquiryTwoeCom(qno);
             System.out.println(ret);
             if (ret == 1) {
+                map.put("result", ret);
                 map.put("status", 200);
             }
 

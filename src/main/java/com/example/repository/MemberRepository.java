@@ -28,6 +28,8 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
 
     MemberCHGProjection findByMemailAndMid(String memail, String mid);
 
+    MemberCHGProjection findByMnameAndMbirth(String mname, String mbirth);
+
     MemberCHGProjection findByMpw(String mpw);
 
     @Query(value = "SELECT MID FROM MEMBERCHG WHERE MID NOT IN (=:mid)", nativeQuery = true)

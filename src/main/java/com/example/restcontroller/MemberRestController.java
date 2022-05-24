@@ -249,7 +249,7 @@ public class MemberRestController {
 			String username = jsonObject.getString("username");
 
 			MemberCHG member1 = mService.memberSelectOne(username);
-			System.out.println("===============================================" + member1);
+
 			member1.setMstep(1);
 			member1.setMid("탈퇴한 아이디");
 			member1.setMphone(null);
@@ -463,6 +463,29 @@ public class MemberRestController {
 		}
 
 		return map;
+	}
+
+	// 아이디 찾기
+	// 127.0.0.1:9090/ROOT/api/member/findmemail?mname=&mbirth=
+	@RequestMapping(value = "/findmemail", method = { RequestMethod.GET }, consumes = {
+			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> findMemailGET(@RequestParam(name = "mname") String mname,
+			@RequestParam(name = "mbirth") String mbirth) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+
+			MemberCHGProjection member = mRepository.findByMnameAndMbirth(mname, mbirth);
+			if (member != null) {
+				map.put("result", member);
+				map.put("status", 200);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
+		}
+		return map;
+
 	}
 
 }
