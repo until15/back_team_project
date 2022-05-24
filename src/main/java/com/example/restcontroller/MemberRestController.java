@@ -66,25 +66,29 @@ public class MemberRestController {
 	public Map<String, Object> joinPOST(@ModelAttribute MemberCHG member, @AuthenticationPrincipal User user,
 			@RequestParam(name = "mimage", required = false) MultipartFile file) throws IOException {
 		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
-
-		member.setMpw(bcpe.encode(member.getMpw())); // 비밀번호 설정
-		member.setMrole(member.getMrole()); // 권한 설정
-
-		// 프로필 이미지
-		if (file != null) {
-			if (!file.isEmpty()) {
-				member.setMprofile(file.getBytes()); // 프로필 이미지
-				member.setMpname(file.getOriginalFilename()); // 이미지 이름
-				member.setMpsize(file.getSize()); // 이미지 사이즈
-				member.setMptype(file.getContentType()); // 이미지 타입
-			}
-		}
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int ret = mService.memberInsertOne(member);
+			member.setMpw(bcpe.encode(member.getMpw())); // 비밀번호 설정
+			member.setMrole(member.getMrole()); // 권한 설정
 
+			int ret = mService.memberInsertOne(member);
 			if (ret == 1) {
 				map.put("status", 200);
+			}
+
+			// 프로필 이미지
+			if (file != null) {
+				if (!file.isEmpty()) {
+					member.setMprofile(file.getBytes()); // 프로필 이미지
+					member.setMpname(file.getOriginalFilename()); // 이미지 이름
+					member.setMpsize(file.getSize()); // 이미지 사이즈
+					member.setMptype(file.getContentType()); // 이미지 타입
+
+					int ret1 = mService.memberInsertOne(member);
+					if (ret1 == 1) {
+						map.put("status", 202);
+					}
+				}
 			}
 
 		} catch (Exception e) {
