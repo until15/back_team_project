@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,51 +26,47 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "CHALLENGECHG")
-@SequenceGenerator(name="SEQ_CHG_NO", sequenceName = "SEQ_CHG_NO", allocationSize = 1, initialValue = 1)
-
-
-
+@SequenceGenerator(name = "SEQ_CHG_NO", sequenceName = "SEQ_CHG_NO", allocationSize = 1, initialValue = 1)
 
 public class ChallengeCHG {
-	
 
 	// 챌린지번호
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CHG_NO")
 	private Long chgno;
-	  
+
 	// 제목
 	private String chgtitle;
-	  
+
 	// 소개
 	private String chgintro;
-	  
+
 	// 내용
 	@Lob
 	private String chgcontent;
-	  
+
 	// 챌린지 시작
 	@Column(nullable = false)
 	private Timestamp chgstart;
-	  
+
 	// 챌린지 종료
 	@Column(nullable = false)
 	private Timestamp chgend;
-	  
+
 	// 모집 시작
 	@Column(nullable = false)
 	private Timestamp recruitstart;
-	  
+
 	// 모집 마감
 	@Column(nullable = false)
 	private Timestamp recruitend;
-	
+
 	// 모집 상태
 	private int recstate = 1;
-	  
+
 	// 인원수
 	private Long chgcnt = 1L;
-	  
+
 	// 참여비
 	private Long chgfee;
 
@@ -85,30 +82,30 @@ public class ChallengeCHG {
 
 	// 이미지명
 	private String chginame;
-	  
+
 	// 생성일자
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
-	@CreationTimestamp	// CURRENT_DATE
+	@CreationTimestamp // CURRENT_DATE
 	@Column(name = "CHGREGDATE")
-	private Date chgregdate;
-	  
+	private LocalDate chgregdate;
+
 	// 좋아요개수저장
 	private Long chglike = 0L;
-	  
+
 	// 난이도
 	private Long chglevel = 1L;
 
 	// 루틴
-	//private Long chgroutine;
-	
+	// private Long chgroutine;
+
 	// 첼린지 기간 일 수
 	private Long chgdaycnt = 1L;
-	
+
 	// 첼린지 생성한 사람
-    @ManyToOne
-    @JoinColumn(name = "memail")
-    private MemberCHG memberchg;
-	
+	@ManyToOne
+	@JoinColumn(name = "memail")
+	private MemberCHG memberchg;
+
 	// ---- vue에서 string to timestamp로 변환하기 위한 임시변수 ----
 	@Transient
 	private String chgstart1;

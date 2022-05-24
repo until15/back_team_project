@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,47 +20,47 @@ import lombok.Data;
 @Entity
 @Table(name = "CHG_VIEW")
 public class ChallengeCHGView {
-    
-    // 참가 번호
+
+	// 참가 번호
 	@Id
-    @Column(name = "CHGNO") // 컬럼명
+	@Column(name = "CHGNO") // 컬럼명
 	private Long chgno;
-			
+
 	// 제목
 	private String chgtitle;
 
-    // 소개
+	// 소개
 	private String chgintro;
-	  
+
 	// 내용
 	@Lob
 	private String chgcontent;
 
-    // 모집 시작
+	// 모집 시작
 	@Column(nullable = false)
 	private Timestamp recruitstart;
-	  
+
 	// 모집 마감
 	@Column(nullable = false)
 	private Timestamp recruitend;
-	
+
 	// 챌린지 시작
 	@Column(nullable = false)
 	private Timestamp chgstart;
-	
+
 	// 챌린지 종료
 	@Column(nullable = false)
 	private Timestamp chgend;
 
-    // 모집 상태
+	// 모집 상태
 	private int recstate = 1;
-	
+
 	// 인원수
 	private Long chgcnt = 1L;
-	
+
 	// 좋아요개수저장
 	private Long chglike = 0L;
-	  
+
 	// 난이도
 	private Long chglevel = 1L;
 
@@ -67,10 +68,10 @@ public class ChallengeCHGView {
 	@Transient
 	private String imgurl;
 
-    // 생성일자
+	// 생성일자
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
-	@CreationTimestamp	// CURRENT_DATE
+	@CreationTimestamp // CURRENT_DATE
 	@Column(name = "CHGREGDATE")
-	private Date chgregdate;
-    
+	private LocalDate chgregdate;
+
 }
