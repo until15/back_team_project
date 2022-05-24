@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -18,27 +19,27 @@ public interface ChallengeProjection {
 	String getChgcontent();
 
 	Timestamp getChgstart();
-	  
+
 	Timestamp getChgend();
-	  
+
 	Timestamp getRecruitstart();
 
 	Timestamp getRecruitend();
-	
+
 	int getRecstate();
-	  
+
 	Long getChgcnt();
-	 
+
 	Long getChgfee();
 
 	Long getChglevel();
 
 	Long getChglike();
 
-	Date chgregdate();
-	
+	LocalDate getChgregdate();
+
 	// 회원 아이디
 	@Value("#{target.memberchg.memail}")
 	String getMemberchgMemail();
-	
+
 }

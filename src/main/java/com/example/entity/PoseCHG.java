@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -53,7 +54,7 @@ public class PoseCHG {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @CreationTimestamp // CURRENT_DATE
     @Column(name = "PREGDATE")
-    private Date pregdate;
+    private LocalDate pregdate;
     
     //자세 영상 테이블
     // @JsonManagedReference

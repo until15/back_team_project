@@ -103,7 +103,7 @@ public class InquiryRestController {
             String username = jsonObject.getString("username");
 
             Pageable pageable = PageRequest.of(page - 1, PAGECNT);
-            List<InquiryCHG> list = iService.selectListInquiry(username, pageable, qtitle);
+            List<InquiryCHGProjection> list = iService.selectListInquiry(username, pageable, qtitle);
 
             long total = iRepository.countByQtitleContaining(qtitle);
 
@@ -218,22 +218,36 @@ public class InquiryRestController {
         return map;
     }
 
-    // 127.0.0.1:9090/ROOT/api/community/updatecom
+    // com +
+    // 127.0.0.1:9090/ROOT/api/Inquiry/updatecom?qno=
     @RequestMapping(value = "/updatecom", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> updateCom(@RequestParam(name = "qno") long qno,
-            @RequestHeader(name = "token") String token) {
+    public Map<String, Object> updateCom(@RequestParam(name = "qno") long qno) {
         Map<String, Object> map = new HashMap<>();
         try {
 
-            String userSubject = jwtUtil.extractUsername(token);
-            // System.out.println("토큰에 담긴 전보 : " + userSubject);
-
-            // 추출된 결과값을 JSONObject 형태로 파싱
-            JSONObject jsonObject = new JSONObject(userSubject);
-            String username = jsonObject.getString("username");
-
             int ret = iService.inquiryUpdateCom(qno);
+            System.out.println(ret);
+            if (ret == 1) {
+                map.put("status", 200);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // com -
+    // 127.0.0.1:9090/ROOT/api/Inquiry/updatetwo?qno=
+    @RequestMapping(value = "/updatetwo", method = { RequestMethod.PUT }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> updateComTwo(@RequestParam(name = "qno") long qno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            int ret = iService.inquiryTwoeCom(qno);
             System.out.println(ret);
             if (ret == 1) {
                 map.put("status", 200);

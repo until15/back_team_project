@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.InquiryCHG;
+import com.example.entity.InquiryCHGProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public interface InquiryService {
     // 게시판 목록
     public List<InquiryCHG> selectInquiryList(Pageable page, String btitle);
 
-    public List<InquiryCHG> selectListInquiry(String memail, Pageable page, String btitle);
+    public List<InquiryCHGProjection> selectListInquiry(String memail, Pageable page, String btitle);
 
     // 게시물 1개 조회
     public InquiryCHG inquirySelectOne(long qno);
@@ -29,5 +30,7 @@ public interface InquiryService {
 
     // 게시물 조회수 증가
     public int inquiryUpdateCom(long qno);
+
+    public int inquiryTwoeCom(long qno);
 
 }

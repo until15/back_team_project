@@ -20,7 +20,7 @@ public interface InquiryRepository extends JpaRepository<InquiryCHG, Long> {
     long countByQtitleContaining(String qtitle);
 
     // 고객용 주문내역
-    List<InquiryCHG> findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(String memail, String qtitle,
+    List<InquiryCHGProjection> findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(String memail, String qtitle,
             Pageable page);
 
     InquiryCHGProjection findByQno(long qno);
@@ -33,5 +33,10 @@ public interface InquiryRepository extends JpaRepository<InquiryCHG, Long> {
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE INQUIRYCHG SET COM=COM+1 WHERE QNO =:qno", nativeQuery = true)
     public int updateComOne(@Param(value = "qno") long qno);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE INQUIRYCHG SET COM=COM-1 WHERE QNO =:qno", nativeQuery = true)
+    public int updateComTwo(@Param(value = "qno") long qno);
 
 }

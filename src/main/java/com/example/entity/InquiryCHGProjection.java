@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +13,14 @@ public interface InquiryCHGProjection {
 
     String getQcontent();
 
-    Date getQregdate();
+    LocalDate getQregdate();
+
+    Long getCom();
 
     @Value("#{target.memberchg.memail}")
-    String getMemberchgMemail();
+    String getMemail();
+
+    @Value("#{target.memberchg.mid}")
+    String getMid();
 
 }
