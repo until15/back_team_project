@@ -485,30 +485,34 @@ public class ConfirmRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(token);	// 토큰
-			System.out.println(page); 	// 페이지네이션
-			System.out.println(text); 	// 검색어
+//			System.out.println(token);	// 토큰
+//			System.out.println(page); 	// 페이지네이션
+//			System.out.println(text); 	// 검색어
 			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
 	        
-	        System.out.println(email);
+//	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
 			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 검색 + 페이지네이션으로 아이디에 해당하는 인증 리스트 조회하기
-			List<ConfirmProjection> list = cfService.selectListConfirm(email, text, pageRequest);
-			System.out.println(list);
+//			List<ConfirmProjection> list = cfService.selectListConfirm(email, text, pageRequest);
+//			System.out.println(list);
+			List<ProveCHGView> list = pRepository.findByMemailAndCfcommentContainingOrderByCfnoDesc(email, text, pageRequest);
+			
+			long total = pRepository.countByMemailAndCfcommentContaining(email, text);
 			
 			// 결과값이 있을 때 반환
-			if (!list.isEmpty()) {				
+			if (!list.isEmpty()) {	
+				map.put("pages", (total-1)/5+1);
 				map.put("result", list);
 				map.put("status", 200);
 			}
