@@ -62,6 +62,9 @@ public class ChallengeCHG {
 	private Timestamp recruitend;
 
 	// 모집 상태
+	// 1 => 대기중
+	// 2 => 시작(진행중)
+	// 3 => 종료
 	private int recstate = 1;
 
 	// 인원수

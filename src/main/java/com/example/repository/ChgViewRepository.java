@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.example.entity.ChallengeCHGView;
@@ -37,4 +38,14 @@ public interface ChgViewRepository extends JpaRepository<ChallengeCHGView, Long>
         nativeQuery = true
     )
     public List<ChallengeCHGView> selectLevelCHG(String challenge);
+	
+	// 오늘 날짜에 시작하는 첼린지 조회
+//	public List<ChallengeCHGView> findByChgregdateBetween(Timestamp start, Timestamp end);
+	@Query(value ="SELECT CV.CHGNO FROM CHG_VIEW CV WHERE CV.CHGSTART BETWEEN :start AND :end", nativeQuery = true)
+	public List<Long> selectTodayCHG(Timestamp start, Timestamp end);
+	
+	// 오늘 날짜에 종료하는 첼린지 조회
+	@Query(value ="SELECT CV.CHGNO FROM CHG_VIEW CV WHERE CV.CHGEND BETWEEN :start AND :end", nativeQuery = true)
+	public List<Long> selectEndCHG(Timestamp start, Timestamp end);
+	
 }
