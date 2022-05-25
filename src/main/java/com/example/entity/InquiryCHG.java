@@ -38,7 +38,7 @@ public class InquiryCHG {
     @Lob
     private String qcontent;
 
-    private Long com = 1L;
+    private Long com = 0L;
 
     // 등록일
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
