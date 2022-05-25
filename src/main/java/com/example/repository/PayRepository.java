@@ -16,13 +16,13 @@ public interface PayRepository extends JpaRepository<PayCHG, String> {
     List<PayCHGProjection> findByJoinchg_Memberchg_memailContainingOrderByJoinchg_jnoDesc(String memail, Pageable page);
 
     // 유저 참가비 조회 + 참가 챌린지 번호
-    PayCHGProjection findByJoinchg_Memberchg_memailAndJoinchg_jnoContaining(String memail, long jno);
+    PayCHGProjection findByJoinchg_Memberchg_memailAndJoinchg_jnoEquals(String memail, long jno);
 
     // 유저 환급용 참가비 조회
-    PayCHG findByImpuidContaining(String uid);
+    PayCHG findByImpuidEquals(String uid);
 
     // 유저 환급용 달성률 조회
-    PayCHGProjection findByJoinchg_jnoContaining(long jno);
+    PayCHGProjection findByJoinchg_jnoEquals(long jno);
 
     // 이메일이 포함된 전체 개수
     long countByJoinchg_Memberchg_memailContaining(String email);
