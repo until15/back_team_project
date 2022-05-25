@@ -23,6 +23,8 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     // memberprojection
     MemberCHGProjection findByMemail(String memail);
 
+    MemberCHG findByMemailOrderByMemailDesc(String memail);
+
     // Containing 입력값 포함된 것 전부
     MemberCHGProjection findByMid(String mid);
 
@@ -42,6 +44,11 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
     List<MemberCHG> findByMemailContainingOrderByMemailDesc(String Memail, Pageable page);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE MEMBERCHG SET MPW=:mpw WHERE MEMAIL=:memail", nativeQuery = true)
+    public int updatePw(@Param(value = "memail") String memail);
 
     @Transactional
     @Modifying(clearAutomatically = true)

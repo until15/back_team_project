@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 import com.example.entity.MemberCHG;
 import com.example.entity.MemberCHGProjection;
@@ -24,6 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -486,6 +489,33 @@ public class MemberRestController {
 		}
 		return map;
 
+	}
+
+	// 암호변경 (토큰, 현재암호, 변경암호)
+	// 127.0.0.1:9090/ROOT/api/member/updatepw3?memail=
+	@RequestMapping(value = "/updatepw3", method = { RequestMethod.PUT }, consumes = {
+			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> updatepwPUT(@RequestParam(name = "memail") String memail,
+			@RequestBody MemberCHG member) {
+		System.out.println("=====================================" + memail);
+		System.out.println("=====================================" + member);
+		Map<String, Object> map = new HashMap<>();
+		try {
+			MemberCHG member1 = mRepository.findByMemailOrderByMemailDesc(memail);
+			if (member1 != null) {
+				int ret = mRepository.updatePw(member1.getMemail());
+				if (ret == 1) {
+					map.put("result", member1);
+					map.put("status", 200);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0); // 정상적이지 않을 때
+		}
+
+		return map;
 	}
 
 }

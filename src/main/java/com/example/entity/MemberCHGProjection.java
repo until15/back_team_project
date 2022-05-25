@@ -4,6 +4,8 @@ public interface MemberCHGProjection {
 
     String getMemail();
 
+    String getMpw();
+
     String getMid();
 
     String getMname();
