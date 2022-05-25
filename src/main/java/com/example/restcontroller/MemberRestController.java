@@ -514,6 +514,8 @@ public class MemberRestController {
 
 				}
 
+			} else if (member1 == null) {
+				map.put("status", 1);
 			}
 
 		} catch (Exception e) {
