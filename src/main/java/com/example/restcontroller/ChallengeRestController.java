@@ -17,12 +17,15 @@ import com.example.entity.ChallengeProjection;
 import com.example.entity.ChallengeProjection2;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
+import com.example.entity.RoutineCHG;
+import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.ChgImageRepository;
 import com.example.repository.ChgViewRepository;
 import com.example.repository.MemberRepository;
 import com.example.repository.RoutineRepository;
+import com.example.repository.RtnRunRepository;
 import com.example.service.ChallengeService;
 import com.example.service.JoinService;
 
@@ -62,6 +65,9 @@ public class ChallengeRestController {
 
     @Autowired
     RoutineRepository rtnRepository;
+
+    @Autowired
+    RtnRunRepository rtnRunRepository;
 
     @Autowired
     JoinService jService;
@@ -172,6 +178,10 @@ public class ChallengeRestController {
             chg.setChglevel(member1.getMrank());
             // chg.setChglevel(chg1.getChglevel()); // 챌린지 레벨
             chg.setMemberchg(member); // 첼린지 생성자
+            chg.setChgroutine(chg1.getChgroutine());
+
+            // RoutineCHG rtn = new RoutineCHG();
+            // chg.setChgroutine(rtn.getRtnno());
 
             // 썸네일
             chg.setChgimage(file.getBytes());
