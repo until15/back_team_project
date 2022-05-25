@@ -14,6 +14,6 @@ public interface PayService {
 	int paySelectOne(String imp_uid, String access_token);
 
     // 결제 취소
-    public void payCancle(String imp_uid, String access_token, int amount, String Emessage) throws IOException;
+    public void payCancle(String imp_uid, String access_token, int amount, String reason) throws IOException;
 	
 }

@@ -2,6 +2,9 @@ package com.example.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class JoinServiceImpl implements JoinService{
 
 	@Autowired JoinRepository jRepository;
 	@Autowired ChgImageRepository ciRepository;
+	@Autowired EntityManagerFactory emf;
 	
 	// 첼린지 참가
 	@Override
@@ -156,6 +160,30 @@ public class JoinServiceImpl implements JoinService{
 			return 1;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	// 첼린지 시작/종료일에 맞춰 진행상태 변경
+	@Override
+	public int todayChallenge(List<JoinCHG> join) {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			
+			for (JoinCHG join1 : join) {
+				
+				JoinCHG oldjoin = em.find(JoinCHG.class, join1.getJno());
+				oldjoin.setChgstate(join1.getChgstate());
+                em.persist(oldjoin);
+            }
+			
+			em.getTransaction().commit();
+			return 1;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
 			return 0;
 		}
 	}

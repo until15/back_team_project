@@ -1,7 +1,13 @@
 package com.example.restcontroller;
 
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +37,9 @@ import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.ChgImageRepository;
+import com.example.repository.ChgViewRepository;
 import com.example.repository.JoinOneRepository;
+import com.example.repository.JoinRepository;
 import com.example.repository.JoinningRepository;
 import com.example.service.JoinService;
 
@@ -41,6 +49,8 @@ public class JoinRestController {
 
 	@Autowired
 	JoinService jService;
+	
+	@Autowired JoinRepository jRepository;
 
 	@Autowired
 	ChallengeRepository chgRepository;
@@ -59,13 +69,17 @@ public class JoinRestController {
 	
 	@Autowired
 	JoinOneRepository joRepository;
+	
+	@Autowired
+	ChgViewRepository cvRepository;
 
 	@Value("${default.image}")
 	String DEFAULT_IMAGE;
 
 	
-	// 현재날짜에 해당하는 첼린지 조회
-	@RequestMapping(value = "/todaystart", 
+	// 첼린지 시작 : chgstate 1 => 3
+	// 127.0.0.1:9090/ROOT/api/join/startchg
+	@RequestMapping(value = "/startchg", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
 			produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -73,8 +87,38 @@ public class JoinRestController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			
+			LocalDateTime starttime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+//			System.out.println("오늘 00:00:00 날짜 : " + starttime);
 			
-			map.put("status", 0);
+			LocalDateTime endtime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+//			System.out.println("오늘 23:59:59 날짜 : " + endtime);
+			
+			// LocalDateTime -> Timestamp 타입을 변환 
+			Timestamp starttstamp = Timestamp.valueOf(starttime);
+			Timestamp endtstamp = Timestamp.valueOf(endtime);
+//			System.out.println(starttstamp);
+//			System.out.println(endtstamp);
+			
+			List<Long> start = cvRepository.selectTodayCHG(starttstamp, endtstamp);
+//			System.out.println("시작시점 첼린지 : "+ start);
+			List<JoinCHG> join = new ArrayList<JoinCHG>();
+			for(int i=0;i<start.size();i++) {
+//				System.out.println(start.get(i));
+				List<JoinCHG> list = jRepository.findByChallengechg_chgno(start.get(i));
+				for(int j=0;j<list.size();j++) {
+					if(list.get(j).getChgstate() == 1) {
+						join.add(list.get(j));						
+					}
+				}
+			}
+			for(int h=0;h<join.size();h++) {
+				join.get(h).setChgstate(3);
+			}
+//			jRepository.saveAll(join);
+			jService.todayChallenge(join);
+			
+			map.put("status", 200);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", -1);
@@ -82,6 +126,58 @@ public class JoinRestController {
 
 		return map;
 	}
+	
+	
+	// 첼린지 종료 : (참가상태 변경)chgstate 3 => 4
+	// 127.0.0.1:9090/ROOT/api/join/endchg
+	@RequestMapping(value = "/endchg", 
+			method = { RequestMethod.GET }, // POST로 받음
+			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
+			produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> endChallengeGET(){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			
+			LocalDateTime starttime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+//			System.out.println("오늘 00:00:00 날짜 : " + starttime);
+			
+			LocalDateTime endtime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
+//			System.out.println("오늘 23:59:59 날짜 : " + endtime);
+			
+			// LocalDateTime -> Timestamp 타입을 변환 
+			Timestamp starttstamp = Timestamp.valueOf(starttime);
+			Timestamp endtstamp = Timestamp.valueOf(endtime);
+//			System.out.println(starttstamp);
+//			System.out.println(endtstamp);
+			
+			List<Long> end = cvRepository.selectEndCHG(starttstamp, endtstamp);
+			System.out.println("종료시점 첼린지 : "+ end);
+			List<JoinCHG> join = new ArrayList<JoinCHG>();
+			for(int i=0;i<end.size();i++) {
+				System.out.println(end.get(i));
+				List<JoinCHG> list = jRepository.findByChallengechg_chgno(end.get(i));
+				for(int j=0;j<list.size();j++) {
+					if(list.get(j).getChgstate() != 2) {
+						join.add(list.get(j));						
+					}
+				}
+			}
+			for(int h=0;h<join.size();h++) {
+				join.get(h).setChgstate(4);
+			}
+//			jRepository.saveAll(join);
+			jService.todayChallenge(join);
+			
+			map.put("status", 200);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+
+		return map;
+	}
+	
 	
 	// 참가하기
 	// 127.0.0.1:9090/ROOT/api/join/insert?chgno=
@@ -307,7 +403,7 @@ public class JoinRestController {
 			String thumbnail = "/ROOT/api/join/thumbnail?chgno="+join.getChgno();
 
 			System.out.println(join.getJregdate());
-			
+
 			if (!join.equals(null)) {
 				map.put("image", thumbnail);
 				map.put("result", join);

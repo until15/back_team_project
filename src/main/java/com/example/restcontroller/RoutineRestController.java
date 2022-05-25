@@ -242,6 +242,50 @@ public class RoutineRestController {
         return map;
     }
 
+    // 챌린지 루틴 조회 (1) => 루틴 번호로 seq 번호 받기
+    // 127.0.0.1:9090/ROOT/api/routine/chgselectone.json
+    @RequestMapping(value = "/chgselectone.json", method = { RequestMethod.GET }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> RoutineselectOnechgGET(
+            @RequestParam(name = "no") long rtnno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            RoutineCHGProjection routine = rRepository.findByRtnnoEquals(rtnno);
+            if(routine != null){
+                map.put("status", 200);
+                map.put("result", routine);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
+    // 챌린지 루틴 조회 (2) => seq 번호로 루틴들 조회하기
+    // 127.0.0.1:9090/ROOT/api/routine/chgselectseq.json
+    @RequestMapping(value = "/chgselectseq.json", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> RoutineselectOneseqGET(
+            @RequestParam(name = "no") long rtnseq) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            List<RoutineCHGProjection> list = rRepository.findByRtnseq(rtnseq);
+
+            if (!list.isEmpty()) {
+                map.put("status", 200);
+                map.put("result", list);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+        return map;
+    }
+
 
     // 루틴 상세 조회
     // 127.0.0.1:9090/ROOT/api/routine/selectone.json

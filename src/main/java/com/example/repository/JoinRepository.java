@@ -37,6 +37,7 @@ public interface JoinRepository extends JpaRepository<JoinCHG, Long>{
 	
 	// 진행 상태에 따른 첼린지 리스트 (페이지네이션)
 	List<JoinProjection> findByMemberchg_memailAndChgstateOrderByJnoDesc(String em, int state, Pageable page);
-		
-
+	
+	// 첼린지 번호에 해당하는 참가목록 조회
+	List<JoinCHG> findByChallengechg_chgno(long no);
 }

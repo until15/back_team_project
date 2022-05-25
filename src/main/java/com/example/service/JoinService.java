@@ -45,5 +45,8 @@ public interface JoinService {
 	
 	// 달성률 업데이트
 	public int challengeSuccessRate(JoinCHG join);
+	
+	// 첼린지 시작
+	public int todayChallenge(List<JoinCHG> join);
 
 }

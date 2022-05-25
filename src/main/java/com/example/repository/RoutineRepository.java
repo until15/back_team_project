@@ -29,6 +29,9 @@ public interface RoutineRepository extends JpaRepository<RoutineCHG, Long> {
     // 루틴 상세 조회
     List<RoutineCHG> findByMemberchg_memailAndRtnseq(String memail, long rtnseq);
 
+    // 챌린지 루틴 조회 (2)
+    List<RoutineCHGProjection> findByRtnseq(long rtnseq);
+
     // 루틴 전체 삭제
     @Transactional
     int deleteByMemberchg_memailAndRtnnoIn(String memail, Long[] rtnno);

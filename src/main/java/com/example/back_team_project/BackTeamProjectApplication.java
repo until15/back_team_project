@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 
@@ -37,6 +38,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ServletComponentScan(basePackages = {
 		"com.example.filter"
 })
+
+// 스케줄러 사용
+@EnableScheduling
 
 public class BackTeamProjectApplication {
 

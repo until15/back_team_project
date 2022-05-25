@@ -27,12 +27,12 @@ public class PayCHG {
     private String merchantuid;
 
     // 결제 금액
-    private Long pprice;
+    private int pprice;
 
     // 참여 중인 챌린지 번호 FK
     @ManyToOne
     @JoinColumn(name = "jno")
-    private JoinCHG join;
+    public JoinCHG joinchg;
 
     // 결제 수단
     private String pmethod;

@@ -67,7 +67,11 @@ public class JoinOneView {
 	// 참가자 아이디
 	private String memail;
 	
+	// 참가자 이메일
+	private String mphone;
+	
 	// 첼린지 생성자 아이디
 	private String cid;
+	
 	
 }
