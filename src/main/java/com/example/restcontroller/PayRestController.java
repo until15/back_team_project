@@ -112,6 +112,35 @@ public Map<String, Object> PayselectlistGET(
     return map;
 }
 
+    // 환급 페이지에서 조회할 것
+    // 127.0.0.1:9090/ROOT/api/pay/selectone.json
+    @RequestMapping(value = "/selectone.json", method = { RequestMethod.GET }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+public Map<String, Object> PayselectoneGET(
+        @RequestHeader(name = "token") String token,
+        @RequestParam(name = "no") long jno) {
+    Map<String, Object> map = new HashMap<>();
+    try {
+        String username = jwtUtil.extractUsername(token);
+        System.out.println("token : " + username);
+        // 추출된 결과값을 JSONObject 형태로 파싱
+        JSONObject jsonObject = new JSONObject(username);
+        String email = jsonObject.getString("username");
+        System.out.println(email);
+
+        PayCHGProjection payProjection = pRepository.findByJoinchg_Memberchg_memailAndJoinchg_jnoEquals(email, jno);
+
+        map.put("status", 200);
+        map.put("result", payProjection);
+        
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        map.put("status", 0);
+    }
+    return map;
+}
+
     // 달성률에 따른 환급
     // 127.0.0.1:9090/ROOT/api/pay/refund.json
     @PostMapping(value = "/refund.json")
@@ -123,10 +152,11 @@ public Map<String, Object> PayselectlistGET(
         System.out.println("토큰 ========== " + token);
 
         // 유저 참가비 가져오기
-        PayCHG pay1 = pRepository.findByImpuidContaining(pay.getImpuid());
+        PayCHG pay1 = pRepository.findByImpuidEquals(pay.getImpuid());
+        System.out.println("유저참가비가져오기============="+pay1);
 
         // 유저 달성률 가져오기
-        PayCHGProjection payProjection = pRepository.findByJoinchg_jnoContaining(pay.getJoinchg().getJno());
+        PayCHGProjection payProjection = pRepository.findByJoinchg_jnoEquals(pay.getJoinchg().getJno());
         
         // 달성률 int로 변환(반올림)
         float payf = payProjection.getChgrate();
