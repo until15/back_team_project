@@ -491,23 +491,29 @@ public class MemberRestController {
 
 	}
 
-	// 암호변경 (토큰, 현재암호, 변경암호)
+	// 암호찾기
 	// 127.0.0.1:9090/ROOT/api/member/updatepw3?memail=
 	@RequestMapping(value = "/updatepw3", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> updatepwPUT(@RequestParam(name = "memail") String memail,
-			@RequestBody MemberCHG member) {
-		System.out.println("=====================================" + memail);
-		System.out.println("=====================================" + member);
+	public Map<String, Object> updatepwPUT(@RequestParam(name = "memail") String memail) {
+		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 		Map<String, Object> map = new HashMap<>();
 		try {
-			MemberCHG member1 = mRepository.findByMemailOrderByMemailDesc(memail);
+			MemberCHG member1 = mRepository.findById(memail).orElse(null);
 			if (member1 != null) {
-				int ret = mRepository.updatePw(member1.getMemail());
+				String uuid = UUID.randomUUID().toString().replace("-", "");
+				uuid = uuid.substring(0, 6);
+
+				member1.setMpw(uuid);
+				String newpw = bcpe.encode(member1.getMpw());
+				member1.setMpw(newpw);
+				int ret = mService.memberUpdate(member1);
 				if (ret == 1) {
-					map.put("result", member1);
+					map.put("result", uuid);
 					map.put("status", 200);
+
 				}
+
 			}
 
 		} catch (Exception e) {
