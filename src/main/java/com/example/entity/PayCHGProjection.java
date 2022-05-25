@@ -4,6 +4,12 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface PayCHGProjection {
 
+    // 고유 ID
+    String getImpuid();
+
+    // 결제 ID
+    String getMerchantuid();
+
     // 결제 금액
     int getPprice();
 
