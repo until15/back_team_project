@@ -35,8 +35,11 @@ public interface ChallengeRepository extends JpaRepository<ChallengeCHG, Long> {
 
     // 오류 도와준 다희씨 고마워요 . . . 2022/04/28
 
+    // 작성자별 조회 갯수
+    long countByMemberchg_memailAndChgtitleContaining(String email, String text);
+    
     // 챌린지 작성자 별 조회
-    List<ChallengeProjection> findByMemberchgOrderByMemberchgDesc(MemberCHG memberchg, Pageable page);
+    List<ChallengeProjection> findByMemberchg_memailAndChgtitleContaining(String email, String text, Pageable page);
 
     // 첼린지 인기별 조회
     List<ChallengeProjection> findByChglikeOrderByChglikeDesc(long chglike, Pageable page);

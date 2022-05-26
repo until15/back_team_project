@@ -177,16 +177,5 @@ public class ChallengeServiceImpl implements ChallengeService {
         return null;
     }
 
-    // 작성자 별 조회
-    @Override
-    public List<ChallengeProjection> memberSelectList(Pageable page, MemberCHG memberchg) {
-        try {
-            List<ChallengeProjection> list = chgRepository.findByMemberchgOrderByMemberchgDesc(memberchg, page);
-            return list;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 }

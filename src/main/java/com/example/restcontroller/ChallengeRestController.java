@@ -353,31 +353,6 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 작성자 별 조회
-    // 127.0.0.1:9090/ROOT/api/challenge/memberselectlist
-    @RequestMapping(value = "/memberselectlist", method = { RequestMethod.GET }, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> memberSelectListGET(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "member", defaultValue = "") MemberCHG memberchg,
-            @RequestParam(name = "challenge", defaultValue = "") String challenge) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Pageable pageable = PageRequest.of(page - 1, 10);
-
-            List<ChallengeProjection> list = chgService.memberSelectList(pageable, memberchg);
-
-            if (list != null) {
-                map.put("status", 200);
-                map.put("result", list);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
 
     // 챌린지 인기별 조회
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike

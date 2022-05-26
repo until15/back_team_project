@@ -22,8 +22,6 @@ public interface ChallengeService {
     // 챌린지 목록 (페이지 1 2 3)
     public List<ChallengeProjection2> challengeSelectList(Pageable page, String challenge);
 
-    // 챌린지 작성자 별 조회
-    public List<ChallengeProjection> memberSelectList(Pageable page, MemberCHG memberchg);
 
     // 챌린지 난이도별 조회
     public List<ChallengeProjection> levelSelectList(Pageable page, long chglevel);
