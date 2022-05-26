@@ -3,6 +3,7 @@ package com.example.repository;
 import java.util.List;
 
 import com.example.entity.LikeCHG;
+import com.example.entity.LikeProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +23,9 @@ public interface LikeRepository extends JpaRepository<LikeCHG, Long> {
     LikeCHG findByChallengechg_chgnoAndMemberchg_memail(Long no, String memail);
 
     // 좋아요 목록
-    List<LikeCHG> findByMemberchg_memailOrderByLnoDesc(String memail, Pageable page);
+    List<LikeProjection> findByMemberchg_memailOrderByLnoDesc(String memail, Pageable page);
+
+
 
    
 }

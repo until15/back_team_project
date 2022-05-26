@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.BookMarkCHG;
+import com.example.entity.BookmarkProjection;
 import com.example.repository.BookMarkRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,9 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     // 북마크 목록
     @Override
-    public List<BookMarkCHG> bookmarkSelectList(Pageable page, String memail) {
+    public List<BookmarkProjection> bookmarkSelectList(Pageable page, String memail) {
         try {
-            List<BookMarkCHG> list = bmkRepository.findByMemberchg_memailOrderByBmknoDesc(memail, page);
+            List<BookmarkProjection> list = bmkRepository.findByMemberchg_memailOrderByBmknoDesc(memail, page);
             return list;
         }
         catch(Exception e) {
