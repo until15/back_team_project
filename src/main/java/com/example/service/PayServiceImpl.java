@@ -133,6 +133,10 @@ public class PayServiceImpl implements PayService{
     // 결제 취소 및 환불
     @Override
     public void payCancle(String imp_uid, String access_token, int amount, String reason) throws IOException{
+
+        System.out.println("결제취소및환불====================");
+        System.out.println(access_token);
+        System.out.println(imp_uid);
         
         URL url = new URL("https://api.iamport.kr/payments/cancel");
         
@@ -148,8 +152,10 @@ public class PayServiceImpl implements PayService{
  
 		json.addProperty("imp_uid", imp_uid); // imp_uid를 환불 `unique key`로 입력
 		json.addProperty("amount", amount); // 가맹점 클라이언트로부터 받은 환불금액
-		json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
+		// json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
         json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
+
+        System.out.println("serviceImpl======================="+reason);
  
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(httpConn.getOutputStream()));
  
