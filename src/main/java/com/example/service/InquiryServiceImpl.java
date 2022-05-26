@@ -77,11 +77,12 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public List<InquiryCHGProjection> selectListInquiry(String memail, Pageable page, String btitle) {
+    public List<InquiryCHGProjection> selectListInquiry(String memail, String mrole, Pageable page, String btitle) {
         try {
-            List<InquiryCHGProjection> list = iRepository.findByMemberchg_memailAndQtitleContainingOrderByQnoDesc(
-                    memail, btitle,
-                    page);
+            List<InquiryCHGProjection> list = iRepository
+                    .findByMemberchg_memailAndMemberchg_mroleAndQtitleContainingOrderByQnoDesc(
+                            memail, mrole, btitle,
+                            page);
             return list;
 
         } catch (Exception e) {
