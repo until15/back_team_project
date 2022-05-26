@@ -25,19 +25,19 @@ public class JwtUtil {
     // 토큰생성(아이디 정보)
     public String generatorToken(String username, String userrole, String userrank) {
         Map<String, Object> map = new HashMap<>();
-        
+
         System.out.println("유저 아이디 : " + username);
         System.out.println("유저 권한 : " + userrole);
         System.out.println("유저 등급 : " + userrank);
-        
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);
         jsonObject.put("userrole", userrole);
         jsonObject.put("userrank", userrank);
-        
+
         System.out.println("토큰 정보 객체화 : " + jsonObject);
         System.out.println("날짜 정보 : " + new Date(System.currentTimeMillis()));
-        
+
         String token = Jwts.builder()
                 .setClaims(map)
                 .setSubject(jsonObject.toString())
@@ -46,7 +46,7 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECURITY_KEY)
                 .compact();
 
-        return token;	// 토큰 반환
+        return token; // 토큰 반환
     }
 
     // 정보 추출용 메소드

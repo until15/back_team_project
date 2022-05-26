@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 
 public interface CommunityCHGProjection {
     Long getBno();

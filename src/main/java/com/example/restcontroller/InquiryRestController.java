@@ -103,7 +103,7 @@ public class InquiryRestController {
             String username = jsonObject.getString("username");
 
             Pageable pageable = PageRequest.of(page - 1, PAGECNT);
-            List<InquiryCHGProjection> list = iService.selectListInquiry(username, username, pageable, qtitle);
+            List<InquiryCHGProjection> list = iService.selectListInquiry(username, pageable, qtitle);
 
             long total = iRepository.countByQtitleContaining(qtitle);
 
@@ -137,6 +137,7 @@ public class InquiryRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
             // System.out.println(username);
+
             InquiryCHGProjection inquiry = iRepository.findByQno(qno);
             // InquiryCHG ret = iService.inquirySelectOne(qno);
 
@@ -257,6 +258,42 @@ public class InquiryRestController {
             e.printStackTrace();
             map.put("status", 0);
         }
+        return map;
+    }
+
+    // 문의 게시판 리스트2
+    // 127.0.0.1:9090/ROOT/api/Inquiry/selectlist2
+    @RequestMapping(value = "/selectlist2", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> inquirySelectList2GET(@RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "qtitle", defaultValue = "") String qtitle,
+            @RequestHeader(name = "token") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+
+            Pageable pageable = PageRequest.of(page - 1, PAGECNT);
+            List<InquiryCHGProjection> list = iRepository.findByQtitleContainingOrderByQnoDesc(qtitle, pageable);
+
+            long total = iRepository.countByQtitleContaining(qtitle);
+
+            if (list != null) {
+                map.put("total", total);
+                map.put("status", 200);
+                map.put("result", list);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+
         return map;
     }
 

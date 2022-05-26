@@ -15,9 +15,9 @@ public interface InquiryService {
     public long inquiryInsertOne(InquiryCHG inquiry);
 
     // 게시판 목록
-    public List<InquiryCHG> selectInquiryList(Pageable page, String btitle);
+    public List<InquiryCHGProjection> selectInquiryList(Pageable page, String btitle);
 
-    public List<InquiryCHGProjection> selectListInquiry(String memail, String mrole, Pageable page, String btitle);
+    public List<InquiryCHGProjection> selectListInquiry(String memail, Pageable page, String btitle);
 
     // 게시물 1개 조회
     public InquiryCHG inquirySelectOne(long qno);

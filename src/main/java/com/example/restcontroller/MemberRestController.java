@@ -59,6 +59,9 @@ public class MemberRestController {
 	@Autowired
 	ResourceLoader rLoader;
 
+	@Value("${board.page.count}")
+	int PAGECNT;
+
 	@Value("${default.image}")
 	String DEFAULT_IMAGE;
 
@@ -361,15 +364,17 @@ public class MemberRestController {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> boardSelectListGET(@RequestParam(name = "page", defaultValue = "1") int page,
-			@RequestParam(name = "memeil", defaultValue = "") String memeil) {
+			@RequestParam(name = "memail", defaultValue = "") String memail) {
 		Map<String, Object> map = new HashMap<>();
 		try {
 
-			Pageable pageable = PageRequest.of(page - 1, 10);
-			List<MemberCHG> list = mService.memberSelectList(pageable, memeil);
+			Pageable pageable = PageRequest.of(page - 1, PAGECNT);
+			List<MemberCHG> list = mService.memberSelectList(pageable, memail);
+			long total = mRepository.countByMemailContaining(memail);
 			if (list != null) {
-				map.put("status", 200);
+				map.put("total", total);
 				map.put("result", list);
+				map.put("status", 200);
 			}
 
 		} catch (Exception e) {
