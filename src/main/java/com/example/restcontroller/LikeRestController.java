@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.example.entity.ChallengeCHG;
 import com.example.entity.LikeCHG;
+import com.example.entity.LikeProjection;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
@@ -120,12 +121,12 @@ public class LikeRestController {
         @RequestHeader(name = "token") String token, 
         @RequestParam(name = "chgno") long chgno,
         @RequestParam(name = "lno") long lno ){
-            System.out.println("좋아요 번호 : "+ lno);
+            //System.out.println("좋아요 번호 : "+ lno);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 정보 : " + userSubject);
+            //System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
@@ -136,12 +137,12 @@ public class LikeRestController {
             member.setMemail(email);
 
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
-            System.out.println(challenge.toString());
+            //System.out.println(challenge.toString());
 
             int ret = lService.deleteLike(lno);
             if(ret == 1) {
                 long chglike = lRepository.countByChallengechg_Chgno(chgno);
-                System.out.println(chglike);
+                //System.out.println(chglike);
                 challenge.setChglike(chglike);
 
                 // 저장
@@ -171,7 +172,7 @@ public class LikeRestController {
         try {
             // 토큰에서 정보 추출
            String userSubject = jwtUtil.extractUsername(token);
-           System.out.println("토큰에 담긴 정보 : " + userSubject);
+           //System.out.println("토큰에 담긴 정보 : " + userSubject);
 
            // 추출된 결과값을 JSONObject 형태로 파싱
            JSONObject jsonObject = new JSONObject(userSubject);
@@ -182,7 +183,7 @@ public class LikeRestController {
             member.setMemail(email);
 
             LikeCHG like = lService.likeSelectOne(lno);
-            System.out.println("좋아요 번호 : " + lno);
+            //System.out.println("좋아요 번호 : " + lno);
             if(like != null){
                 map.put("status", 200);
                 map.put("result", like);
@@ -205,20 +206,20 @@ public class LikeRestController {
     public Map<String, Object> selectlistGET(
         @RequestHeader(name = "token") String token,
         @RequestParam(name = "page", defaultValue = "1") int page){  
-        System.out.println("페이지 : " + page);
-        System.out.println("토큰 : " + token);
+        //System.out.println("페이지 : " + page);
+        //System.out.println("토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 정보 : " + userSubject);
+            //System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
 
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<LikeCHG> list = lService.likeSelectList(pageable, email);
+            List<LikeProjection> list = lService.likeSelectList(pageable, email);
             if(list != null){
                 map.put("status", 200);
                 map.put("result", list);

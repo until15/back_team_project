@@ -372,7 +372,7 @@ public class JoinRestController {
 	
 	
 	// 내가 만든 첼린지 리스트 조회 (페이지네이션)
-	// 127.0.0.1:9090/ROOT/api/join/cidselectlist?page=
+	// 127.0.0.1:9090/ROOT/api/join/cidselectlist?page=&text=
 	@RequestMapping(value = "/cidselectlist", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -421,7 +421,7 @@ public class JoinRestController {
 	
 	
 	// 내가 생성한 첼린지 상세 조회
-	// 127.0.0.1:9090/ROOT/api/join/cidselectone?chgno=8
+	// 127.0.0.1:9090/ROOT/api/join/cidselectone?chgno=81
 	@RequestMapping(value = "/cidselectone", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -431,20 +431,31 @@ public class JoinRestController {
 			@RequestHeader(name = "token") String token) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println("첼린지 번호 : " + chgno);
-			System.out.println("토큰 : " + token);
+//			System.out.println("첼린지 번호 : " + chgno);
+//			System.out.println("토큰 : " + token);
 			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 			JSONObject jsonObject = new JSONObject(userSubject);
 			String email = jsonObject.getString("username");
 
-			System.out.println(email);
+//			System.out.println(email);
 			
+			JoinOneView join = joRepository.findByChgnoAndMemail(chgno, email);
+//			System.out.println("상세 조회 : " + join);
 			
+			String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chgno;
+			
+			if (!join.equals(null)) {
+				map.put("image", thumbnail);
+				map.put("result", join);
+				map.put("status", 200);
+			} else {
+				map.put("status", 0);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

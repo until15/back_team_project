@@ -2,11 +2,11 @@ package com.example.entity;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public interface BookmarkProjection {
-    
-    // 북마크 번호
-    Long getBmkno();
+public interface LikeProjection {
 
+    // 좋아요 번호 
+    Long getLno();
+    
     @Value("#{target.challengechg.chgno}")
 	String getChgno();
 

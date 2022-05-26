@@ -13,6 +13,9 @@ public interface PayCHGProjection {
     // 결제 금액
     int getPprice();
 
+    // 환불 가능 금액
+    int getCancelprice();
+
     // 챌린지 참여 번호
     @Value("#{target.joinchg.jno}")
     Long getJno();
