@@ -48,4 +48,7 @@ public interface ChgViewRepository extends JpaRepository<ChallengeCHGView, Long>
 	@Query(value ="SELECT CV.CHGNO FROM CHG_VIEW CV WHERE CV.CHGEND BETWEEN :start AND :end", nativeQuery = true)
 	public List<Long> selectEndCHG(Timestamp start, Timestamp end);
 	
+	// 작성자 별 첼린지 리스트 조회
+//	public List<ChallengeCHGView> findBy
+	
 }

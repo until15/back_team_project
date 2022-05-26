@@ -83,7 +83,7 @@ public class JoinRestController {
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
 			produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Map<String, Object> startChallengeGET(){
+	public Map<String, Object> startChallengeGET() {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			
@@ -369,7 +369,91 @@ public class JoinRestController {
 
 		return map;
 	}
+	
+	
+	// 내가 만든 첼린지 리스트 조회 (페이지네이션)
+	// 127.0.0.1:9090/ROOT/api/join/cidselectlist?page=
+	@RequestMapping(value = "/cidselectlist", 
+			method = { RequestMethod.GET }, // POST로 받음
+			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
+			produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> cIdSelectListGET(
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "text", defaultValue = "") String text,
+			@RequestHeader(name = "token") String token ){
+		Map<String, Object> map = new HashMap<>();
+		try {
+//			System.out.println("페이지 : " + page);
+//			System.out.println("토큰 : " + token);
+			
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String email = jsonObject.getString("username");
+
+//			System.out.println(email);
+			
+			// 페이지네이션(시작페이지(0부터), 갯수)
+			PageRequest pageRequest = PageRequest.of(page - 1, 10);
+//			System.out.println("페이지네이션 : " + pageRequest);
+			
+			List<ChallengeProjection> list = chgRepository.findByMemberchg_memailAndChgtitleContaining(email, text, pageRequest);
+			
+			long total = chgRepository.countByMemberchg_memailAndChgtitleContaining(email, text);
+//			System.out.println("항목 갯수 : " + total);
+			if (!list.equals(null)) {
+				map.put("pages", (total-1)/10+1);
+				map.put("result", list);
+				map.put("status", 200);
+			}
+			else {
+				map.put("status", 0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+	
+	
+	// 내가 생성한 첼린지 상세 조회
+	// 127.0.0.1:9090/ROOT/api/join/cidselectone?chgno=8
+	@RequestMapping(value = "/cidselectone", 
+			method = { RequestMethod.GET }, // POST로 받음
+			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
+			produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> cIdSelectOneGET(
+			@RequestParam(name = "chgno") long chgno,
+			@RequestHeader(name = "token") String token) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			System.out.println("첼린지 번호 : " + chgno);
+			System.out.println("토큰 : " + token);
+			
+			// 토큰에서 정보 추출
+			String userSubject = jwtUtil.extractUsername(token);
+			System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+			// 추출된 결과값을 JSONObject 형태로 파싱
+			JSONObject jsonObject = new JSONObject(userSubject);
+			String email = jsonObject.getString("username");
+
+			System.out.println(email);
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", -1);
+		}
+		return map;
+	}
+
+	
 	// 내가 참여한 첼린지 1개 상세 조회
 	// 127.0.0.1:9090/ROOT/api/join/selectone?jno=8
 	@RequestMapping(value = "/selectone", method = { RequestMethod.GET }, // POST로 받음

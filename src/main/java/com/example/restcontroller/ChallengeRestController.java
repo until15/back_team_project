@@ -18,7 +18,6 @@ import com.example.entity.ChallengeProjection2;
 import com.example.entity.JoinCHG;
 import com.example.entity.MemberCHG;
 import com.example.entity.RoutineCHG;
-import com.example.entity.RtnRunCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.ChallengeRepository;
 import com.example.repository.ChgImageRepository;
@@ -104,7 +103,7 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 등록
+     // 챌린지 등록
     // 127.0.0.1:9090/ROOT/api/challenge/insert
     // headers => token:토큰
     // form-data : "chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
@@ -113,112 +112,113 @@ public class ChallengeRestController {
     // :
     // 10000
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> insertChallengePOST(
-            @ModelAttribute ChallengeCHG chg1, // 이미지와 같이 넣을 땐 ModelAttribute 사용
-            @RequestHeader(name = "token") String token,
-            @RequestParam(name = "cimage", required = false) MultipartFile file) throws IOException {
-        Map<String, Object> map = new HashMap<>();
+        MediaType.APPLICATION_JSON_VALUE })
+public Map<String, Object> insertChallengePOST(
+        @ModelAttribute ChallengeCHG chg1, // 이미지와 같이 넣을 땐 ModelAttribute 사용
+        @RequestHeader(name = "token") String token,
+        @RequestParam(name = "chgroutine") Long rtnno,
+        @RequestParam(name = "cimage", required = false) MultipartFile file) throws IOException {
+    Map<String, Object> map = new HashMap<>();
 
-        try {
-            // 토큰에서 정보 추출
-            String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 정보 : " + userSubject);
+    try {
+        // 토큰에서 정보 추출
+        String userSubject = jwtUtil.extractUsername(token);
+        System.out.println("토큰에 담긴 정보 : " + userSubject);
 
-            // 추출된 결과값을 JSONObject 형태로 파싱
-            JSONObject jsonObject = new JSONObject(userSubject);
-            String email = jsonObject.getString("username");
+        // 추출된 결과값을 JSONObject 형태로 파싱
+        JSONObject jsonObject = new JSONObject(userSubject);
+        String email = jsonObject.getString("username");
 
-            // 멤버 엔티티
-            MemberCHG member = new MemberCHG();
-            member.setMemail(email);
+        // 멤버 엔티티
+        MemberCHG member = new MemberCHG();
+        member.setMemail(email);
 
-            // 멤버 레벨
-            MemberCHG member1 = mRepository.findById(email).orElse(null);
-            // System.out.println(member1.getMrank());
+        // 멤버 레벨
+        MemberCHG member1 = mRepository.findById(email).orElse(null);
+        // System.out.println(member1.getMrank());
 
-            // 챌린지 엔티티
-            ChallengeCHG chg = new ChallengeCHG();
+        // 챌린지 엔티티
+        ChallengeCHG chg = new ChallengeCHG();
 
-            // 챌린지 생성일 = 모집 시작일
-            // new Timestamp(System.currentTimeMillis()); => timeStamp to long
-            chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
+        // 루틴 번호 가져오기
+        RoutineCHG rtn = rtnRepository.findById(rtnno).orElse(null);
 
-            // string to timestamp 아래와 같은 포멧으로 기입.
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        // 챌린지 생성일 = 모집 시작일
+        // new Timestamp(System.currentTimeMillis()); => timeStamp to long
+        chg.setRecruitstart(new Timestamp(System.currentTimeMillis()));
 
-            // 모집 마감일 (임의 지정)
-            Date chgrend = formatter.parse(chg1.getRecruitend1());
-            Timestamp ts1 = new Timestamp(chgrend.getTime());
-            chg.setRecruitend(ts1);
+        // string to timestamp 아래와 같은 포멧으로 기입.
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 
-            // 시작일 = 모집 마감일
-            chg.setChgstart(ts1);
+        // 모집 마감일 (임의 지정)
+        Date chgrend = formatter.parse(chg1.getRecruitend1());
+        Timestamp ts1 = new Timestamp(chgrend.getTime());
+        chg.setRecruitend(ts1);
 
-            // 종료일 (임의 지정)
-            Date chgend = formatter.parse(chg1.getChgend1());
-            Timestamp ts2 = new Timestamp(chgend.getTime());
-            chg.setChgend(ts2);
+        // 시작일 = 모집 마감일
+        chg.setChgstart(ts1);
 
-            // 챌린지 시작일 종료일 차이
-            String date = chg1.getChgend1(); // 날짜2
-            System.out.println("날짜2 : " + date);
+        // 종료일 (임의 지정)
+        Date chgend = formatter.parse(chg1.getChgend1());
+        Timestamp ts2 = new Timestamp(chgend.getTime());
+        chg.setChgend(ts2);
 
-            Date start = new Date(ts1.getTime()); // timeStamp
-            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(date); // string
-            long diffSec = (start.getTime() - end.getTime()) / 1000; // 초 차이
-            long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
-            // System.out.println(diffSec + "초 차이");
-            System.out.println(diffDays + "일 차이");
+        // 챌린지 시작일 종료일 차이
+        String date = chg1.getChgend1(); // 날짜2
+        System.out.println("날짜2 : " + date);
 
-            chg.setChgtitle(chg1.getChgtitle()); // 제목
-            chg.setChgintro(chg1.getChgintro()); // 소개글
-            chg.setChgcontent(chg1.getChgcontent()); // 내용
-            chg.setChgfee(chg1.getChgfee()); // 참가비
-            chg.setChglevel(member1.getMrank());
-            // chg.setChglevel(chg1.getChglevel()); // 챌린지 레벨
-            chg.setMemberchg(member); // 첼린지 생성자
-            chg.setChgroutine(chg1.getChgroutine());
+        Date start = new Date(ts1.getTime()); // timeStamp
+        Date end = new SimpleDateFormat("yyyy-MM-dd").parse(date); // string
+        long diffSec = (start.getTime() - end.getTime()) / 1000; // 초 차이
+        long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+        // System.out.println(diffSec + "초 차이");
+        System.out.println(diffDays + "일 차이");
 
-            // RoutineCHG rtn = new RoutineCHG();
-            // chg.setChgroutine(rtn.getRtnno());
+        chg.setChgtitle(chg1.getChgtitle()); // 제목
+        chg.setChgintro(chg1.getChgintro()); // 소개글
+        chg.setChgcontent(chg1.getChgcontent()); // 내용
+        chg.setChgfee(chg1.getChgfee()); // 참가비
+        chg.setChglevel(member1.getMrank());
+        // chg.setChglevel(chg1.getChglevel()); // 챌린지 레벨
+        chg.setMemberchg(member); // 첼린지 생성자
+        chg.setChgroutine(rtn.getRtnno()); // 루틴 번호 
 
-            // 썸네일
-            chg.setChgimage(file.getBytes());
-            chg.setChginame(file.getOriginalFilename());
-            chg.setChgisize(file.getSize());
-            chg.setChgitype(file.getContentType());
+        // 썸네일
+        chg.setChgimage(file.getBytes());
+        chg.setChginame(file.getOriginalFilename());
+        chg.setChgisize(file.getSize());
+        chg.setChgitype(file.getContentType());
 
-            int ret = chgService.insertChallengeOne(chg);
-            System.out.println("DB에 추가됨 : " + ret);
+        int ret = chgService.insertChallengeOne(chg);
+        System.out.println("DB에 추가됨 : " + ret);
 
-            if (ret == 1) {
-                // 첼린지 생성 시 생성자 참가
-                JoinCHG join = new JoinCHG();
-                join.setMemberchg(member); // 참가하는 아이디(생성자)
+        if (ret == 1) {
+            // 첼린지 생성 시 생성자 참가
+            JoinCHG join = new JoinCHG();
+            join.setMemberchg(member); // 참가하는 아이디(생성자)
 
-                // 생성자가 마지막으로 만든 첼린지 조회
-                ChallengeProjection chgpro = chgRepository.findTop1ByMemberchg_memailOrderByChgnoDesc(email);
-                ChallengeCHG chg3 = new ChallengeCHG();
-                chg3.setChgno(chgpro.getChgno());
+            // 생성자가 마지막으로 만든 첼린지 조회
+            ChallengeProjection chgpro = chgRepository.findTop1ByMemberchg_memailOrderByChgnoDesc(email);
+            ChallengeCHG chg3 = new ChallengeCHG();
+            chg3.setChgno(chgpro.getChgno());
 
-                join.setChallengechg(chg3); // 참가하는 첼린지 번호
+            join.setChallengechg(chg3); // 참가하는 첼린지 번호
 
-                // 생성자 첼린지에 참여하기
-                int ret1 = jService.challengeJoin(join);
-                if (ret1 == 1) {
+            // 생성자 첼린지에 참여하기
+            int ret1 = jService.challengeJoin(join);
+            if (ret1 == 1) {
 
-                    map.put("status", 200);
-                }
-            } else {
-                map.put("status", 0);
+                map.put("status", 200);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", -1);
+        } else {
+            map.put("status", 0);
         }
-        return map;
+    } catch (Exception e) {
+        e.printStackTrace();
+        map.put("status", -1);
     }
+    return map;
+}
 
     // 챌린지 수정
     // 127.0.0.1:9090/ROOT/api/challenge/updateone
@@ -353,31 +353,6 @@ public class ChallengeRestController {
         return map;
     }
 
-    // 챌린지 작성자 별 조회
-    // 127.0.0.1:9090/ROOT/api/challenge/memberselectlist
-    @RequestMapping(value = "/memberselectlist", method = { RequestMethod.GET }, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Map<String, Object> memberSelectListGET(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "member", defaultValue = "") MemberCHG memberchg,
-            @RequestParam(name = "challenge", defaultValue = "") String challenge) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Pageable pageable = PageRequest.of(page - 1, 10);
-
-            List<ChallengeProjection> list = chgService.memberSelectList(pageable, memberchg);
-
-            if (list != null) {
-                map.put("status", 200);
-                map.put("result", list);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", 0);
-        }
-        return map;
-    }
 
     // 챌린지 인기별 조회
     // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike
