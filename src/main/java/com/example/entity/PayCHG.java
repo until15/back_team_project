@@ -29,6 +29,9 @@ public class PayCHG {
     // 결제 금액
     private int pprice;
 
+    // 환불된 총 금액(환불 가능 금액 계산시 사용)
+    private int cancelprice;
+
     // 참여 중인 챌린지 번호 FK
     @ManyToOne
     @JoinColumn(name = "jno")

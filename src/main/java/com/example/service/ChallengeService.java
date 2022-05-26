@@ -5,7 +5,6 @@ import java.util.List;
 import com.example.entity.ChallengeCHG;
 import com.example.entity.ChallengeProjection;
 import com.example.entity.ChallengeProjection2;
-import com.example.entity.MemberCHG;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

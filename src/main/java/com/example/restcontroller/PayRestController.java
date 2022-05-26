@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -151,24 +152,32 @@ public Map<String, Object> PayselectoneGET(
         String token = pService.getToken();
         System.out.println("토큰 ========== " + token);
 
-        // 유저 참가비 가져오기
+        // 유저 참가비, 환불된 금액 가져오기
         PayCHG pay1 = pRepository.findByImpuidEquals(pay.getImpuid());
-        System.out.println("유저참가비가져오기============="+pay1);
+        System.out.println("유저참가비=============" + pay1.getPprice());
+        System.out.println("환불된 금액============" + pay1.getCancelprice());
 
         // 유저 달성률 가져오기
         PayCHGProjection payProjection = pRepository.findByJoinchg_jnoEquals(pay.getJoinchg().getJno());
         
+        // 환불 가능 금액
+        int payprice = pay1.getPprice() - pay1.getCancelprice();
+
         // 달성률 int로 변환(반올림)
         float payf = payProjection.getChgrate();
         int payint = Math.round(payf);
 
         // 달성률에 따른 환급금
-        int payrefund = (int) (pay1.getPprice()*(payint*0.01));
+        int payrefund = (int) (payprice*(payint*0.01));
+        System.out.println("환급금====================" + payrefund);
 
         try {
             // 달성률이 양수
             if(payProjection.getChgrate() > 0){
                 pService.payCancle(pay.getImpuid(), token, payrefund, "챌린지 종료 참가비 환급");
+                PayCHG payput = pRepository.findByImpuidEquals(pay.getImpuid());
+                payput.setCancelprice(payrefund);
+                pRepository.save(payput);
                 return new ResponseEntity<>("환급 완료", HttpStatus.OK);
             }
             else{

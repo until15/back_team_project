@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.entity.BookMarkCHG;
+import com.example.entity.BookmarkProjection;
 import com.example.entity.ChallengeCHG;
 import com.example.entity.MemberCHG;
 import com.example.jwt.JwtUtil;
@@ -192,7 +193,7 @@ public class BookMarkRestController {
             String email = jsonObject.getString("username");
 
             Pageable pageable = PageRequest.of(page - 1, 10);
-            List<BookMarkCHG> list = bmkService.bookmarkSelectList(pageable, email);
+            List<BookmarkProjection> list = bmkService.bookmarkSelectList(pageable, email);
             if(list != null){
                 map.put("status", 200);
                 map.put("result", list);

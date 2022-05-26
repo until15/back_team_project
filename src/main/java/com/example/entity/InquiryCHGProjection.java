@@ -23,4 +23,7 @@ public interface InquiryCHGProjection {
     @Value("#{target.memberchg.mid}")
     String getMid();
 
+    @Value("#{target.memberchg.mrole}")
+    String getMrole();
+
 }

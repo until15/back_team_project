@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.LikeCHG;
+import com.example.entity.LikeProjection;
 import com.example.repository.LikeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,9 @@ public class LikeServiceImpl implements LikeService {
 
     // 좋아요 목록 (페이지네이션)
     @Override
-    public List<LikeCHG> likeSelectList(Pageable page, String memail) {
+    public List<LikeProjection> likeSelectList(Pageable page, String memail) {
         try {
-            List<LikeCHG> list = lRepository.findByMemberchg_memailOrderByLnoDesc(memail, page);
+            List<LikeProjection> list = lRepository.findByMemberchg_memailOrderByLnoDesc(memail, page);
             return list;
         }
         catch(Exception e) {
@@ -77,4 +78,6 @@ public class LikeServiceImpl implements LikeService {
         }
      
     }
+
+
 }

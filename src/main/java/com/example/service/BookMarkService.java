@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.BookMarkCHG;
+import com.example.entity.BookmarkProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,5 @@ public interface BookMarkService {
     public BookMarkCHG bookmarkSelectOne(long bmkno);
 
     // 북마크 목록
-    public List<BookMarkCHG> bookmarkSelectList(Pageable page, String memail);
+    public List<BookmarkProjection> bookmarkSelectList(Pageable page, String memail);
 }
