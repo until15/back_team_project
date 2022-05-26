@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import com.example.entity.LikeCHG;
+import com.example.entity.LikeProjection;
 
 import org.springframework.data.domain.Pageable;
 
@@ -21,6 +22,7 @@ public interface LikeService {
     public LikeCHG likeSelectOne(long lno);
 
     // 좋아요 목록
-    public List<LikeCHG> likeSelectList(Pageable page, String memail);
+    public List<LikeProjection> likeSelectList(Pageable page, String memail);
+
 
 }

@@ -2,7 +2,6 @@ package com.example.entity;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 
