@@ -19,5 +19,5 @@ public interface JoinOneRepository extends JpaRepository<JoinOneView, Long> {
 
 	
 	// 첼린지 생성자로 첼린지 조회
-	List<JoinOneView> findByCid(String id);
+	JoinOneView findByChgnoAndMemail(Long chgno, String email);
 }
