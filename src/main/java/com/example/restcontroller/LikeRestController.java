@@ -53,7 +53,7 @@ public class LikeRestController {
         method   = {RequestMethod.POST},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> insertBookmarkPOST(
+    public Map<String, Object> insertLikePOST(
         @RequestBody LikeCHG like,
         @RequestHeader(name = "token") String token, 
         @RequestParam(name = "chgno") long chgno ){  
@@ -61,13 +61,13 @@ public class LikeRestController {
             System.out.println("챌린지 번호 : " + chgno);
         Map<String, Object> map = new HashMap<>();
         try {
-           // 토큰에서 정보 추출
-           String userSubject = jwtUtil.extractUsername(token);
-           System.out.println("토큰에 담긴 정보 : " + userSubject);
+            // 토큰에서 정보 추출
+            String userSubject = jwtUtil.extractUsername(token);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
 
-           // 추출된 결과값을 JSONObject 형태로 파싱
-           JSONObject jsonObject = new JSONObject(userSubject);
-           String email = jsonObject.getString("username");
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
            
             // 멤버 엔티티 
             MemberCHG member = new MemberCHG();
@@ -117,7 +117,7 @@ public class LikeRestController {
         method   = {RequestMethod.DELETE},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> deleteChallengeDELETE(
+    public Map<String, Object> deleteLikeDELETE(
         @RequestHeader(name = "token") String token, 
         @RequestParam(name = "chgno") long chgno,
         @RequestParam(name = "lno") long lno ){
@@ -165,7 +165,7 @@ public class LikeRestController {
         method   = {RequestMethod.GET},
         consumes = {MediaType.ALL_VALUE}, 
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> selectOneChallengeGET(
+    public Map<String, Object> selectOneLikeGET(
         @RequestHeader(name = "token") String token, 
         @RequestParam(name = "lno") long lno ){
         Map<String, Object> map = new HashMap<>();
