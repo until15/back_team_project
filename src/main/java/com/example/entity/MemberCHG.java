@@ -79,7 +79,7 @@ public class MemberCHG {
 	// 가입일자
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
 	@CreationTimestamp // CURRENT_DATE
-	@Column(name = "MREGDATE")
+	@Column(name = "MREGDATE", updatable = false)
 	private Date mregdate;
 
 	// 임시 암호
