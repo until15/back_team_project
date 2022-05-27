@@ -67,7 +67,7 @@ public class MemberRestController {
 	@RequestMapping(value = "/join", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> joinPOST(@ModelAttribute MemberCHG member, @AuthenticationPrincipal User user,
-			@RequestParam(name = "mimage", required = false) MultipartFile file) throws IOException {
+			@RequestParam(name = "mimage", required = false) MultipartFile file) {
 		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 		Map<String, Object> map = new HashMap<>();
 		try {
