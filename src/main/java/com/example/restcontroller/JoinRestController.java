@@ -405,7 +405,7 @@ public class JoinRestController {
 			long total = chgRepository.countByMemberchg_memailAndChgtitleContaining(email, text);
 //			System.out.println("항목 갯수 : " + total);
 			if (!list.equals(null)) {
-				map.put("pages", (total-1)/10+1);
+				map.put("pages", total);
 				map.put("result", list);
 				map.put("status", 200);
 			}

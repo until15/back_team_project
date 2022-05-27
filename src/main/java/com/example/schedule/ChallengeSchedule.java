@@ -17,7 +17,7 @@ import okhttp3.Response;
 public class ChallengeSchedule {
 
 	// 오늘 날짜에 시작하는 첼린지 상태 변경
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0 16 * * *")
 	@Async
 	public void challengeStart() throws IOException {
 		
@@ -37,7 +37,7 @@ public class ChallengeSchedule {
 	}
 	
 	// 오늘 날짜에 종료하는 첼린지 상태 변경
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0 16 * * *")
 	@Async
 	public void challengeEnd() throws IOException {
 		
