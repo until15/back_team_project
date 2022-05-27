@@ -7,7 +7,6 @@ import java.util.Map;
 import com.example.entity.CommentCHG;
 import com.example.entity.CommunityCHG;
 import com.example.entity.MemberCHG;
-import com.example.entity.MemberCHGProjection;
 import com.example.jwt.JwtUtil;
 import com.example.repository.CommentRepository;
 import com.example.repository.MemberRepository;

@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import com.example.entity.MemberCHG;
@@ -15,7 +14,6 @@ import com.example.repository.MemberRepository;
 import com.example.service.MemberService;
 import com.example.service.UserDetailsServiceImpl;
 
-import org.aspectj.weaver.Member;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +24,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -526,6 +523,33 @@ public class MemberRestController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", 0); // 정상적이지 않을 때
+		}
+
+		return map;
+	}
+
+	// 회원리스트
+	// 127.0.0.1:9090/ROOT/api/member/selectmemberlist1
+	@RequestMapping(value = "/selectmemberlist1", method = { RequestMethod.GET }, consumes = {
+			MediaType.ALL_VALUE }, produces = {
+					MediaType.APPLICATION_JSON_VALUE })
+	public Map<String, Object> memberSelectListGET(@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "memail", defaultValue = "") String memail) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+
+			Pageable pageable = PageRequest.of(page - 1, PAGECNT);
+			List<MemberCHG> list = mRepository.findByMemailContainingOrderByMemailDesc(memail, pageable);
+			long total = mRepository.countByMemailContaining(memail);
+			if (list != null) {
+				map.put("total", total);
+				map.put("result", list);
+				map.put("status", 200);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", 0);
 		}
 
 		return map;
