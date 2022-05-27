@@ -156,6 +156,7 @@ public class poseRestController {
             if (video != null) {
                 map.put("videoUrl", video);
                 map.put("videoVno", videochg.getVno());
+                map.put("videotype", videochg.getVtype());
             }
 
         } catch (Exception e) {
