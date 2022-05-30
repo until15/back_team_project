@@ -171,7 +171,7 @@ public class poseRestController {
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(
-            @RequestParam(name="step", defaultValue = "1") int step,
+            @RequestParam(name = "step", defaultValue = "1") int step,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "title", defaultValue = "") String title) {
         Map<String, Object> map = new HashMap<>();
