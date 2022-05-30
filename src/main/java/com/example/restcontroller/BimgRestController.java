@@ -278,4 +278,46 @@ public class BimgRestController {
 
     }
 
+    // 127.0.0.1:9090/ROOT/api/bimg/insert1
+    @RequestMapping(value = "/insert1", method = { RequestMethod.POST }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> insert1PSOT(
+            @RequestParam(name = "file", required = false) MultipartFile file,
+            @RequestParam(name = "bno") long bno) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            BimgCHG bimg = new BimgCHG();
+            CommunityCHG community = new CommunityCHG();
+            community.setBno(bno);
+            bimg.setCommunitychg(community);
+
+            MemberCHG member = new MemberCHG();
+            // 게시판 엔티티에 추가
+            bimg.setMemberchg(member);
+
+            map.put(("status"), 200);
+            map.put("result", 0);
+
+            if (file != null) {
+                if (!file.isEmpty()) {
+                    bimg.setBimage(file.getBytes());
+                    bimg.setBimgname(file.getOriginalFilename());
+                    bimg.setBimgsize(file.getSize());
+                    bimg.setBimgtype(file.getContentType());
+
+                    int ret = bService.insertBimg(bimg);
+                    if (ret == 1) {
+                        map.put("result", bimg);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put(("status"), 0);
+        }
+        return map;
+    }
+
 }
