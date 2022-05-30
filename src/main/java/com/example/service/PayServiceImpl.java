@@ -149,11 +149,11 @@ public class PayServiceImpl implements PayService{
         httpConn.setDoOutput(true);
 
         JsonObject json = new JsonObject();
- 
+        
+        json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
 		json.addProperty("imp_uid", imp_uid); // imp_uid를 환불 `unique key`로 입력
 		json.addProperty("amount", amount); // 가맹점 클라이언트로부터 받은 환불금액
 		// json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
-        json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
 
         System.out.println("serviceImpl======================="+reason);
  
@@ -164,6 +164,8 @@ public class PayServiceImpl implements PayService{
 		bw.close();
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
+
+        System.out.println("====================버퍼리더"+br);
  
 		br.close();
 		httpConn.disconnect();

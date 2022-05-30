@@ -169,8 +169,11 @@ public Map<String, Object> PayselectoneGET(
 
         // 달성률에 따른 환급금
         int payrefund = (int) (payprice*(payint*0.01));
+        // 80% 이상 달성시 100% 환불
+        if(payint >= 80 ){
+            payrefund = payprice;
+        }
         System.out.println("환급금====================" + payrefund);
-
         try {
             // 달성률이 양수
             if(payProjection.getChgrate() > 0){
