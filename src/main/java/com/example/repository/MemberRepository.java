@@ -20,6 +20,8 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
 
     long countByMemailContaining(String memail);
 
+    long countByMidContaining(String mid);
+
     // memberprojection
     MemberCHGProjection findByMemail(String memail);
 
@@ -44,6 +46,8 @@ public interface MemberRepository extends JpaRepository<MemberCHG, String> {
     // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
     // WHERE BTITLE LIKE '%' || '검색어' || '%'
     List<MemberCHG> findByMemailContainingOrderByMemailDesc(String memail, Pageable page);
+
+    List<MemberCHGProjection> findByMemailOrMidContainingOrderByMemailDesc(String memail, String mid, Pageable page);
 
     @Transactional
     @Modifying(clearAutomatically = true)

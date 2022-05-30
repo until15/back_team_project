@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentCHG> commentSelectList(Long bno) {
         try {
-            List<CommentCHG> list = coRepository.findByCommunitychg_bnoOrderByCmtnoDesc(bno);
+            List<CommentCHG> list = coRepository.findByCommunitychg_bnoOrderByCmtnoAsc(bno);
 
             return list;
         } catch (Exception e) {

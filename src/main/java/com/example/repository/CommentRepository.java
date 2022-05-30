@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<CommentCHG, Long> {
 
-    List<CommentCHG> findByCommunitychg_bnoOrderByCmtnoDesc(long bno);
+    List<CommentCHG> findByCommunitychg_bnoOrderByCmtnoAsc(long bno);
 
     List<CommentCHG> findBycmtnoOrderByCmtnoDesc(long bno);
 

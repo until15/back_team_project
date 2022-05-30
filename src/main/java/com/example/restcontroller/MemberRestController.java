@@ -534,13 +534,14 @@ public class MemberRestController {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> memberSelectListGET(@RequestParam(name = "page", defaultValue = "1") int page,
-			@RequestParam(name = "memail", defaultValue = "") String memail) {
+			@RequestParam(name = "memail", defaultValue = "") String memail, @RequestParam(name = "mid") String mid) {
 		Map<String, Object> map = new HashMap<>();
 		try {
 
 			Pageable pageable = PageRequest.of(page - 1, PAGECNT);
-			List<MemberCHG> list = mRepository.findByMemailContainingOrderByMemailDesc(memail, pageable);
-			long total = mRepository.countByMemailContaining(memail);
+			List<MemberCHGProjection> list = mRepository.findByMemailOrMidContainingOrderByMemailDesc(memail, mid,
+					pageable);
+			long total = mRepository.countByMidContaining(mid);
 			if (list != null) {
 				map.put("total", total);
 				map.put("result", list);
