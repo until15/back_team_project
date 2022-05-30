@@ -9,6 +9,7 @@ import java.util.Map;
 import com.example.entity.MemberCHG;
 import com.example.entity.MemberCHGProjection;
 import com.example.entity.PoseCHG;
+import com.example.entity.PoseVideoVIEW;
 import com.example.entity.VideoCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.MemberRepository;
@@ -151,6 +152,7 @@ public class poseRestController {
 
             // 자세 동영상 조회
             VideoCHG videochg = vRepository.findByPosechg_pnoEquals(pno);
+            System.out.println("자세동영상========================="+videochg);
             String video = new String();
             video = "/ROOT/api/pose/video?no=" + videochg.getVno();
             if (video != null) {
