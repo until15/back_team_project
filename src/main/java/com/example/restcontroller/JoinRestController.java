@@ -334,7 +334,7 @@ public class JoinRestController {
 			// System.out.println(page);
 
 			// 페이지네이션
-			PageRequest pageRequest = PageRequest.of(page - 1, 5);
+			PageRequest pageRequest = PageRequest.of(page - 1, 10);
 			// System.out.println(pageRequest);
 
 			// 토큰에서 정보 추출
@@ -355,7 +355,7 @@ public class JoinRestController {
 			// System.out.println(total);
 
 			if (!list.isEmpty()) {
-				map.put("pages", (total - 1) / 5 + 1);
+				map.put("pages", total);
 				map.put("result", list);
 				map.put("status", 200);
 			} else {
@@ -397,7 +397,7 @@ public class JoinRestController {
 //			System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
-			PageRequest pageRequest = PageRequest.of(page - 1, 10);
+			PageRequest pageRequest = PageRequest.of(page - 1, 5);
 //			System.out.println("페이지네이션 : " + pageRequest);
 			
 			List<ChallengeProjection> list = chgRepository.findByMemberchg_memailAndChgtitleContaining(email, text, pageRequest);
