@@ -23,7 +23,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "JoinCHG") // 테이블명
-//생성할 시퀀스
+// 생성할 시퀀스
 @SequenceGenerator(name = "SEQ_JOIN", sequenceName = "SEQ_JOIN_JNO", allocationSize = 1, initialValue = 1)
 public class JoinCHG {
 
@@ -32,32 +32,32 @@ public class JoinCHG {
     @Column(name = "JNO") // 컬럼명
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_JOIN") // 시퀀스 적용
     private Long jno;
-    
+
     // 참가 상태
     // 1 => 대기
     // 2 => 포기
     // 3 => 진행중
     // 4 => 달성
     private int chgstate = 1;
-    
+
     // 달성률
     private float chgrate = 0;
-    
-	// 생성일자
-	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
-	@CreationTimestamp	// CURRENT_DATE
-	@Column(name = "JREGDATE")
-	private Date jregdate;
+
+    // 생성일자
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss.SSS")
+    @CreationTimestamp // CURRENT_DATE
+    @Column(name = "JREGDATE")
+    private Date jregdate;
 
     // 챌린지 테이블
-	@JsonBackReference
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "chgno")
     private ChallengeCHG challengechg;
-    
+
     // 회원테이블
     @ManyToOne
     @JoinColumn(name = "memail")
     private MemberCHG memberchg;
-	
+
 }
