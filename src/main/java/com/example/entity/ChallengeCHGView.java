@@ -36,6 +36,9 @@ public class ChallengeCHGView {
 	@Lob
 	private String chgcontent;
 
+	// 참여비
+	private Long chgfee;
+
 	// 모집 시작
 	@Column(nullable = false)
 	private Timestamp recruitstart;
