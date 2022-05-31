@@ -56,24 +56,24 @@ public class PayRestController {
         System.out.println("토큰 ========== " + token);
 
         // 결제된 금액
-        int amount = pService.paySelectOne(pay.getImpuid(), token);
+        int amount = pService.paySelectOne(pay.getImp_uid(), token);
         System.out.println("결제금액=======" + amount);
-        System.out.println("결제되어야하는금액=========" + pay.getPprice());
+        System.out.println("결제되어야하는금액=========" + pay.getAmount());
 
         try {
             // 결제 되어야 하는 금액과 결제된 금액이 동일할 경우에만 정상 결제 및 DB 등록
-            if(pay.getPprice() == amount){
+            if(pay.getAmount() == amount){
                 pRepository.save(pay);
                 return new ResponseEntity<>("결제 완료", HttpStatus.OK);
             }
             else{
-                pService.payCancle(pay.getImpuid(), token, amount, "결제 실패");
+                pService.payCancle(pay.getImp_uid(), token, amount, "결제 실패");
                 return new ResponseEntity<String>("결제 취소", HttpStatus.BAD_REQUEST);
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            pService.payCancle(pay.getImpuid(), token, amount, "결제 오류");
+            pService.payCancle(pay.getImp_uid(), token, amount, "결제 오류");
             return new ResponseEntity<String>("결제 오류", HttpStatus.BAD_REQUEST);
         }
     }
@@ -153,15 +153,15 @@ public Map<String, Object> PayselectoneGET(
         System.out.println("토큰 ========== " + token);
 
         // 유저 참가비, 환불된 금액 가져오기
-        PayCHG pay1 = pRepository.findByImpuidEquals(pay.getImpuid());
-        System.out.println("유저참가비=============" + pay1.getPprice());
-        System.out.println("환불된 금액============" + pay1.getCancelprice());
+        PayCHG pay1 = pRepository.SelectOneImp(pay.getImp_uid());
+        System.out.println("유저참가비=============" + pay1.getAmount());
+        System.out.println("환불된 금액============" + pay1.getChecksum());
 
         // 유저 달성률 가져오기
         PayCHGProjection payProjection = pRepository.findByJoinchg_jnoEquals(pay.getJoinchg().getJno());
         
         // 환불 가능 금액
-        int payprice = pay1.getPprice() - pay1.getCancelprice();
+        int payprice = pay1.getAmount() - pay1.getChecksum();
 
         // 달성률 int로 변환(반올림)
         float payf = payProjection.getChgrate();
@@ -177,12 +177,12 @@ public Map<String, Object> PayselectoneGET(
         try {
             // 달성률이 양수
             if(payProjection.getChgrate() > 0){
-                pService.payCancle(pay.getImpuid(), token, payrefund, pay.getReason());
-                PayCHG payput = pRepository.findByImpuidEquals(pay.getImpuid());
-                payput.setCancelprice(payrefund);
-                payput.setReason(pay.getReason());
-                pRepository.save(payput);
-                return new ResponseEntity<>("환급 완료", HttpStatus.OK);
+                pService.payCancle(token, pay.getImp_uid(), payrefund, pay.getReason());
+                // PayCHG payput = pRepository.SelectOneImp(pay.getImp_uid());
+                // payput.setChecksum(payrefund);
+                // payput.setReason(pay.getReason());
+                // pRepository.save(payput);
+                return new ResponseEntity<String>("환급 완료", HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<String>("환급 실패", HttpStatus.BAD_REQUEST);

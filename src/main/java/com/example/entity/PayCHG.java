@@ -21,16 +21,16 @@ public class PayCHG {
 
     // 고유 ID
     @Id
-    private String impuid;
+    private String imp_uid;
 
     // 결제 ID
-    private String merchantuid;
+    private String merchant_uid;
 
     // 결제 금액
-    private int pprice;
+    private int amount;
 
     // 환불된 총 금액(환불 가능 금액 계산시 사용)
-    private int cancelprice;
+    private int checksum;
 
     // 환급 이유
     @Column(nullable = true)

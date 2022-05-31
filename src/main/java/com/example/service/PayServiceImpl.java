@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.example.entity.PayCHG;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -132,7 +133,7 @@ public class PayServiceImpl implements PayService{
 
     // 결제 취소 및 환불
     @Override
-    public void payCancle(String imp_uid, String access_token, int amount, String reason) throws IOException{
+    public void payCancle(String access_token, String imp_uid, int amount, String reason) throws IOException{
 
         System.out.println("결제취소및환불====================");
         System.out.println(access_token);
@@ -144,28 +145,34 @@ public class PayServiceImpl implements PayService{
         httpConn = (HttpsURLConnection) url.openConnection();
 
         httpConn.setRequestMethod("POST");
-        httpConn.setRequestProperty("Authorization", access_token);
-        httpConn.setRequestProperty("Content-type", "application/json");
         httpConn.setRequestProperty("Accept", "application/json");
-        httpConn.setRequestProperty("Connection", "keep-alive");
+        httpConn.setRequestProperty("Content-type", "application/json");
+        httpConn.setRequestProperty("Authorization", access_token);
         httpConn.setDoOutput(true);
 
         JsonObject json = new JsonObject();
         
-        json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
 		json.addProperty("imp_uid", imp_uid); // imp_uid를 환불 `unique key`로 입력
 		json.addProperty("amount", amount); // 가맹점 클라이언트로부터 받은 환불금액
-		json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
+		// json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
+        json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
 
         System.out.println("serviceImpl======================="+reason);
+        System.out.println("금액==================="+amount);
+        System.out.println("imp_uid=========================" + imp_uid);
  
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(httpConn.getOutputStream()));
- 
+
 		bw.write(json.toString());
 		bw.flush();
 		bw.close();
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
+
+        String inputLine;
+        while((inputLine=br.readLine())!=null){
+            System.out.println("=====================RESPONSE"+inputLine);
+        }
 
 		br.close();
 		httpConn.disconnect();

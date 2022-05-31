@@ -2,6 +2,8 @@ package com.example.service;
 
 import java.io.IOException;
 
+import com.example.entity.PayCHG;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +16,6 @@ public interface PayService {
 	int paySelectOne(String imp_uid, String access_token);
 
     // 결제 취소
-    public void payCancle(String imp_uid, String access_token, int amount, String reason) throws IOException;
+    public void payCancle(String access_token, String imp_uid, int amount, String reason) throws IOException;
 	
 }
