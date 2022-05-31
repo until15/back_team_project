@@ -30,52 +30,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/like")
 public class LikeRestController {
 
-    @Autowired JwtUtil jwtUtil;
+    @Autowired
+    JwtUtil jwtUtil;
 
-    @Autowired LikeService lService;
+    @Autowired
+    LikeService lService;
 
-    @Autowired ChallengeService chgService;
+    @Autowired
+    ChallengeService chgService;
 
-    @Autowired LikeRepository lRepository;
+    @Autowired
+    LikeRepository lRepository;
 
-    @Autowired ChallengeRepository cRepository;
-
-
-
+    @Autowired
+    ChallengeRepository cRepository;
 
     // 좋아요 추가
     // 127.0.0.1:9090/ROOT/api/like/insert
     // params => chgno:1
     // headers => token:...
     // body/json => { "memail":"이메일" }
-    @RequestMapping(
-        value    = "/insert", 
-        method   = {RequestMethod.POST},
-        consumes = {MediaType.ALL_VALUE}, 
-        produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertLikePOST(
-        @RequestBody LikeCHG like,
-        @RequestHeader(name = "token") String token, 
-        @RequestParam(name = "chgno") long chgno ){  
-            System.out.println("토큰 : " + token);
-            System.out.println("챌린지 번호 : " + chgno);
+            @RequestBody LikeCHG like,
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "chgno") long chgno) {
+        // System.out.println("토큰 : " + token);
+        // System.out.println("챌린지 번호 : " + chgno);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            System.out.println("토큰에 담긴 정보 : " + userSubject);
+            // System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
-           
-            // 멤버 엔티티 
+
+            // 멤버 엔티티
             MemberCHG member = new MemberCHG();
             member.setMemail(email);
 
             // 챌린지 조회
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
-            System.out.println(challenge.toString());
+            // System.out.println(challenge.toString());
 
             // 저장
             like.setChallengechg(challenge);
@@ -84,24 +83,22 @@ public class LikeRestController {
             // 중복 확인
             LikeCHG duplicate = lService.duplicateInsert(chgno, email);
 
-            if(duplicate == null) {
+            if (duplicate == null) {
                 int ret = lService.insertLike(like);
-                if(ret == 1) {
+                if (ret == 1) {
                     // chgno 불러오기
                     long chglike = lRepository.countByChallengechg_Chgno(chgno);
-                    System.out.println(chglike);
+                    // System.out.println(chglike);
                     challenge.setChglike(chglike);
 
                     // 저장
                     cRepository.save(challenge);
                     map.put("status", 200);
                 }
-            }
-            else {
+            } else {
                 map.put("status", 0);
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
         }
@@ -112,84 +109,76 @@ public class LikeRestController {
     // 127.0.0.1:9090/ROOT/api/like/delete
     // params => lno : 1, chgno : 1
     // headers => token:...
-    @RequestMapping(
-        value    = "/delete", 
-        method   = {RequestMethod.DELETE},
-        consumes = {MediaType.ALL_VALUE}, 
-        produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> deleteLikeDELETE(
-        @RequestHeader(name = "token") String token, 
-        @RequestParam(name = "chgno") long chgno,
-        @RequestParam(name = "lno") long lno ){
-            //System.out.println("좋아요 번호 : "+ lno);
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "chgno") long chgno,
+            @RequestParam(name = "lno") long lno) {
+        // System.out.println("좋아요 번호 : "+ lno);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            //System.out.println("토큰에 담긴 정보 : " + userSubject);
+            // System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
 
-            // 멤버 엔티티 
+            // 멤버 엔티티
             MemberCHG member = new MemberCHG();
             member.setMemail(email);
 
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
-            //System.out.println(challenge.toString());
+            // System.out.println(challenge.toString());
 
             int ret = lService.deleteLike(lno);
-            if(ret == 1) {
+            if (ret == 1) {
                 long chglike = lRepository.countByChallengechg_Chgno(chgno);
-                //System.out.println(chglike);
+                // System.out.println(chglike);
                 challenge.setChglike(chglike);
 
                 // 저장
                 cRepository.save(challenge);
                 map.put("status", 200);
-            } 
-        }
-        catch(Exception e) {
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-			map.put("status", 0);
+            map.put("status", 0);
         }
         return map;
     }
 
     // 좋아요 조회
-    // 127.0.0.1:9090/ROOT/api/like/selectone?lno=  
+    // 127.0.0.1:9090/ROOT/api/like/selectone?lno=
     // Params => key:lno, values:
-    @RequestMapping(
-        value    = "/selectone", 
-        method   = {RequestMethod.GET},
-        consumes = {MediaType.ALL_VALUE}, 
-        produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectOneLikeGET(
-        @RequestHeader(name = "token") String token, 
-        @RequestParam(name = "lno") long lno ){
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "lno") long lno) {
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
-           String userSubject = jwtUtil.extractUsername(token);
-           //System.out.println("토큰에 담긴 정보 : " + userSubject);
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 정보 : " + userSubject);
 
-           // 추출된 결과값을 JSONObject 형태로 파싱
-           JSONObject jsonObject = new JSONObject(userSubject);
-           String email = jsonObject.getString("username");
+            // 추출된 결과값을 JSONObject 형태로 파싱
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String email = jsonObject.getString("username");
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
             member.setMemail(email);
 
             LikeCHG like = lService.likeSelectOne(lno);
-            //System.out.println("좋아요 번호 : " + lno);
-            if(like != null){
+            // System.out.println("좋아요 번호 : " + lno);
+            if (like != null) {
                 map.put("status", 200);
                 map.put("result", like);
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
         }
@@ -198,21 +187,18 @@ public class LikeRestController {
 
     // 좋아요 목록
     // 127.0.0.1:9090/ROOT/api/like/selectlist
-    @RequestMapping(
-        value    = "/selectlist", 
-        method   = {RequestMethod.GET},
-        consumes = {MediaType.ALL_VALUE}, 
-        produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(
-        @RequestHeader(name = "token") String token,
-        @RequestParam(name = "page", defaultValue = "1") int page){  
-        //System.out.println("페이지 : " + page);
-        //System.out.println("토큰 : " + token);
+            @RequestHeader(name = "token") String token,
+            @RequestParam(name = "page", defaultValue = "1") int page) {
+        // System.out.println("페이지 : " + page);
+        // System.out.println("토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            //System.out.println("토큰에 담긴 정보 : " + userSubject);
+            // System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
@@ -220,12 +206,11 @@ public class LikeRestController {
 
             Pageable pageable = PageRequest.of(page - 1, 10);
             List<LikeProjection> list = lService.likeSelectList(pageable, email);
-            if(list != null){
+            if (list != null) {
                 map.put("status", 200);
                 map.put("result", list);
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             map.put("status", 0);
         }
