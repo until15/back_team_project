@@ -317,7 +317,11 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
+
+            String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chgno;
+
             if (challenge != null) {
+                map.put("image", thumbnail);
                 map.put("status", 200);
                 map.put("result", challenge);
             }
@@ -340,6 +344,7 @@ public class ChallengeRestController {
             Pageable pageable = PageRequest.of(page - 1, 10);
             List<ChallengeProjection2> list = chgService.challengeSelectList(pageable, challenge);
             long total = chgRepository.countByChgtitleContaining(challenge);
+            
             if (list != null) {
                 map.put("total", total);
                 map.put("status", 200);
