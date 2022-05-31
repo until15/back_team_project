@@ -253,6 +253,7 @@ public class ChallengeRestController {
             challenge.setChgintro(chg.getChgintro());
             challenge.setChgcontent(chg.getChgcontent());
 
+
             // 썸네일 변경
 
             challenge.setChgimage(file.getBytes());
@@ -341,11 +342,20 @@ public class ChallengeRestController {
             @RequestParam(name = "challenge", defaultValue = "") String challenge) {
         Map<String, Object> map = new HashMap<>();
         try {
-            Pageable pageable = PageRequest.of(page - 1, 10);
+            Pageable pageable = PageRequest.of(page - 1, 9);
             List<ChallengeProjection2> list = chgService.challengeSelectList(pageable, challenge);
             long total = chgRepository.countByChgtitleContaining(challenge);
+
+            // ChallengeCHG chg = new ChallengeCHG();
+
+            // chg.setChgno(chg.getChgno());
+
+
+            
+            // String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chg;
             
             if (list != null) {
+                //map.put("image", thumbnail);
                 map.put("total", total);
                 map.put("status", 200);
                 map.put("result", list);
