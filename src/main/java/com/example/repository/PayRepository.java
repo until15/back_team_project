@@ -7,6 +7,8 @@ import com.example.entity.PayCHGProjection;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,7 +21,8 @@ public interface PayRepository extends JpaRepository<PayCHG, String> {
     PayCHGProjection findByJoinchg_Memberchg_memailAndJoinchg_jnoEquals(String memail, long jno);
 
     // 유저 환급용 참가비 조회
-    PayCHG findByImpuidEquals(String uid);
+    @Query(value = "SELECT * FROM PAYCHG WHERE IMP_UID=:uid", nativeQuery = true)
+    PayCHG SelectOneImp(@Param("uid") String uid);
 
     // 유저 환급용 달성률 조회
     PayCHGProjection findByJoinchg_jnoEquals(long jno);
