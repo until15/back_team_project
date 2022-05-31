@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Value;
 
 public interface PayCHGProjection {
@@ -15,6 +17,9 @@ public interface PayCHGProjection {
 
     // 환불 가능 금액
     int getCancelprice();
+
+    // 결제일
+    LocalDate getPregdate();
 
     // 챌린지 참여 번호
     @Value("#{target.joinchg.jno}")
@@ -35,5 +40,5 @@ public interface PayCHGProjection {
     // 참여한 챌린지 달성률
     @Value("#{target.joinchg.chgrate}")
     float getChgrate();
-    
+
 }
