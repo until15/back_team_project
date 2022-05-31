@@ -370,7 +370,7 @@ public class ConfirmRestController {
 			
 			
 			if (!list.isEmpty()) {
-				map.put("pages", (total-1)/5+1);
+				map.put("pages", total);
 				map.put("result", list);
 				map.put("status", 200);				
 			}
@@ -456,7 +456,7 @@ public class ConfirmRestController {
 			// 조회한 값이 있을 때 반환 
 			if(!list.isEmpty()) {
 				map.put("result", list);
-				map.put("pages", (total-1)/5+1);
+				map.put("pages", total);
 				map.put("status", 200);				
 			}
 			else {
