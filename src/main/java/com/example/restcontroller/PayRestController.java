@@ -177,9 +177,10 @@ public Map<String, Object> PayselectoneGET(
         try {
             // 달성률이 양수
             if(payProjection.getChgrate() > 0){
-                pService.payCancle(pay.getImpuid(), token, payrefund, "챌린지 종료 참가비 환급");
+                pService.payCancle(pay.getImpuid(), token, payrefund, pay.getReason());
                 PayCHG payput = pRepository.findByImpuidEquals(pay.getImpuid());
                 payput.setCancelprice(payrefund);
+                payput.setReason(pay.getReason());
                 pRepository.save(payput);
                 return new ResponseEntity<>("환급 완료", HttpStatus.OK);
             }

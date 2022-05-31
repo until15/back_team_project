@@ -146,6 +146,8 @@ public class PayServiceImpl implements PayService{
         httpConn.setRequestMethod("POST");
         httpConn.setRequestProperty("Authorization", access_token);
         httpConn.setRequestProperty("Content-type", "application/json");
+        httpConn.setRequestProperty("Accept", "application/json");
+        httpConn.setRequestProperty("Connection", "keep-alive");
         httpConn.setDoOutput(true);
 
         JsonObject json = new JsonObject();
@@ -153,7 +155,7 @@ public class PayServiceImpl implements PayService{
         json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
 		json.addProperty("imp_uid", imp_uid); // imp_uid를 환불 `unique key`로 입력
 		json.addProperty("amount", amount); // 가맹점 클라이언트로부터 받은 환불금액
-		// json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
+		json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
 
         System.out.println("serviceImpl======================="+reason);
  
@@ -165,8 +167,6 @@ public class PayServiceImpl implements PayService{
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
 
-        System.out.println("====================버퍼리더"+br);
- 
 		br.close();
 		httpConn.disconnect();
     }

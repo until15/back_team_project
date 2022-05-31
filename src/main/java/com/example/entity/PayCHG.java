@@ -32,6 +32,10 @@ public class PayCHG {
     // 환불된 총 금액(환불 가능 금액 계산시 사용)
     private int cancelprice;
 
+    // 환급 이유
+    @Column(nullable = true)
+    private String reason;
+
     // 참여 중인 챌린지 번호 FK
     @ManyToOne
     @JoinColumn(name = "jno")
