@@ -54,7 +54,7 @@ public class IqcommentServiceImpl implements IqcommentService {
     public List<IqcommentCHG> icommentSelectList(long qno) {
         try {
 
-            List<IqcommentCHG> list = iqRepository.findByInquirychg_qnoOrderByIqcmtnoDesc(qno);
+            List<IqcommentCHG> list = iqRepository.findByInquirychg_qnoOrderByIqcmtnoAsc(qno);
             return list;
 
         } catch (Exception e) {
