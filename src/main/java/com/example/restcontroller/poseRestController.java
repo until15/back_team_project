@@ -151,7 +151,7 @@ public class poseRestController {
 
             // 자세 동영상 조회
             VideoCHG videochg = vRepository.findByPosechg_pnoEquals(pno);
-            System.out.println("자세동영상========================="+videochg);
+            // System.out.println("자세동영상========================="+videochg);
             String video = new String();
             video = "/ROOT/api/pose/video?no=" + videochg.getVno();
             if (video != null) {
