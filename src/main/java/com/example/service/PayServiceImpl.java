@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.example.entity.PayCHG;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -58,10 +57,7 @@ public class PayServiceImpl implements PayService{
 			httpcon.setRequestProperty("Content-type", "application/json");
             httpcon.setDoInput(true);
 			httpcon.setDoOutput(true);
-
-            // System.out.println("impKey===============" + impKey);
-            // System.out.println("imp_secret===========" + impSecret);
-			
+            
             JsonObject json = new JsonObject();
 			json.addProperty("imp_key", impKey);
 			json.addProperty("imp_secret", impSecret);
@@ -71,26 +67,18 @@ public class PayServiceImpl implements PayService{
 			bw.write(json.toString());
 			bw.flush();
 			bw.close();
-
-            // System.out.println("PayServiceImpl 버퍼writer=============" + bw);
  
 			BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "utf-8"));
-
-            // System.out.println("PayServiceImpl 버퍼reader=============" + br);
  
 			Gson gson = new Gson();
             
             // Json 문자열을 Object 클래스로 변환
 			String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
-			
-			// System.out.println("PayServiceImpl response=========" + response);
  
 			String token = gson.fromJson(response, Map.class).get("access_token").toString();
  
 			br.close();
 			httpcon.disconnect();
-
-            // System.out.println("ServiceImpl token===============" + token);
  
 			return token;
             
@@ -133,11 +121,13 @@ public class PayServiceImpl implements PayService{
 
     // 결제 취소 및 환불
     @Override
-    public void payCancle(String access_token, String imp_uid, int amount, String reason) throws IOException{
+    public void payCancle(String imp_uid, int amount, String reason) throws IOException{
 
         System.out.println("결제취소및환불====================");
-        System.out.println(access_token);
         System.out.println(imp_uid);
+
+        String access_token = getToken();
+        System.out.println("토큰===================="+access_token);
         
         URL url = new URL("https://api.iamport.kr/payments/cancel");
         
@@ -157,9 +147,7 @@ public class PayServiceImpl implements PayService{
 		// json.addProperty("checksum", amount); // [권장] 환불 가능 금액 입력
         json.addProperty("reason", reason); // 가맹점 클라이언트로부터 받은 환불사유
 
-        System.out.println("serviceImpl======================="+reason);
-        System.out.println("금액==================="+amount);
-        System.out.println("imp_uid=========================" + imp_uid);
+        System.out.println(json);
  
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(httpConn.getOutputStream()));
 
@@ -177,5 +165,6 @@ public class PayServiceImpl implements PayService{
 		br.close();
 		httpConn.disconnect();
     }
+
     
 }

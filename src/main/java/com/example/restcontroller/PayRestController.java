@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,13 +66,13 @@ public class PayRestController {
                 return new ResponseEntity<>("결제 완료", HttpStatus.OK);
             }
             else{
-                pService.payCancle(pay.getImp_uid(), token, amount, "결제 실패");
+                pService.payCancle(pay.getImp_uid(), amount, "결제 실패");
                 return new ResponseEntity<String>("결제 취소", HttpStatus.BAD_REQUEST);
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            pService.payCancle(pay.getImp_uid(), token, amount, "결제 오류");
+            pService.payCancle(pay.getImp_uid(), amount, "결제 오류");
             return new ResponseEntity<String>("결제 오류", HttpStatus.BAD_REQUEST);
         }
     }
@@ -147,11 +146,6 @@ public Map<String, Object> PayselectoneGET(
     @PostMapping(value = "/refund.json")
     public ResponseEntity<String> payRefoundPost
     (@RequestBody PayCHG pay) throws IOException {
-
-        // 토큰 가져오기
-        String token = pService.getToken();
-        System.out.println("토큰 ========== " + token);
-
         // 유저 참가비, 환불된 금액 가져오기
         PayCHG pay1 = pRepository.SelectOneImp(pay.getImp_uid());
         System.out.println("유저참가비=============" + pay1.getAmount());
@@ -177,7 +171,7 @@ public Map<String, Object> PayselectoneGET(
         try {
             // 달성률이 양수
             if(payProjection.getChgrate() > 0){
-                pService.payCancle(token, pay.getImp_uid(), payrefund, pay.getReason());
+                pService.payCancle(pay.getImp_uid(), payrefund, pay.getReason());
                 // PayCHG payput = pRepository.SelectOneImp(pay.getImp_uid());
                 // payput.setChecksum(payrefund);
                 // payput.setReason(pay.getReason());
