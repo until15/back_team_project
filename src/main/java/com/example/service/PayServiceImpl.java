@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.example.entity.PayCHG;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 

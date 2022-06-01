@@ -346,9 +346,11 @@ public class ChallengeRestController {
             List<ChallengeProjection2> list = chgService.challengeSelectList(pageable, challenge);
             long total = chgRepository.countByChgtitleContaining(challenge);
 
-            // ChallengeCHG chg = new ChallengeCHG();
+            //ChallengeCHG chg = new ChallengeCHG();
 
-            // chg.setChgno(chg.getChgno());
+            //chg.setChgno(chg.getChgno());
+
+            //String thumbnail = "/ROOT/api/challenge/thumbnail?chgno=" + chg.getChgno(); 
 
 
             

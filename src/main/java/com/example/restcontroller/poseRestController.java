@@ -9,7 +9,6 @@ import java.util.Map;
 import com.example.entity.MemberCHG;
 import com.example.entity.MemberCHGProjection;
 import com.example.entity.PoseCHG;
-import com.example.entity.PoseVideoVIEW;
 import com.example.entity.VideoCHG;
 import com.example.jwt.JwtUtil;
 import com.example.repository.MemberRepository;
