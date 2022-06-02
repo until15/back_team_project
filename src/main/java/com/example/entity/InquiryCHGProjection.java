@@ -1,7 +1,6 @@
 package com.example.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 
