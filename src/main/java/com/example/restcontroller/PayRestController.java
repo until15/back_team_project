@@ -172,10 +172,10 @@ public Map<String, Object> PayselectoneGET(
             // 달성률이 양수
             if(payProjection.getChgrate() > 0){
                 pService.payCancle(pay.getImp_uid(), payrefund, pay.getReason());
-                // PayCHG payput = pRepository.SelectOneImp(pay.getImp_uid());
-                // payput.setChecksum(payrefund);
-                // payput.setReason(pay.getReason());
-                // pRepository.save(payput);
+                PayCHG payput = pRepository.SelectOneImp(pay.getImp_uid());
+                payput.setChecksum(payrefund);
+                payput.setReason(pay.getReason());
+                pRepository.save(payput);
                 return new ResponseEntity<String>("환급 완료", HttpStatus.OK);
             }
             else{
