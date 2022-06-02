@@ -17,6 +17,9 @@ import com.example.entity.CommunityCHGProjection;
 @Repository
 public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
 
+    List<CommunityCHGProjection> findByMemberchg_memailAndBtitleContainingOrderByBnoDesc(String memail, String btitle,
+            Pageable page);
+
     long countByBtitleContaining(String btitle);
 
     // CommunityCHG findByBno(Long bno);

@@ -279,4 +279,42 @@ public class CommunityRestController {
         return map;
     }
 
+    // 게시글 조회 및 페이지네이션
+    // 127.0.0.1:9090/ROOT/api/community/myselectlist
+    @RequestMapping(value = "/myselectlist", method = { RequestMethod.GET }, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    public Map<String, Object> mySelectListGET(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "btitle", defaultValue = "") String btitle,
+            @RequestHeader(name = "token") String token) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            String userSubject = jwtUtil.extractUsername(token);
+            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+
+            JSONObject jsonObject = new JSONObject(userSubject);
+            String username = jsonObject.getString("username");
+
+            Pageable pageable = PageRequest.of(page - 1, PAGECNT);
+            List<CommunityCHGProjection> list = cRepository
+                    .findByMemberchg_memailAndBtitleContainingOrderByBnoDesc(username, btitle, pageable);
+
+            long total = cRepository.countByBtitleContaining(btitle);
+
+            if (list != null) {
+                map.put("status", 200);
+                map.put("result", list);
+                map.put("total", total);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", 0);
+        }
+
+        return map;
+    }
+
 }
