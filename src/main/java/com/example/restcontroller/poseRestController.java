@@ -198,6 +198,29 @@ public class poseRestController {
         return map;
     }
 
+    // 자세 삭제 (관리자)
+    // 127.0.0.1:9090/ROOT/api/pose/deleteone.json
+    @RequestMapping(value = "/deleteone.json", method = { RequestMethod.PUT }, consumes = {
+        MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+public Map<String, Object> poseDeleteOnePOST(
+        @RequestBody PoseCHG pose) {
+    Map<String, Object> map = new HashMap<>();
+    try {
+        PoseCHG pose1 = pService.poseSelectOne(pose.getPno());
+        pose1.setPstep(pose.getPstep());
+
+        int ret = pService.poseDelete(pose1);
+        if (ret == 1) {
+            map.put("status", 200);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        map.put("status", 0);
+    }
+    return map;
+}
+
     // 자세 삭제 (삭제가 아닌 수정 pstep)
     // 127.0.0.1:9090/ROOT/api/pose/delete.json
     // {"pno" : 1, "pstep" : 2}
