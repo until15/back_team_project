@@ -283,15 +283,10 @@ public class BimgRestController {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insert1PSOT(
-            @RequestParam(name = "file", required = false) MultipartFile file,
-            @RequestParam(name = "bno") long bno) {
+            @RequestParam(name = "file", required = false) MultipartFile file) {
         Map<String, Object> map = new HashMap<>();
         try {
             BimgCHG bimg = new BimgCHG();
-            CommunityCHG community = new CommunityCHG();
-            community.setBno(bno);
-            bimg.setCommunitychg(community);
-
             MemberCHG member = new MemberCHG();
             // 게시판 엔티티에 추가
             bimg.setMemberchg(member);
