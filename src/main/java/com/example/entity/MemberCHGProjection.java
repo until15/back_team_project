@@ -1,5 +1,8 @@
 package com.example.entity;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public interface MemberCHGProjection {
 
     String getMemail();
@@ -21,6 +24,8 @@ public interface MemberCHGProjection {
     String getMphone();
 
     String getMrole();
+
+    LocalDate getMregdate();
 
     Long getMrank();
 
