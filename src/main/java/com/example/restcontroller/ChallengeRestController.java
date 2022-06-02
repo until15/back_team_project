@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -346,21 +347,22 @@ public class ChallengeRestController {
             List<ChallengeProjection2> list = chgService.challengeSelectList(pageable, challenge);
             long total = chgRepository.countByChgtitleContaining(challenge);
 
-            //ChallengeCHG chg = new ChallengeCHG();
-
-            //chg.setChgno(chg.getChgno());
-
-            //String thumbnail = "/ROOT/api/challenge/thumbnail?chgno=" + chg.getChgno(); 
-
-
             
-            // String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chg;
+
+            List<Map<String, Object>> list1 = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                Map<String, Object> map1 = new HashMap<>();
+                ChallengeProjection2 obj = list.get(i);
+                map1.put("obj", obj);
+                map1.put("img", "/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                list1.add(map1);
+            }
             
             if (list != null) {
-                //map.put("image", thumbnail);
                 map.put("total", total);
                 map.put("status", 200);
                 map.put("result", list);
+                map.put("result1", list1);
             }
 
         } catch (Exception e) {
