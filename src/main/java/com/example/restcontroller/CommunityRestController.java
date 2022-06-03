@@ -301,7 +301,7 @@ public class CommunityRestController {
             List<CommunityCHGProjection> list = cRepository
                     .findByMemberchg_memailAndBtitleContainingOrderByBnoDesc(username, btitle, pageable);
 
-            long total = cRepository.countByBtitleContaining(btitle);
+            long total = cRepository.countByMemberchg_memailAndBtitleContaining(username, btitle);
 
             if (list != null) {
                 map.put("status", 200);

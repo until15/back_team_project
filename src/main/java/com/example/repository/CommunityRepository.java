@@ -17,37 +17,40 @@ import com.example.entity.CommunityCHGProjection;
 @Repository
 public interface CommunityRepository extends JpaRepository<CommunityCHG, Long> {
 
-    List<CommunityCHGProjection> findByMemberchg_memailAndBtitleContainingOrderByBnoDesc(String memail, String btitle,
-            Pageable page);
+        List<CommunityCHGProjection> findByMemberchg_memailAndBtitleContainingOrderByBnoDesc(String memail,
+                        String btitle,
+                        Pageable page);
 
-    long countByBtitleContaining(String btitle);
+        long countByMemberchg_memailAndBtitleContaining(String memail, String btitle);
 
-    // CommunityCHG findByBno(Long bno);
+        long countByBtitleContaining(String btitle);
 
-    CommunityCHGProjection findByBno(Long bno);
+        // CommunityCHG findByBno(Long bno);
 
-    // 이전글 ex)20 이면 작은것중에서 가장 큰것 1개 19...
-    CommunityCHGProjection findTop1ByBnoLessThanOrderByBnoDesc(long bno);
+        CommunityCHGProjection findByBno(Long bno);
 
-    // 다음글 ex)20이면 큰것중에서 가장 작은것 1개 21...
-    CommunityCHGProjection findTop1ByBnoGreaterThanOrderByBnoAsc(long bno);
+        // 이전글 ex)20 이면 작은것중에서 가장 큰것 1개 19...
+        CommunityCHGProjection findTop1ByBnoLessThanOrderByBnoDesc(long bno);
 
-    CommunityCHG findByMemberchg_memailAndBnoEqualsOrderByBnoDesc(String memail, long bno);
+        // 다음글 ex)20이면 큰것중에서 가장 작은것 1개 21...
+        CommunityCHGProjection findTop1ByBnoGreaterThanOrderByBnoAsc(long bno);
 
-    // findBy 컬럼명 ContainingOrderBy컬럼명Desc
-    // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
-    // WHERE BTITLE LIKE '%' || '검색어' || '%'
-    List<CommunityCHGProjection> findByBtitleContainingOrderByBnoDesc(
-            String btitle, Pageable page);
+        CommunityCHG findByMemberchg_memailAndBnoEqualsOrderByBnoDesc(String memail, long bno);
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE COMMUNITYCHG SET BHIT=BHIT+1 WHERE BNO=:bno", nativeQuery = true)
-    public int updateBoardHitOne(@Param(value = "bno") long bno);
+        // findBy 컬럼명 ContainingOrderBy컬럼명Desc
+        // SELECT B.*, ROW_NUMBER() OVER (ORDER BY DESC) FROM BOARD10 B
+        // WHERE BTITLE LIKE '%' || '검색어' || '%'
+        List<CommunityCHGProjection> findByBtitleContainingOrderByBnoDesc(
+                        String btitle, Pageable page);
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query(value = "DELETE FROM COMMUNITYCHG WHERE BNO =:bno", nativeQuery = true)
-    public int deleteBoardOne(@Param(value = "bno") long bno);
+        @Transactional
+        @Modifying(clearAutomatically = true)
+        @Query(value = "UPDATE COMMUNITYCHG SET BHIT=BHIT+1 WHERE BNO=:bno", nativeQuery = true)
+        public int updateBoardHitOne(@Param(value = "bno") long bno);
+
+        @Transactional
+        @Modifying(clearAutomatically = true)
+        @Query(value = "DELETE FROM COMMUNITYCHG WHERE BNO =:bno", nativeQuery = true)
+        public int deleteBoardOne(@Param(value = "bno") long bno);
 
 }
