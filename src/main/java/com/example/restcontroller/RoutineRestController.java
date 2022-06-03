@@ -200,7 +200,7 @@ public class RoutineRestController {
             // 전체 개수
             long total = rRepository.countByMemberchg_memailContaining(email);
 
-            if (!list.isEmpty()) {
+            if (list != null) {
                 map.put("status", 200);
                 map.put("result", list);
                 map.put("total", total);
