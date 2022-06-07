@@ -54,5 +54,4 @@ public class BackTeamProjectApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(BackTeamProjectApplication.class);
 	}
-
 }

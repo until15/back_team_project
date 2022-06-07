@@ -27,8 +27,6 @@
 		</repository>
 	</repositories>
 
-	<packaging>war</packaging>
-
 	<dependencies>
 		<!-- 결제 연동 -->
 		<dependency>
