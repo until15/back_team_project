@@ -17,6 +17,8 @@
 		<java.version>11</java.version>
 	</properties>
 
+	<packaging>war</packaging>
+
 	<!-- JitPack 을 통해 maven설정 -->
 	<repositories>
 		<repository>
@@ -50,6 +52,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
+		<!-- tomcat 배포용 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- tomcat (개발용 웹 서버) -->
