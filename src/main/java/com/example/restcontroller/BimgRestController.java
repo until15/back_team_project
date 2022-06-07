@@ -58,7 +58,7 @@ public class BimgRestController {
     String DEFAULT_IMAGE;
 
     // 게시판 이미지 등록
-    // 127.0.0.1:9090/ROOT/api/bimg/insert
+    // 127.0.0.1:9090/until15/api/bimg/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPSOT(
@@ -108,7 +108,7 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 일괄 등록
-    // 127.0.0.1:9090/ROOT/api/bimg/insertbatch
+    // 127.0.0.1:9090/until15/api/bimg/insertbatch
     @RequestMapping(value = "/insertbatch", method = { RequestMethod.POST }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -122,7 +122,7 @@ public class BimgRestController {
             String userSubject = jwtUtil.extractUsername(token);
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
-            System.out.println(username);
+            // System.out.println(username);
 
             List<BimgCHG> list = new ArrayList<>();
             for (int i = 0; i < file.length; i++) {
@@ -156,7 +156,7 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 1개 조회
-    // 127.0.0.1:9090/ROOT/api/bimg/selectimg?bimgno=4
+    // 127.0.0.1:9090/until15/api/bimg/selectimg?bimgno=4
     @RequestMapping(value = "/selectimg", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -191,7 +191,7 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 수정
-    // 127.0.0.1:9090/ROOT/api/bimg/update
+    // 127.0.0.1:9090/until15/api/bimg/update
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> imgUpdatePUT(@ModelAttribute BimgCHG bimg,
@@ -205,7 +205,7 @@ public class BimgRestController {
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
-            System.out.println(username);
+            // System.out.println(username);
 
             BimgCHG bimg1 = bService.selectOneimage(bimg.getBimgno());
             bimg1.setBimage(file.getBytes());
@@ -225,7 +225,7 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 삭제
-    // 127.0.0.1:9090/ROOT/api/bimg/delete
+    // 127.0.0.1:9090/until15/api/bimg/delete
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> imgDELETE(@RequestParam(name = "bimgno") long bimgno,
@@ -257,7 +257,7 @@ public class BimgRestController {
     }
 
     // 게시판 이미지 1개 조회
-    // 127.0.0.1:9090/ROOT/api/bimg/selectimage1?bimgno=4
+    // 127.0.0.1:9090/until15/api/bimg/selectimage1?bimgno=4
     @RequestMapping(value = "/selectimage1", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectImageOneGET(@RequestParam(name = "bimgno") long bimgno) {
@@ -278,7 +278,7 @@ public class BimgRestController {
 
     }
 
-    // 127.0.0.1:9090/ROOT/api/bimg/insert1
+    // 127.0.0.1:9090/until15/api/bimg/insert1
     @RequestMapping(value = "/insert1", method = { RequestMethod.POST }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
