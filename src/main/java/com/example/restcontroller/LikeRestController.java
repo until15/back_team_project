@@ -46,7 +46,7 @@ public class LikeRestController {
     ChallengeRepository cRepository;
 
     // 좋아요 추가
-    // 127.0.0.1:9090/ROOT/api/like/insert
+    // 127.0.0.1:9090/until15/api/like/insert
     // params => chgno:1
     // headers => token:...
     // body/json => { "memail":"이메일" }
@@ -106,7 +106,7 @@ public class LikeRestController {
     }
 
     // 좋아요 삭제(해제)
-    // 127.0.0.1:9090/ROOT/api/like/delete
+    // 127.0.0.1:9090/until15/api/like/delete
     // params => lno : 1, chgno : 1
     // headers => token:...
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
@@ -151,7 +151,7 @@ public class LikeRestController {
     }
 
     // 좋아요 조회
-    // 127.0.0.1:9090/ROOT/api/like/selectone?lno=
+    // 127.0.0.1:9090/until15/api/like/selectone?lno=
     // Params => key:lno, values:
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -186,7 +186,7 @@ public class LikeRestController {
     }
 
     // 좋아요 목록
-    // 127.0.0.1:9090/ROOT/api/like/selectlist
+    // 127.0.0.1:9090/until15/api/like/selectlist
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(

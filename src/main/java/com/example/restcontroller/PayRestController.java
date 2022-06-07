@@ -45,7 +45,7 @@ public class PayRestController {
 
 
     // 결제 정보 검증 및 등록
-    // 127.0.0.1:9090/ROOT/api/pay/insert.json
+    // 127.0.0.1:9090/until15/api/pay/insert.json
     @PostMapping(value = "/insert.json")
     public ResponseEntity<String> paySelectonPost
     (@RequestBody PayCHG pay) throws IOException {
@@ -78,7 +78,7 @@ public class PayRestController {
     }
 
     // 유저 참가비 조회
-    //127.0.0.1:9090/ROOT/api/pay/selectlist.json
+    //127.0.0.1:9090/until15/api/pay/selectlist.json
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public Map<String, Object> PayselectlistGET(
@@ -113,7 +113,7 @@ public Map<String, Object> PayselectlistGET(
 }
 
     // 환급 페이지에서 조회할 것
-    // 127.0.0.1:9090/ROOT/api/pay/selectone.json
+    // 127.0.0.1:9090/until15/api/pay/selectone.json
     @RequestMapping(value = "/selectone.json", method = { RequestMethod.GET }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public Map<String, Object> PayselectoneGET(
@@ -142,7 +142,7 @@ public Map<String, Object> PayselectoneGET(
 }
 
     // 달성률에 따른 환급
-    // 127.0.0.1:9090/ROOT/api/pay/refund.json
+    // 127.0.0.1:9090/until15/api/pay/refund.json
     @PostMapping(value = "/refund.json")
     public ResponseEntity<String> payRefoundPost
     (@RequestBody PayCHG pay) throws IOException {

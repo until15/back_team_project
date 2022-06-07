@@ -77,7 +77,7 @@ public class JoinRestController {
 
 	
 	// 첼린지 시작 : chgstate 1 => 3
-	// 127.0.0.1:9090/ROOT/api/join/startchg
+	// 127.0.0.1:9090/until15/api/join/startchg
 	@RequestMapping(value = "/startchg", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -128,7 +128,7 @@ public class JoinRestController {
 	
 	
 	// 첼린지 종료 : (참가상태 변경)chgstate 3 => 4
-	// 127.0.0.1:9090/ROOT/api/join/endchg
+	// 127.0.0.1:9090/until15/api/join/endchg
 	@RequestMapping(value = "/endchg", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -179,7 +179,7 @@ public class JoinRestController {
 	
 	
 	// 참가하기
-	// 127.0.0.1:9090/ROOT/api/join/insert?chgno=
+	// 127.0.0.1:9090/until15/api/join/insert?chgno=
 	// Headers : token
 	@RequestMapping(value = "/insert", 
 			method = { RequestMethod.POST }, // POST로 받음
@@ -272,7 +272,7 @@ public class JoinRestController {
 	}
 
 	// 포기하기 (chgstate 가 1이면 참여중 2면 포기)
-	// 127.0.0.1:9090/ROOT/api/join/giveup?chgno=
+	// 127.0.0.1:9090/until15/api/join/giveup?chgno=
 	// Headers : token
 	@RequestMapping(value = "/giveup", method = { RequestMethod.PUT }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -317,7 +317,7 @@ public class JoinRestController {
 	}
 
 	// 진행 상태에 따른 조회 리스트
-	// 127.0.0.1:9090/ROOT/api/join/joinstate?chgstate=&page=
+	// 127.0.0.1:9090/until15/api/join/joinstate?chgstate=&page=
 	@RequestMapping(value = "/joinstate", method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
 			produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -371,7 +371,7 @@ public class JoinRestController {
 	
 	
 	// 내가 만든 첼린지 리스트 조회 (페이지네이션)
-	// 127.0.0.1:9090/ROOT/api/join/cidselectlist?page=&text=
+	// 127.0.0.1:9090/until15/api/join/cidselectlist?page=&text=
 	@RequestMapping(value = "/cidselectlist", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -420,7 +420,7 @@ public class JoinRestController {
 	
 	
 	// 내가 생성한 첼린지 상세 조회
-	// 127.0.0.1:9090/ROOT/api/join/cidselectone?chgno=81
+	// 127.0.0.1:9090/until15/api/join/cidselectone?chgno=81
 	@RequestMapping(value = "/cidselectone", 
 			method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -446,7 +446,7 @@ public class JoinRestController {
 			JoinOneView join = joRepository.findByChgnoAndMemail(chgno, email);
 //			System.out.println("상세 조회 : " + join);
 			
-			String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chgno;
+			String thumbnail = "/until15/api/join/thumbnail?chgno=" + chgno;
 			
 			if (!join.equals(null)) {
 				map.put("image", thumbnail);
@@ -465,7 +465,7 @@ public class JoinRestController {
 
 	
 	// 내가 참여한 첼린지 1개 상세 조회
-	// 127.0.0.1:9090/ROOT/api/join/selectone?jno=8
+	// 127.0.0.1:9090/until15/api/join/selectone?jno=8
 	@RequestMapping(value = "/selectone", method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
 			produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -494,7 +494,7 @@ public class JoinRestController {
 
 			JoinOneView join = joRepository.findByMemailAndJno(email, jno);
 
-			String thumbnail = "/ROOT/api/join/thumbnail?chgno="+join.getChgno();
+			String thumbnail = "/until15/api/join/thumbnail?chgno="+join.getChgno();
 
 			System.out.println(join.getJregdate());
 
@@ -515,7 +515,7 @@ public class JoinRestController {
 	}
 
 	// 진행 중인 내 첼린지 전체 조회
-	// 127.0.0.1:9090/ROOT/api/join/inglist
+	// 127.0.0.1:9090/until15/api/join/inglist
 	// Headers => token :
 	@RequestMapping(value = "/inglist", method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
@@ -550,7 +550,7 @@ public class JoinRestController {
 			// URL화 시킨 이미지를 배열에 담기
 			String[] imgs = new String[list.size()];
 			for (int i = 0; i < list.size(); i++) {
-				imgs[i] = "/ROOT/api/join/thumbnail?chgno=" + list.get(i).getChgno();
+				imgs[i] = "/until15/api/join/thumbnail?chgno=" + list.get(i).getChgno();
 				list.get(i).setJimgurl(imgs[i]);
 			}
 			System.out.println("이미지 url : " + imgs.toString());
@@ -570,7 +570,7 @@ public class JoinRestController {
 
 
 	// 썸네일 조회
-	// 127.0.0.1:9090/ROOT/api/join/thumbnail?chgno=
+	// 127.0.0.1:9090/until15/api/join/thumbnail?chgno=
 	@RequestMapping(value = "/thumbnail", method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
 			produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -609,7 +609,7 @@ public class JoinRestController {
 	}
 
 	// 내가 참여했던 첼린지 전체 조회 (페이지네이션)
-	// 127.0.0.1:9090/ROOT/api/join/selectlist?page=&title=
+	// 127.0.0.1:9090/until15/api/join/selectlist?page=&title=
 	// Headers => token :
 	@RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, // POST로 받음
 			consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음

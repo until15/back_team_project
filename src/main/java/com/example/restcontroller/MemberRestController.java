@@ -63,7 +63,7 @@ public class MemberRestController {
 	String DEFAULT_IMAGE;
 
 	// 회원가입
-	// 127.0.0.1:9090/ROOT/api/member/join
+	// 127.0.0.1:9090/until15/api/member/join
 	@RequestMapping(value = "/join", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> joinPOST(@ModelAttribute MemberCHG member, @AuthenticationPrincipal User user,
@@ -102,7 +102,7 @@ public class MemberRestController {
 	}
 
 	// 로그인 (토큰 사용)
-	// 127.0.0.1:9090/ROOT/api/member/login
+	// 127.0.0.1:9090/until15/api/member/login
 	@RequestMapping(value = "/login", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> memberLoginPOST(
@@ -149,7 +149,7 @@ public class MemberRestController {
 		return map;
 	}
 
-	// 127.0.0.1:9090/ROOT/api/member/updatemember
+	// 127.0.0.1:9090/until15/api/member/updatemember
 	// 회원정보수정 (토큰, 이름, 전화번호)
 	@RequestMapping(value = "/updatemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
@@ -202,7 +202,7 @@ public class MemberRestController {
 	}
 
 	// 암호변경 (토큰, 현재암호, 변경암호)
-	// 127.0.0.1:9090/ROOT/api/member/updatepw
+	// 127.0.0.1:9090/until15/api/member/updatepw
 	@RequestMapping(value = "/updatepw", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> customerupdatepwPUT(@RequestHeader(name = "token") String token,
@@ -237,7 +237,7 @@ public class MemberRestController {
 	}
 
 	// 회원탈퇴(삭제가 아닌 수정)
-	// 127.0.0.1:9090/ROOT/api/member/deletemember
+	// 127.0.0.1:9090/until15/api/member/deletemember
 	@RequestMapping(value = "/deletemember", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> deleteMemberOnePUT(
@@ -285,7 +285,7 @@ public class MemberRestController {
 	}
 
 	// 회원 1명 조회
-	// 127.0.0.1:9090/ROOT/api/member/selectmemberone
+	// 127.0.0.1:9090/until15/api/member/selectmemberone
 	@RequestMapping(value = "/selectmemberone", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> selectMemberOneGET(
@@ -305,7 +305,7 @@ public class MemberRestController {
 
 			MemberCHG member1 = mService.memberSelectOne(username);
 			String imgs = new String();
-			imgs = "/ROOT/api/member/profile?memail=" + username;
+			imgs = "/until15/api/member/profile?memail=" + username;
 
 			if (member1 != null) {
 				map.put("result", member1);
@@ -320,7 +320,7 @@ public class MemberRestController {
 	}
 
 	// 회원 프로필 사진 조회
-	// 127.0.0.1:9090/ROOT/api/member/profile
+	// 127.0.0.1:9090/until15/api/member/profile
 	@RequestMapping(value = "/profile", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<byte[]> selectProfileGET(
@@ -356,7 +356,7 @@ public class MemberRestController {
 	}
 
 	// 회원리스트
-	// 127.0.0.1:9090/ROOT/api/member/selectmemberlist
+	// 127.0.0.1:9090/until15/api/member/selectmemberlist
 	@RequestMapping(value = "/selectmemberlist", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
@@ -383,7 +383,7 @@ public class MemberRestController {
 	}
 
 	// 중복체크
-	// 127.0.0.1:9090/ROOT/api/member/emailcheck
+	// 127.0.0.1:9090/until15/api/member/emailcheck
 	@RequestMapping(value = "/emailcheck", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
@@ -405,7 +405,7 @@ public class MemberRestController {
 	}
 
 	// 닉네임 중복체크
-	// 127.0.0.1:9090/ROOT/api/member/checkmid
+	// 127.0.0.1:9090/until15/api/member/checkmid
 	@RequestMapping(value = "/checkmid", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
@@ -429,7 +429,7 @@ public class MemberRestController {
 	}
 
 	// 닉네임 정보수정 중복체크
-	// 127.0.0.1:9090/ROOT/api/member/checkmidone
+	// 127.0.0.1:9090/until15/api/member/checkmidone
 	@RequestMapping(value = "/checkmidone", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })
@@ -471,7 +471,7 @@ public class MemberRestController {
 	}
 
 	// 아이디 찾기
-	// 127.0.0.1:9090/ROOT/api/member/findmemail?mname=&mbirth=
+	// 127.0.0.1:9090/until15/api/member/findmemail?mname=&mbirth=
 	@RequestMapping(value = "/findmemail", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> findMemailGET(@RequestParam(name = "mname") String mname,
@@ -494,7 +494,7 @@ public class MemberRestController {
 	}
 
 	// 암호찾기
-	// 127.0.0.1:9090/ROOT/api/member/updatepw3?memail=
+	// 127.0.0.1:9090/until15/api/member/updatepw3?memail=
 	@RequestMapping(value = "/updatepw3", method = { RequestMethod.PUT }, consumes = {
 			MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Map<String, Object> updatepwPUT(@RequestParam(name = "memail") String memail) {
@@ -529,7 +529,7 @@ public class MemberRestController {
 	}
 
 	// 회원리스트
-	// 127.0.0.1:9090/ROOT/api/member/selectmemberlist1
+	// 127.0.0.1:9090/until15/api/member/selectmemberlist1
 	@RequestMapping(value = "/selectmemberlist1", method = { RequestMethod.GET }, consumes = {
 			MediaType.ALL_VALUE }, produces = {
 					MediaType.APPLICATION_JSON_VALUE })

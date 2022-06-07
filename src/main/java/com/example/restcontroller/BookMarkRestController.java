@@ -158,8 +158,11 @@ public class BookMarkRestController {
 
     // 북마크 목록(즐켜찾는 챌린지/목록)
     // 127.0.0.1:9090/until15/api/bookmark/selectlist
-    @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(
+        value    = "/selectlist", 
+        method   = {RequestMethod.GET},
+        consumes = {MediaType.ALL_VALUE}, 
+        produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> selectlistGET(
             @RequestHeader(name = "token") String token,
             @RequestParam(name = "page", defaultValue = "1") int page) {
