@@ -59,7 +59,7 @@ public class CommentRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String memail = jsonObject.getString("username");
 
-            System.out.println(memail);
+            // System.out.println(memail);
             // 회원엔티티 객체 생성 및 이메일 추가
             MemberCHG member = new MemberCHG();
             member.setMemail(memail);
