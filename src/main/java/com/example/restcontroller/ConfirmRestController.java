@@ -69,7 +69,7 @@ public class ConfirmRestController {
 	
 	
 	// 달성률 증가
-	// 127.0.0.1:9090/ROOT/api/confirm/successrate.json?chgno=&jno=
+	// 127.0.0.1:9090/until15/api/confirm/successrate.json?chgno=&jno=
 	@RequestMapping(value="/successrate.json", 
 			method = {RequestMethod.PUT},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
@@ -133,7 +133,7 @@ public class ConfirmRestController {
 	
 	
 	// 인증하기
-	// 127.0.0.1:9090/ROOT/api/confirm/insert.json?jno=
+	// 127.0.0.1:9090/until15/api/confirm/insert.json?jno=
 	// Headers -> token :
 	// Body -> {"cfcomment":"테스트"}
 	@RequestMapping(value="/insert.json", 
@@ -228,7 +228,7 @@ public class ConfirmRestController {
 	
 	
 	// 인증 수정하기
-	// 127.0.0.1:9090/ROOT/api/confirm/update.json?cfno=
+	// 127.0.0.1:9090/until15/api/confirm/update.json?cfno=
 	// Headers -> token:
 	// Bodys -> {"cfcomment":"수정 테스트"}
 	@RequestMapping(value="/update.json", 
@@ -291,7 +291,7 @@ public class ConfirmRestController {
 	
 	
 	// 인증 삭제하기
-	// 127.0.0.1:9090/ROOT/api/confirm/delete.json?cfno=
+	// 127.0.0.1:9090/until15/api/confirm/delete.json?cfno=
 	// Headers -> token:
 	@RequestMapping(value="/delete.json", 
 			method = {RequestMethod.DELETE},	// POST로 받음
@@ -346,7 +346,7 @@ public class ConfirmRestController {
 	
 	
 	// 인증글 전체 조회( 페이지네이션 )
-	// 127.0.0.1:9090/ROOT/api/confirm/provelist.json?page=&email=
+	// 127.0.0.1:9090/until15/api/confirm/provelist.json?page=&email=
 	@RequestMapping(value="/provelist.json", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
@@ -387,7 +387,7 @@ public class ConfirmRestController {
 	
 	
 	// 인증 1개 조회
-	// 127.0.0.1:9090/ROOT/api/confirm/selectone.json?cfno=
+	// 127.0.0.1:9090/until15/api/confirm/selectone.json?cfno=
 	// Headers -> token:
 	@RequestMapping(value="/selectone.json", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -423,7 +423,7 @@ public class ConfirmRestController {
 	}
 	
 	// 첼린지 내에서 인증 리스트 전체 조회
-	// 127.0.0.1:9090/ROOT/api/confirm/chgcfmlist.json?chgno=&page=
+	// 127.0.0.1:9090/until15/api/confirm/chgcfmlist.json?chgno=&page=
 	@RequestMapping(value="/chgcfmlist.json", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
@@ -472,7 +472,7 @@ public class ConfirmRestController {
 	
 	
 	// 내가 인증한 리스트 전체 조회 (페이지네이션)
-	// 127.0.0.1:9090/ROOT/api/confirm/myselectlist.json?page=?&text=?
+	// 127.0.0.1:9090/until15/api/confirm/myselectlist.json?page=?&text=?
 	// Headers -> token :
 	@RequestMapping(value="/myselectlist.json", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -529,7 +529,7 @@ public class ConfirmRestController {
 	
 	
 	// 내가 인증한 리스트 첼린지별 조회 (페이지네이션)
-	// 127.0.0.1:9090/ROOT/api/confirm/mycfmlist.json?chgno=&page=
+	// 127.0.0.1:9090/until15/api/confirm/mycfmlist.json?chgno=&page=
 	// Headers -> token :
 	@RequestMapping(value="/mycfmlist.json", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -582,7 +582,7 @@ public class ConfirmRestController {
 	
 	
 	// 생성자가 인증 성공 여부 판별하기
-	// 127.0.0.1:9090/ROOT/api/confirm/whethercfm.json?cfno=
+	// 127.0.0.1:9090/until15/api/confirm/whethercfm.json?cfno=
 	// Body -> {"cfsuccess" : "1"}
 	@RequestMapping(value="/whethercfm.json", 
 			method = {RequestMethod.PUT},	// POST로 받음
@@ -637,7 +637,7 @@ public class ConfirmRestController {
 	
 	
 	// 성공 유무 별로 조회하기 (첼린지 생성자 권한)
-	// 127.0.0.1:9090/ROOT/api/confirm/selectsuccess.json?chgno=&cfsuccess=&page=
+	// 127.0.0.1:9090/until15/api/confirm/selectsuccess.json?chgno=&cfsuccess=&page=
 	// Headers => token :
 	@RequestMapping(value="/selectsuccess.json", 
 			method = {RequestMethod.GET},	// POST로 받음
@@ -693,7 +693,7 @@ public class ConfirmRestController {
 	
 	
 	// 인증 이미지 일괄 추가하기
-	// 127.0.0.1:9090/ROOT/api/confirm/cfimage.insert?cfno=
+	// 127.0.0.1:9090/until15/api/confirm/cfimage.insert?cfno=
 	@RequestMapping(value="/cfimage.insert", 
 			method = {RequestMethod.POST},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
@@ -743,7 +743,7 @@ public class ConfirmRestController {
 	}
 	
 	// 인증 이미지 조회
-	// 127.0.0.1:9090/ROOT/api/confirm/cfimages.json?cfimgno=
+	// 127.0.0.1:9090/until15/api/confirm/cfimages.json?cfimgno=
 	@RequestMapping(value="/cfimages.json", 
 			method = {RequestMethod.GET},	// POST로 받음
 			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
@@ -782,7 +782,7 @@ public class ConfirmRestController {
 	}
 	
 	// 인증이미지 URL (인증 번호로 인증 이미지 번호 조회)
-	// 127.0.0.1:9090/ROOT/api/confirm/selectimages?cfno=
+	// 127.0.0.1:9090/until15/api/confirm/selectimages?cfno=
 	@RequestMapping(value = "/selectimages",
 			method = {RequestMethod.GET}, 
 			consumes = {MediaType.ALL_VALUE}, 
@@ -804,7 +804,7 @@ public class ConfirmRestController {
 					imgs[i] = "";
 				}
 				else {
-					imgs[i] = "/ROOT/api/confirm/cfimages.json?cfimgno=" + list.get(i);					
+					imgs[i] = "/until15/api/confirm/cfimages.json?cfimgno=" + list.get(i);					
 				}
 			}
 			System.out.println("이미지 url : " + imgs.length);

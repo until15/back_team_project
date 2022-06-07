@@ -44,7 +44,7 @@ public class IqcommentRestController {
     InquiryRepository inRepository;
 
     // 댓글 등록
-    // 127.0.0.1:9090/ROOT/api/Iqcomment/insert
+    // 127.0.0.1:9090/until15/api/Iqcomment/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPOST(@RequestBody IqcommentCHG iqcomment,
@@ -78,7 +78,7 @@ public class IqcommentRestController {
     }
 
     // 댓글 목록에 보이기
-    // 127.0.0.1:9090/ROOT/api/Iqcomment/selectone
+    // 127.0.0.1:9090/until15/api/Iqcomment/selectone
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPOST(@RequestParam(name = "qno") long qno,
@@ -111,7 +111,7 @@ public class IqcommentRestController {
     }
 
     // 댓글 삭제
-    // 127.0.0.1:9090/ROOT/api/Iqcomment/delete?iqcmtno=1
+    // 127.0.0.1:9090/until15/api/Iqcomment/delete?iqcmtno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -135,7 +135,7 @@ public class IqcommentRestController {
         return map;
     }
 
-    // 127.0.0.1:9090/ROOT/api/Iqcomment/selectlist
+    // 127.0.0.1:9090/until15/api/Iqcomment/selectlist
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectListGET(

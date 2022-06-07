@@ -36,7 +36,7 @@ public class RtnRunRestController {
 
     // 루틴 실행 등록
     // [{"routinechg":{"rtnno":23}}, {"routinechg":{"rtnno":24}}]
-    // 127.0.0.1:9090/ROOT/api/rtnrun/insertbatch.json
+    // 127.0.0.1:9090/until15/api/rtnrun/insertbatch.json
     @RequestMapping(value = "/insertbatch.json", method = { RequestMethod.POST }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RunInsertPOST(
@@ -74,7 +74,7 @@ public class RtnRunRestController {
     }
 
     // 루틴 실행 수정
-    // 127.0.0.1:9090/ROOT/api/rtnrun/updatebatch.json
+    // 127.0.0.1:9090/until15/api/rtnrun/updatebatch.json
     // [{"runno" : 6, "routinechg":{"rtnno":19}}, {"runno" :
     // 7,"routinechg":{"rtnno":20}}]
     @RequestMapping(value = "/updatebatch.json", method = { RequestMethod.PUT }, consumes = {
@@ -117,7 +117,7 @@ public class RtnRunRestController {
     }
 
     // 루틴 실행 조회
-    // 127.0.0.1:9090/ROOT/api/rtnrun/selectlist.json
+    // 127.0.0.1:9090/until15/api/rtnrun/selectlist.json
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectlistGET(
@@ -146,7 +146,7 @@ public class RtnRunRestController {
     }
 
     // 루틴 실행 삭제
-    // 127.0.0.1:9090/ROOT/api/rtnrun/deletebatch.json?no=1,2
+    // 127.0.0.1:9090/until15/api/rtnrun/deletebatch.json?no=1,2
     @RequestMapping(value = "/deletebatch.json", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineDeleteDELETE(

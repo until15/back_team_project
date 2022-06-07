@@ -59,7 +59,7 @@ public class poseRestController {
     int PAGECNT;
 
     // 자세 등록
-    // 127.0.0.1:9090/ROOT/api/pose/insert.json
+    // 127.0.0.1:9090/until15/api/pose/insert.json
     // {"pname":"aaa", "ppart" : "bbb", "pcontent" : "ccc", "plevel" : 1, "pstep" :
     // 1}
     @RequestMapping(value = "/insert.json", method = { RequestMethod.POST }, consumes = {
@@ -95,7 +95,7 @@ public class poseRestController {
     }
 
     // 자세 수정
-    // 127.0.0.1:9090/ROOT/api/pose/update.json
+    // 127.0.0.1:9090/until15/api/pose/update.json
     // {"pname":"aaa2", "ppart" : "bbb2", "pcontent" : "ccc2", "plevel" : 1, "pno" :
     // 1}
     @RequestMapping(value = "/update.json", method = { RequestMethod.PUT }, consumes = {
@@ -131,7 +131,7 @@ public class poseRestController {
     }
 
     // 자세 조회
-    // 127.0.0.1:9090/ROOT/api/pose/selectone.json?pno=
+    // 127.0.0.1:9090/until15/api/pose/selectone.json?pno=
     @RequestMapping(value = "/selectone.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectoneGET(
@@ -153,7 +153,7 @@ public class poseRestController {
             VideoCHG videochg = vRepository.findByPosechg_pnoEquals(pno);
             // System.out.println("자세동영상========================="+videochg);
             String video = new String();
-            video = "/ROOT/api/pose/video?no=" + videochg.getVno();
+            video = "/until15/api/pose/video?no=" + videochg.getVno();
             if (video != null) {
                 map.put("videoUrl", video);
                 map.put("videoVno", videochg.getVno());
@@ -168,7 +168,7 @@ public class poseRestController {
     }
 
     // 자세 목록 (검색어 + 페이지네이션)
-    // 127.0.0.1:9090/ROOT/api/pose/selectlist.json?page=1&title=
+    // 127.0.0.1:9090/until15/api/pose/selectlist.json?page=1&title=
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(
@@ -199,7 +199,7 @@ public class poseRestController {
     }
 
     // 자세 삭제 (관리자)
-    // 127.0.0.1:9090/ROOT/api/pose/deleteone.json
+    // 127.0.0.1:9090/until15/api/pose/deleteone.json
     @RequestMapping(value = "/deleteone.json", method = { RequestMethod.PUT }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public Map<String, Object> poseDeleteOnePOST(
@@ -222,7 +222,7 @@ public Map<String, Object> poseDeleteOnePOST(
 }
 
     // 자세 삭제 (삭제가 아닌 수정 pstep)
-    // 127.0.0.1:9090/ROOT/api/pose/delete.json
+    // 127.0.0.1:9090/until15/api/pose/delete.json
     // {"pno" : 1, "pstep" : 2}
     @RequestMapping(value = "/delete.json", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -251,7 +251,7 @@ public Map<String, Object> poseDeleteOnePOST(
     }
 
     // 자세 동영상 등록
-    // 127.0.0.1:9090/ROOT/api/pose/insertvideo.json
+    // 127.0.0.1:9090/until15/api/pose/insertvideo.json
     @RequestMapping(value = "/insertvideo.json", method = { RequestMethod.POST }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> poseVideoInsertPOST(
@@ -291,7 +291,7 @@ public Map<String, Object> poseDeleteOnePOST(
     }
 
     // 자세 동영상 조회
-    // 127.0.0.1:9090/ROOT/api/pose/video?no=
+    // 127.0.0.1:9090/until15/api/pose/video?no=
     @RequestMapping(value = "/video", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<byte[]> selectvideoGET(
@@ -334,7 +334,7 @@ public Map<String, Object> poseDeleteOnePOST(
     }
 
     // 자세 동영상 수정
-    // 127.0.0.1:9090/ROOT/api/pose/updatevideo.json
+    // 127.0.0.1:9090/until15/api/pose/updatevideo.json
     @RequestMapping(value = "/updatevideo.json", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> poseVideoUpdatePOST(
@@ -377,7 +377,7 @@ public Map<String, Object> poseDeleteOnePOST(
     }
 
     // 자세 동영상 삭제
-    // 127.0.0.1:9090/ROOT/api/pose/deletevideo.json?no=8&pno=5
+    // 127.0.0.1:9090/until15/api/pose/deletevideo.json?no=8&pno=5
     @RequestMapping(value = "/deletevideo.json", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> poseVideoDeleteDELETE(
