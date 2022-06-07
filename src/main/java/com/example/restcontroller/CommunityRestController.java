@@ -64,19 +64,19 @@ public class CommunityRestController {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardInsertPOST(@RequestBody CommunityCHG community,
             @RequestHeader(name = "token") String token) {
-        // System.out.println(community.toString());
-        // System.out.println(token);
+        System.out.println(community.toString());
+        System.out.println(token);
         Map<String, Object> map = new HashMap<>();
 
         // 토큰에서 이메일 추출
         String userSubject = jwtUtil.extractUsername(token);
-        // System.out.println("토큰에 담긴 전보 : " + userSubject);
+        System.out.println("토큰에 담긴 전보 : " + userSubject);
 
         // 추출된 결과값을 JSONObject 형태로 파싱
         JSONObject jsonObject = new JSONObject(userSubject);
         String memail = jsonObject.getString("username");
 
-        // System.out.println(memail);
+        System.out.println(memail);
 
         // 회원엔티티 객체 생성 및 이메일 추가
         MemberCHG member = new MemberCHG();
@@ -181,13 +181,13 @@ public class CommunityRestController {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardDELETE(@RequestParam(name = "bno") long bno,
             @RequestHeader(name = "token") String token) {
-        // System.out.println(bno);
-        // System.out.println(token);
+        System.out.println(bno);
+        System.out.println(token);
         Map<String, Object> map = new HashMap<>();
         try {
 
             String userSubject = jwtUtil.extractUsername(token);
-            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
@@ -217,13 +217,13 @@ public class CommunityRestController {
         try {
 
             String userSubject = jwtUtil.extractUsername(token);
-            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String username = jsonObject.getString("username");
 
-            // System.out.println(username);
+            System.out.println(username);
 
             CommunityCHG community1 = cService.boardSelectPrivate(username, bno);
             community1.setBtitle(community.getBtitle());
@@ -244,11 +244,11 @@ public class CommunityRestController {
     @RequestMapping(value = "/updatehit", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateHitPUT(@RequestParam(name = "bno") long bno) {
-        // System.out.println(bno);
+        System.out.println(bno);
         Map<String, Object> map = new HashMap<>();
         try {
             int ret = cService.boardUpdateHit(bno);
-            // System.out.println(ret);
+            System.out.println(ret);
             if (ret == 1) {
                 map.put("status", 200);
             }
@@ -265,7 +265,7 @@ public class CommunityRestController {
     @RequestMapping(value = "/updatehit1", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateHit1PUT(@RequestParam(name = "bno") long bno) {
-        // System.out.println(bno);
+        System.out.println(bno);
         Map<String, Object> map = new HashMap<>();
         try {
             CommunityCHG community = cService.boardUpdateHit1(bno);

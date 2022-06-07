@@ -85,7 +85,7 @@ public class ChallengeRestController {
     String DEFAULT_IMAGE;
 
     // 생성자가 마지막으로 만든 첼린지 조회 테스트
-    // 127.0.0.1:9090/until15/api/challenge/testone?email='cc'
+    // 127.0.0.1:9090/ROOT/api/challenge/testone?email='cc'
     @RequestMapping(value = "/testone", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> testGET(
@@ -93,7 +93,7 @@ public class ChallengeRestController {
         Map<String, Object> map = new HashMap<>();
         try {
             ChallengeProjection chg = chgRepository.findTop1ByMemberchg_memailOrderByChgnoDesc(em);
-            // System.out.println(chg.toString());
+            System.out.println(chg.toString());
 
             map.put("ressult", chg);
             map.put("status", 200);
@@ -105,7 +105,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 등록
-    // 127.0.0.1:9090/until15/api/challenge/insert
+    // 127.0.0.1:9090/ROOT/api/challenge/insert
     // headers => token:토큰
     // form-data : "chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
     // "chglevel" : 1,
@@ -124,7 +124,7 @@ public class ChallengeRestController {
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            // System.out.println("토큰에 담긴 정보 : " + userSubject);
+            System.out.println("토큰에 담긴 정보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
@@ -173,7 +173,7 @@ public class ChallengeRestController {
             long diffSec = (start.getTime() - end.getTime()) / 1000; // 초 차이
             long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
             // System.out.println(diffSec + "초 차이");
-            // System.out.println(diffDays + "일 차이");
+            System.out.println(diffDays + "일 차이");
 
             chg.setChgtitle(chg1.getChgtitle()); // 제목
             chg.setChgintro(chg1.getChgintro()); // 소개글
@@ -191,7 +191,7 @@ public class ChallengeRestController {
             chg.setChgitype(file.getContentType());
 
             int ret = chgService.insertChallengeOne(chg);
-            // System.out.println("DB에 추가됨 : " + ret);
+            System.out.println("DB에 추가됨 : " + ret);
 
             if (ret == 1) {
                 // 첼린지 생성 시 생성자 참가
@@ -222,16 +222,19 @@ public class ChallengeRestController {
     }
 
     // 챌린지 수정
-    // 127.0.0.1:9090/until15/api/challenge/updateone
+    // 127.0.0.1:9090/ROOT/api/challenge/updateone
     // {"chgno" : 1, "chgtitle" : "aaa2", "chgintro" : "bbb2", "chgcontent" :
     // "ccc2"}
-    @RequestMapping(value = "/updateone", method = { RequestMethod.PUT }, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(
+        value    = "/updateone", 
+        method   = { RequestMethod.PUT }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateChallengePUT(
             @ModelAttribute ChallengeCHG chg,
             @RequestHeader(name = "token") String token,
             @RequestParam(name = "cimage") MultipartFile file) throws IOException {
-        // System.out.println("토큰 : " + token);
+        System.out.println("토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
@@ -242,14 +245,15 @@ public class ChallengeRestController {
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
 
-            // System.out.println(email);
+            System.out.println(email);
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
             member.setMemail(email);
 
             // 수정
-            ChallengeCHG challenge = chgService.challengeSelectOne(chg.getChgno());
+            ChallengeCHG challenge = 
+            chgService.challengeSelectOne(chg.getChgno());
             challenge.setChgtitle(chg.getChgtitle());
             challenge.setChgintro(chg.getChgintro());
             challenge.setChgcontent(chg.getChgcontent());// 썸네일 변경
@@ -269,25 +273,25 @@ public class ChallengeRestController {
     }
 
     // 챌린지 삭제
-    // 127.0.0.1:9090/until15/api/challenge/delete?chgno=1
+    // 127.0.0.1:9090/ROOT/api/challenge/delete?chgno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> deleteChallengeDELETE(
             @RequestParam("chgno") long chgno,
             @RequestHeader(name = "token") String token) {
-        // System.out.println("토큰 : " + token);
-        // System.out.println("챌린지 번호 : " + chgno);
+        System.out.println("토큰 : " + token);
+        System.out.println("챌린지 번호 : " + chgno);
         Map<String, Object> map = new HashMap<>();
         try {
             // 토큰에서 정보 추출
             String userSubject = jwtUtil.extractUsername(token);
-            // System.out.println("토큰에 담긴 전보 : " + userSubject);
+            System.out.println("토큰에 담긴 전보 : " + userSubject);
 
             // 추출된 결과값을 JSONObject 형태로 파싱
             JSONObject jsonObject = new JSONObject(userSubject);
             String email = jsonObject.getString("username");
 
-            // System.out.println(email);
+            System.out.println(email);
 
             // 멤버 엔티티
             MemberCHG member = new MemberCHG();
@@ -306,7 +310,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 1개 조회
-    // 127.0.0.1:9090/until15/api/challenge/selectone?chgno=챌린지번호
+    // 127.0.0.1:9090/ROOT/api/challenge/selectone?chgno=챌린지번호
     // Params => key:chgno, values:챌린지번호
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -316,7 +320,7 @@ public class ChallengeRestController {
         try {
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
 
-            String thumbnail = "/until15/api/join/thumbnail?chgno=" + chgno;
+            String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chgno;
 
             if (challenge != null) {
                 map.put("image", thumbnail);
@@ -331,7 +335,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 목록 (검색어 + 페이지네이션)
-    // 127.0.0.1:9090/until15/api/challenge/selectlist?page=1&challenge
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlist?page=1&challenge
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(
@@ -343,15 +347,17 @@ public class ChallengeRestController {
             List<ChallengeProjection2> list = chgService.challengeSelectList(pageable, challenge);
             long total = chgRepository.countByChgtitleContaining(challenge);
 
+            
+
             List<Map<String, Object>> list1 = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 Map<String, Object> map1 = new HashMap<>();
                 ChallengeProjection2 obj = list.get(i);
                 map1.put("obj", obj);
-                map1.put("img", "/until15/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                map1.put("img", "/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
                 list1.add(map1);
             }
-
+            
             if (list != null) {
                 map.put("total", total);
                 map.put("status", 200);
@@ -367,7 +373,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 인기별 조회
-    // 127.0.0.1:9090/until15/api/challenge/selectlistlike
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike
     @RequestMapping(value = "/selectlistlike", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistLikeGET(
@@ -393,7 +399,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 인기 목록(페이지네이션)
-    // 127.0.0.1:9090/until15/api/challenge/likeselectlist
+    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
     @RequestMapping(value = "/likeselectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> likeSelectlistGET(
@@ -420,7 +426,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 난이도별 조회
-    // 127.0.0.1:9090/until15/api/challenge/selectlistlevel
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlistlevel
     @RequestMapping(value = "/selectlistlevel", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistLevelGET(
@@ -446,7 +452,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 난이도 목록(페이지네이션)
-    // 127.0.0.1:9090/until15/api/challenge/levelselectlist
+    // 127.0.0.1:9090/ROOT/api/challenge/levelselectlist
     @RequestMapping(value = "/levelselectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> levelSelectlistGET(
@@ -476,7 +482,7 @@ public class ChallengeRestController {
     ////////////////////////////////////////////////////////////// //////////////////////////////////////////////////////////////
 
     // 챌린지 인기 목록 내림차순 (9개표시)
-    // 127.0.0.1:9090/until15/api/challenge/selectlikelist
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlikelist
     @RequestMapping(value = "/selectlikelist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectLikeListGET(
@@ -490,9 +496,9 @@ public class ChallengeRestController {
 
                 ChallengeCHGView obj = list.get(i);
                 // System.out.println("테스트 번호 : "+obj.getChgno());
-                obj.setImgurl("/until15/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                obj.setImgurl("/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
 
-                // imgs[i] = "/until15/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
+                // imgs[i] = "/ROOT/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
             }
             // System.out.println("이미지 url : " + imgs.toString());
 
@@ -508,7 +514,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 난이도 목록 내림차순 (9개표시)
-    // 127.0.0.1:9090/until15/api/challenge/selectlevellist
+    // 127.0.0.1:9090/ROOT/api/challenge/selectlevellist
     @RequestMapping(value = "/selectlevellist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectLevelListGET(
@@ -518,8 +524,8 @@ public class ChallengeRestController {
             List<ChallengeCHGView> list = cvRepository.selectLevelCHG(challenge);
             for (int i = 0; i < list.size(); i++) {
                 ChallengeCHGView obj = list.get(i);
-                // System.out.println("테스트 번호 : " + obj.getChgno());
-                obj.setImgurl("/until15/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                System.out.println("테스트 번호 : " + obj.getChgno());
+                obj.setImgurl("/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
             }
             map.put("result", list);
             map.put("status", 200);
@@ -532,13 +538,13 @@ public class ChallengeRestController {
     }
 
     // 썸네일 조회
-    // 127.0.0.1:9090/until15/api/challenge/thumbnail?chgno=
+    // 127.0.0.1:9090/ROOT/api/challenge/thumbnail?chgno=
     @RequestMapping(value = "/thumbnail", method = { RequestMethod.GET }, // POST로 받음
             consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
             produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<byte[]> selectImageGET(
             @RequestParam(name = "chgno") long chgno) {
-        // System.out.println("챌린지 번호" + chgno);
+        System.out.println("챌린지 번호" + chgno);
         try {
             // 이미지를 한개 조회
             CHGImgView chgImage = chgIRepository.findByChgno(chgno);
