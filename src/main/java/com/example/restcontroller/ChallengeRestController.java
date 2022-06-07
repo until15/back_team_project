@@ -225,8 +225,11 @@ public class ChallengeRestController {
     // 127.0.0.1:9090/ROOT/api/challenge/updateone
     // {"chgno" : 1, "chgtitle" : "aaa2", "chgintro" : "bbb2", "chgcontent" :
     // "ccc2"}
-    @RequestMapping(value = "/updateone", method = { RequestMethod.PUT }, consumes = {
-            MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(
+        value    = "/updateone", 
+        method   = { RequestMethod.PUT }, 
+        consumes = { MediaType.ALL_VALUE }, 
+        produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateChallengePUT(
             @ModelAttribute ChallengeCHG chg,
             @RequestHeader(name = "token") String token,
@@ -249,14 +252,11 @@ public class ChallengeRestController {
             member.setMemail(email);
 
             // 수정
-            ChallengeCHG challenge = chgService.challengeSelectOne(chg.getChgno());
+            ChallengeCHG challenge = 
+            chgService.challengeSelectOne(chg.getChgno());
             challenge.setChgtitle(chg.getChgtitle());
             challenge.setChgintro(chg.getChgintro());
-            challenge.setChgcontent(chg.getChgcontent());
-
-
-            // 썸네일 변경
-
+            challenge.setChgcontent(chg.getChgcontent());// 썸네일 변경
             challenge.setChgimage(file.getBytes());
             challenge.setChginame(file.getOriginalFilename());
             challenge.setChgisize(file.getSize());
