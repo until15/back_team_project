@@ -44,7 +44,7 @@ public class InquiryimgRestController {
     String DEFAULT_IMAGE;
 
     // 게시판 이미지 등록
-    // 127.0.0.1:9090/ROOT/api/Inquiryimg/insert
+    // 127.0.0.1:9090/until15/api/Inquiryimg/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPSOT(
@@ -94,7 +94,7 @@ public class InquiryimgRestController {
     }
 
     // 게시판 이미지 1개 조회
-    // 127.0.0.1:9090/ROOT/api/Inquiryimg/selectimg?qimgno=4
+    // 127.0.0.1:9090/until15/api/Inquiryimg/selectimg?qimgno=4
     @RequestMapping(value = "/selectimg", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -131,7 +131,7 @@ public class InquiryimgRestController {
     }
 
     // 게시판 이미지 수정
-    // 127.0.0.1:9090/ROOT/api/Inquiryimg/update
+    // 127.0.0.1:9090/until15/api/Inquiryimg/update
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> imgUpdatePUT(@ModelAttribute InquiryimgCHG inquiryimg,
@@ -165,7 +165,7 @@ public class InquiryimgRestController {
     }
 
     // 게시판 이미지 삭제
-    // 127.0.0.1:9090/ROOT/api/Inquiryimg/delete?qimgno=7
+    // 127.0.0.1:9090/until15/api/Inquiryimg/delete?qimgno=7
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> imgDELETE(@RequestParam(name = "qimgno") long qimgno,

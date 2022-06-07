@@ -85,7 +85,7 @@ public class ChallengeRestController {
     String DEFAULT_IMAGE;
 
     // 생성자가 마지막으로 만든 첼린지 조회 테스트
-    // 127.0.0.1:9090/ROOT/api/challenge/testone?email='cc'
+    // 127.0.0.1:9090/until15/api/challenge/testone?email='cc'
     @RequestMapping(value = "/testone", method = { RequestMethod.GET }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> testGET(
@@ -105,7 +105,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 등록
-    // 127.0.0.1:9090/ROOT/api/challenge/insert
+    // 127.0.0.1:9090/until15/api/challenge/insert
     // headers => token:토큰
     // form-data : "chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
     // "chglevel" : 1,
@@ -222,7 +222,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 수정
-    // 127.0.0.1:9090/ROOT/api/challenge/updateone
+    // 127.0.0.1:9090/until15/api/challenge/updateone
     // {"chgno" : 1, "chgtitle" : "aaa2", "chgintro" : "bbb2", "chgcontent" :
     // "ccc2"}
     @RequestMapping(
@@ -273,7 +273,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 삭제
-    // 127.0.0.1:9090/ROOT/api/challenge/delete?chgno=1
+    // 127.0.0.1:9090/until15/api/challenge/delete?chgno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> deleteChallengeDELETE(
@@ -310,7 +310,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 1개 조회
-    // 127.0.0.1:9090/ROOT/api/challenge/selectone?chgno=챌린지번호
+    // 127.0.0.1:9090/until15/api/challenge/selectone?chgno=챌린지번호
     // Params => key:chgno, values:챌린지번호
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -320,7 +320,7 @@ public class ChallengeRestController {
         try {
             ChallengeCHG challenge = chgService.challengeSelectOne(chgno);
 
-            String thumbnail = "/ROOT/api/join/thumbnail?chgno=" + chgno;
+            String thumbnail = "/until15/api/join/thumbnail?chgno=" + chgno;
 
             if (challenge != null) {
                 map.put("image", thumbnail);
@@ -335,7 +335,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 목록 (검색어 + 페이지네이션)
-    // 127.0.0.1:9090/ROOT/api/challenge/selectlist?page=1&challenge
+    // 127.0.0.1:9090/until15/api/challenge/selectlist?page=1&challenge
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistGET(
@@ -354,7 +354,7 @@ public class ChallengeRestController {
                 Map<String, Object> map1 = new HashMap<>();
                 ChallengeProjection2 obj = list.get(i);
                 map1.put("obj", obj);
-                map1.put("img", "/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                map1.put("img", "/until15/api/challenge/thumbnail?chgno=" + obj.getChgno());
                 list1.add(map1);
             }
             
@@ -373,7 +373,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 인기별 조회
-    // 127.0.0.1:9090/ROOT/api/challenge/selectlistlike
+    // 127.0.0.1:9090/until15/api/challenge/selectlistlike
     @RequestMapping(value = "/selectlistlike", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistLikeGET(
@@ -399,7 +399,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 인기 목록(페이지네이션)
-    // 127.0.0.1:9090/ROOT/api/challenge/likeselectlist
+    // 127.0.0.1:9090/until15/api/challenge/likeselectlist
     @RequestMapping(value = "/likeselectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> likeSelectlistGET(
@@ -426,7 +426,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 난이도별 조회
-    // 127.0.0.1:9090/ROOT/api/challenge/selectlistlevel
+    // 127.0.0.1:9090/until15/api/challenge/selectlistlevel
     @RequestMapping(value = "/selectlistlevel", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectlistLevelGET(
@@ -452,7 +452,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 난이도 목록(페이지네이션)
-    // 127.0.0.1:9090/ROOT/api/challenge/levelselectlist
+    // 127.0.0.1:9090/until15/api/challenge/levelselectlist
     @RequestMapping(value = "/levelselectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> levelSelectlistGET(
@@ -482,7 +482,7 @@ public class ChallengeRestController {
     ////////////////////////////////////////////////////////////// //////////////////////////////////////////////////////////////
 
     // 챌린지 인기 목록 내림차순 (9개표시)
-    // 127.0.0.1:9090/ROOT/api/challenge/selectlikelist
+    // 127.0.0.1:9090/until15/api/challenge/selectlikelist
     @RequestMapping(value = "/selectlikelist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectLikeListGET(
@@ -496,9 +496,9 @@ public class ChallengeRestController {
 
                 ChallengeCHGView obj = list.get(i);
                 // System.out.println("테스트 번호 : "+obj.getChgno());
-                obj.setImgurl("/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                obj.setImgurl("/until15/api/challenge/thumbnail?chgno=" + obj.getChgno());
 
-                // imgs[i] = "/ROOT/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
+                // imgs[i] = "/until15/api/challenge/thumbnail?chgno=" + list.get(i).getChgno();
             }
             // System.out.println("이미지 url : " + imgs.toString());
 
@@ -514,7 +514,7 @@ public class ChallengeRestController {
     }
 
     // 챌린지 난이도 목록 내림차순 (9개표시)
-    // 127.0.0.1:9090/ROOT/api/challenge/selectlevellist
+    // 127.0.0.1:9090/until15/api/challenge/selectlevellist
     @RequestMapping(value = "/selectlevellist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectLevelListGET(
@@ -525,7 +525,7 @@ public class ChallengeRestController {
             for (int i = 0; i < list.size(); i++) {
                 ChallengeCHGView obj = list.get(i);
                 System.out.println("테스트 번호 : " + obj.getChgno());
-                obj.setImgurl("/ROOT/api/challenge/thumbnail?chgno=" + obj.getChgno());
+                obj.setImgurl("/until15/api/challenge/thumbnail?chgno=" + obj.getChgno());
             }
             map.put("result", list);
             map.put("status", 200);
@@ -538,7 +538,7 @@ public class ChallengeRestController {
     }
 
     // 썸네일 조회
-    // 127.0.0.1:9090/ROOT/api/challenge/thumbnail?chgno=
+    // 127.0.0.1:9090/until15/api/challenge/thumbnail?chgno=
     @RequestMapping(value = "/thumbnail", method = { RequestMethod.GET }, // POST로 받음
             consumes = { MediaType.ALL_VALUE }, // 모든 타입을 다 받음
             produces = { MediaType.APPLICATION_JSON_VALUE })

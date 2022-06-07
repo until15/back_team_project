@@ -22,7 +22,7 @@ public class ChallengeSchedule {
 	public void challengeStart() throws IOException {
 		
 		// rest 컨트롤러에서 만든 오늘날짜에 시작하는 첼린지 조회 URL 
-		final String URL = "http://127.0.0.1:9090/ROOT/api/join/startchg";
+		final String URL = "http://127.0.0.1:9090/until15/api/join/startchg";
 		
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder().url(URL).build();
@@ -42,7 +42,7 @@ public class ChallengeSchedule {
 	public void challengeEnd() throws IOException {
 		
 		// rest 컨트롤러에서 만든 오늘날짜에 시작하는 첼린지 조회 URL 
-		final String URL = "http://127.0.0.1:9090/ROOT/api/join/endchg";
+		final String URL = "http://127.0.0.1:9090/until15/api/join/endchg";
 		
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder().url(URL).build();

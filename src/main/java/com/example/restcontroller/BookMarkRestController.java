@@ -35,7 +35,7 @@ public class BookMarkRestController {
     @Autowired ChallengeService chgService;
 
     // 북마크 추가
-    // 127.0.0.1:9090/ROOT/api/bookmark/insert
+    // 127.0.0.1:9090/until15/api/bookmark/insert
     // params => chgno:1
     // headers => token:...
     // body/json => { "memail":"이메일" }
@@ -91,7 +91,7 @@ public class BookMarkRestController {
 
 
     // 북마크 삭제(해제)
-    // 127.0.0.1:9090/ROOT/api/bookmark/delete
+    // 127.0.0.1:9090/until15/api/bookmark/delete
     // params => bmkno:1
     // headers => token:...
     @RequestMapping(
@@ -131,7 +131,7 @@ public class BookMarkRestController {
 
 
     // 북마크 조회(즐겨찾는 챌린지/1개)
-    // 127.0.0.1:9090/ROOT/api/bookmark/selectone?bmkno=북마크번호
+    // 127.0.0.1:9090/until15/api/bookmark/selectone?bmkno=북마크번호
     // Params => key:chgno, values:챌린지번호
     @RequestMapping(
         value    = "/selectone", 
@@ -171,7 +171,7 @@ public class BookMarkRestController {
 
 
     // 북마크 목록(즐켜찾는 챌린지/목록)
-    // 127.0.0.1:9090/ROOT/api/bookmark/selectlist
+    // 127.0.0.1:9090/until15/api/bookmark/selectlist
     @RequestMapping(
         value    = "/selectlist", 
         method   = {RequestMethod.GET},

@@ -59,7 +59,7 @@ public class CommunityRestController {
     int PAGECNT;
 
     // 게시글 등록
-    // 127.0.0.1:9090/ROOT/api/community/insert
+    // 127.0.0.1:9090/until15/api/community/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardInsertPOST(@RequestBody CommunityCHG community,
@@ -99,7 +99,7 @@ public class CommunityRestController {
     }
 
     // 게시글 조회 및 페이지네이션
-    // 127.0.0.1:9090/ROOT/api/community/selectlist
+    // 127.0.0.1:9090/until15/api/community/selectlist
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -129,7 +129,7 @@ public class CommunityRestController {
     }
 
     // 게시글 1개 조회
-    // 127.0.0.1:9090/ROOT/api/community/selectone?bno=1
+    // 127.0.0.1:9090/until15/api/community/selectone?bno=1
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardSelectListGET(@RequestParam(name = "bno") long bno) {
@@ -161,7 +161,7 @@ public class CommunityRestController {
             // 배열 형태로 반복문 돌림
             String[] imgs = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                imgs[i] = "/ROOT/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
+                imgs[i] = "/until15/api/bimg/selectimg?bimgno=" + list.get(i).getBimgno();
             }
 
             map.put("result", ret);
@@ -176,7 +176,7 @@ public class CommunityRestController {
     }
 
     // 게시글 삭제
-    // 127.0.0.1:9090/ROOT/api/community/delete?bno=1
+    // 127.0.0.1:9090/until15/api/community/delete?bno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> boardDELETE(@RequestParam(name = "bno") long bno,
@@ -208,7 +208,7 @@ public class CommunityRestController {
     }
 
     // 게시글 수정
-    // 127.0.0.1:9090/ROOT/api/community/update?bno=1
+    // 127.0.0.1:9090/until15/api/community/update?bno=1
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updatePUT(@RequestBody CommunityCHG community,
@@ -240,7 +240,7 @@ public class CommunityRestController {
     }
 
     // 게시글 조회수 증가
-    // 127.0.0.1:9090/ROOT/api/community/updatehit
+    // 127.0.0.1:9090/until15/api/community/updatehit
     @RequestMapping(value = "/updatehit", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateHitPUT(@RequestParam(name = "bno") long bno) {
@@ -261,7 +261,7 @@ public class CommunityRestController {
     }
 
     // 게시글 조회수증가
-    // 127.0.0.1:9090/ROOT/api/community/updatehit1
+    // 127.0.0.1:9090/until15/api/community/updatehit1
     @RequestMapping(value = "/updatehit1", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateHit1PUT(@RequestParam(name = "bno") long bno) {
@@ -280,7 +280,7 @@ public class CommunityRestController {
     }
 
     // 게시글 조회 및 페이지네이션
-    // 127.0.0.1:9090/ROOT/api/community/myselectlist
+    // 127.0.0.1:9090/until15/api/community/myselectlist
     @RequestMapping(value = "/myselectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })

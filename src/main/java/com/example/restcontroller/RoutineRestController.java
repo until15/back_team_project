@@ -45,7 +45,7 @@ public class RoutineRestController {
     int PAGECNT;
 
     // 루틴 등록
-    // 127.0.0.1:9090/ROOT/api/routine/insertbatch.json
+    // 127.0.0.1:9090/until15/api/routine/insertbatch.json
     // [{"rtnday":"테스트", "rtncnt" : 10, "rtnset" : 1, "rtnname" : "가나다",
     // "posechg":{"pno":15}, "memberchg":{"memail":""}}, {"rtnday":"테스트", "rtncnt" :
     // 10, "rtnset" : 1, "rtnname" : "가나다", "posechg":{"pno":15},
@@ -95,7 +95,7 @@ public class RoutineRestController {
 
 
     // 루틴 개별 수정
-    // 127.0.0.1:9090/ROOT/api/routine/update.json
+    // 127.0.0.1:9090/until15/api/routine/update.json
     @RequestMapping(value = "/update.json", method = { RequestMethod.PUT }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineUpdatePUT(
@@ -129,7 +129,7 @@ public class RoutineRestController {
     }
 
     // 루틴 수정
-    // 127.0.0.1:9090/ROOT/api/routine/updatebatch.json
+    // 127.0.0.1:9090/until15/api/routine/updatebatch.json
     // [{"rtnno" : 70, "rtnday":"수정", "rtncnt" : 120, "rtnset" : 13, "rtnname" :
     // "가나", "posechg":{"pno":15}},...]
     @RequestMapping(value = "/updatebatch.json", method = { RequestMethod.PUT }, consumes = {
@@ -179,7 +179,7 @@ public class RoutineRestController {
     }
 
     // 루틴 조회
-    // 127.0.0.1:9090/ROOT/api/routine/selectlist.json?page=
+    // 127.0.0.1:9090/until15/api/routine/selectlist.json?page=
     @RequestMapping(value = "/selectlist.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectlistGET(
@@ -214,7 +214,7 @@ public class RoutineRestController {
     }
     
     // 루틴 개별 조회
-    // 127.0.0.1:9090/ROOT/api/routine/selectoneDt.json
+    // 127.0.0.1:9090/until15/api/routine/selectoneDt.json
     @RequestMapping(value = "/selectoneDt.json", method = { RequestMethod.GET }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectOneDtGET(
@@ -243,7 +243,7 @@ public class RoutineRestController {
     }
 
     // 챌린지 루틴 조회 (1) => 루틴 번호로 seq 번호 받기
-    // 127.0.0.1:9090/ROOT/api/routine/chgselectone.json
+    // 127.0.0.1:9090/until15/api/routine/chgselectone.json
     @RequestMapping(value = "/chgselectone.json", method = { RequestMethod.GET }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectOnechgGET(
@@ -264,7 +264,7 @@ public class RoutineRestController {
     }
 
     // 챌린지 루틴 조회 (2) => seq 번호로 루틴들 조회하기
-    // 127.0.0.1:9090/ROOT/api/routine/chgselectseq.json
+    // 127.0.0.1:9090/until15/api/routine/chgselectseq.json
     @RequestMapping(value = "/chgselectseq.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectOneseqGET(
@@ -288,7 +288,7 @@ public class RoutineRestController {
 
 
     // 루틴 상세 조회
-    // 127.0.0.1:9090/ROOT/api/routine/selectone.json
+    // 127.0.0.1:9090/until15/api/routine/selectone.json
     @RequestMapping(value = "/selectone.json", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineselectOneGET(
@@ -320,7 +320,7 @@ public class RoutineRestController {
     }
 
     // 루틴 개별 삭제
-    // 127.0.0.1:9090/ROOT/api/routine/delete.json
+    // 127.0.0.1:9090/until15/api/routine/delete.json
     @RequestMapping(value = "/delete.json", method = { RequestMethod.DELETE }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public Map<String, Object> RoutineDeleteOneDELETE(
@@ -349,7 +349,7 @@ public Map<String, Object> RoutineDeleteOneDELETE(
 }
 
     // 루틴 seq 삭제
-    // 127.0.0.1:9090/ROOT/api/routine/deleteseq.json
+    // 127.0.0.1:9090/until15/api/routine/deleteseq.json
     @RequestMapping(value = "/deleteseq.json", method = { RequestMethod.DELETE }, consumes = {
         MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public Map<String, Object> RoutineDeleteseqDELETE(
@@ -374,7 +374,7 @@ public Map<String, Object> RoutineDeleteseqDELETE(
 }
 
     // 루틴 삭제
-    // 127.0.0.1:9090/ROOT/api/routine/deletebatch.json
+    // 127.0.0.1:9090/until15/api/routine/deletebatch.json
     @RequestMapping(value = "/deletebatch.json", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> RoutineDeleteDELETE(

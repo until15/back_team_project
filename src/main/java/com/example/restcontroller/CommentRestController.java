@@ -43,7 +43,7 @@ public class CommentRestController {
     CommentRepository cRepository;
 
     // 댓글 등록
-    // 127.0.0.1:9090/ROOT/api/comment/insert
+    // 127.0.0.1:9090/until15/api/comment/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPOST(@RequestBody CommentCHG comment,
@@ -78,7 +78,7 @@ public class CommentRestController {
     }
 
     // 댓글 목록에 보이기
-    // 127.0.0.1:9090/ROOT/api/comment/selectone
+    // 127.0.0.1:9090/until15/api/comment/selectone
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -106,7 +106,7 @@ public class CommentRestController {
     }
 
     // 댓글 삭제
-    // 127.0.0.1:9090/ROOT/api/comment/delete?cmtno=1
+    // 127.0.0.1:9090/until15/api/comment/delete?cmtno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })

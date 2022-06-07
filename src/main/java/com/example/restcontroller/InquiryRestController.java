@@ -50,7 +50,7 @@ public class InquiryRestController {
     int PAGECNT;
 
     // 문의등록
-    // 127.0.0.1:9090/ROOT/api/Inquiry/insert
+    // 127.0.0.1:9090/until15/api/Inquiry/insert
     @RequestMapping(value = "/insert", method = { RequestMethod.POST }, consumes = { MediaType.ALL_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> insertPOST(@RequestBody InquiryCHG inquiry,
@@ -86,7 +86,7 @@ public class InquiryRestController {
     }
 
     // 문의 게시판 리스트
-    // 127.0.0.1:9090/ROOT/api/Inquiry/selectlist
+    // 127.0.0.1:9090/until15/api/Inquiry/selectlist
     @RequestMapping(value = "/selectlist", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
@@ -122,7 +122,7 @@ public class InquiryRestController {
     }
 
     // 문의 게시글 1개 조회
-    // 127.0.0.1:9090/ROOT/api/Inquiry/selectone?qno=1
+    // 127.0.0.1:9090/until15/api/Inquiry/selectone?qno=1
     @RequestMapping(value = "/selectone", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> inquirySelectListGET(@RequestParam(name = "qno") long qno,
@@ -144,7 +144,7 @@ public class InquiryRestController {
             List<InquiryimgCHGProjection> list = imRepository.findByInquirychg_qnoOrderByQimgnoDesc(qno);
             String[] imgs = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                imgs[i] = "/ROOT/api/Inquiryimg/selectimg?qimgno=" + list.get(i).getQimgno();
+                imgs[i] = "/until15/api/Inquiryimg/selectimg?qimgno=" + list.get(i).getQimgno();
             }
 
             map.put("result", inquiry);
@@ -159,7 +159,7 @@ public class InquiryRestController {
     }
 
     // 문의 게시글 삭제
-    // 127.0.0.1:9090/ROOT/api/Inquiry/delete?qno=1
+    // 127.0.0.1:9090/until15/api/Inquiry/delete?qno=1
     @RequestMapping(value = "/delete", method = { RequestMethod.DELETE }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> inquiryDELETE(@RequestParam(name = "qno") long qno,
@@ -188,7 +188,7 @@ public class InquiryRestController {
     }
 
     // 문의 게시글 수정
-    // 127.0.0.1:9090/ROOT/api/Inquiry/update?qno=1
+    // 127.0.0.1:9090/until15/api/Inquiry/update?qno=1
     @RequestMapping(value = "/update", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> inquiryupdatePUT(@RequestBody InquiryCHG inquiry,
@@ -219,7 +219,7 @@ public class InquiryRestController {
     }
 
     // com +
-    // 127.0.0.1:9090/ROOT/api/Inquiry/updatecom?qno=
+    // 127.0.0.1:9090/until15/api/Inquiry/updatecom?qno=
     @RequestMapping(value = "/updatecom", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateCom(@RequestParam(name = "qno") long qno) {
@@ -240,7 +240,7 @@ public class InquiryRestController {
     }
 
     // com -
-    // 127.0.0.1:9090/ROOT/api/Inquiry/updatetwo?qno=
+    // 127.0.0.1:9090/until15/api/Inquiry/updatetwo?qno=
     @RequestMapping(value = "/updatetwo", method = { RequestMethod.PUT }, consumes = {
             MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> updateComTwo(@RequestParam(name = "qno") long qno) {
@@ -262,7 +262,7 @@ public class InquiryRestController {
     }
 
     // 문의 게시판 리스트2
-    // 127.0.0.1:9090/ROOT/api/Inquiry/selectlist2
+    // 127.0.0.1:9090/until15/api/Inquiry/selectlist2
     @RequestMapping(value = "/selectlist2", method = { RequestMethod.GET }, consumes = {
             MediaType.ALL_VALUE }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
