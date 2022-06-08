@@ -277,6 +277,7 @@ public Map<String, Object> poseDeleteOnePOST(
                 video.setVname(file.getOriginalFilename());
                 video.setVsize(file.getSize());
                 video.setVvideo(file.getBytes());
+
             }
             long ret = pService.poseVideoInsert(video);
             if (ret == 1) {
