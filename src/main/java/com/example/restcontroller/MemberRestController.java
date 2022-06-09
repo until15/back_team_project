@@ -503,17 +503,20 @@ public class MemberRestController {
 		try {
 			MemberCHG member1 = mRepository.findById(memail).orElse(null);
 			if (member1 != null) {
-				String uuid = UUID.randomUUID().toString().replace("-", "");
-				uuid = uuid.substring(0, 6);
+				if (member1.getMstep() != 1) {
 
-				member1.setMpw(uuid);
-				String newpw = bcpe.encode(member1.getMpw());
-				member1.setMpw(newpw);
-				int ret = mService.memberUpdate(member1);
-				if (ret == 1) {
-					map.put("result", uuid);
-					map.put("status", 200);
+					String uuid = UUID.randomUUID().toString().replace("-", "");
+					uuid = uuid.substring(0, 6);
 
+					member1.setMpw(uuid);
+					String newpw = bcpe.encode(member1.getMpw());
+					member1.setMpw(newpw);
+					int ret = mService.memberUpdate(member1);
+					if (ret == 1) {
+						map.put("result", uuid);
+						map.put("status", 200);
+
+					}
 				}
 
 			} else if (member1 == null) {
