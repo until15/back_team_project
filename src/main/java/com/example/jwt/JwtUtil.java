@@ -26,17 +26,18 @@ public class JwtUtil {
     public String generatorToken(String username, String userrole, String userrank) {
         Map<String, Object> map = new HashMap<>();
 
-        System.out.println("유저 아이디 : " + username);
-        System.out.println("유저 권한 : " + userrole);
-        System.out.println("유저 등급 : " + userrank);
+        // System.out.println("유저 아이디 : " + username);
+        // System.out.println("유저 권한 : " + userrole);
+        // System.out.println("유저 등급 : " + userrank);
 
+        // 토큰에 넣을 데이터를 객체에 담기
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);
         jsonObject.put("userrole", userrole);
         jsonObject.put("userrank", userrank);
 
-        System.out.println("토큰 정보 객체화 : " + jsonObject);
-        System.out.println("날짜 정보 : " + new Date(System.currentTimeMillis()));
+        // System.out.println("토큰 정보 객체화 : " + jsonObject);
+        // System.out.println("날짜 정보 : " + new Date(System.currentTimeMillis()));
 
         String token = Jwts.builder()
                 .setClaims(map)

@@ -40,13 +40,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{	// UserDetail
 		Collection<GrantedAuthority> roles 
             = AuthorityUtils.createAuthorityList(strRole);
         
-		System.out.println("배열을 collection으로 : " + roles);
+		// System.out.println("배열을 collection으로 : " + roles);
 		
 		// 자동으로 세션에 데이터가 들어감
         // 목표: 아이디와 비밀번호, 권한을 리턴시킴
         // UserDetails => User
         User user = new User(member.getMemail(), member.getMpw(), roles);
-        System.out.println("필요한 정보들을 user에 담음 : " + user);
+        // System.out.println("필요한 정보들을 user에 담음 : " + user);
         
         // SecurityConfig에서 사용
         return user;
