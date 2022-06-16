@@ -137,8 +137,8 @@ public class ConfirmRestController {
 	// Headers -> token :
 	// Body -> {"cfcomment":"테스트"}
 	@RequestMapping(value="/insert.json", 
-			method = {RequestMethod.POST},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.POST},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	
 	public Map<String, Object> insertConfirmPOST(
@@ -148,58 +148,42 @@ public class ConfirmRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-//			System.out.println(jno);	// 참가번호
-//			System.out.println(token);	// 토큰
-//			System.out.println(confirm.toString());	// 인증글
-			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
-	        
-//	        System.out.println(email);
 			
 			// Confirm 엔티티에 회원정보를 담기 위해 아이디를 Member 엔티티에 넣어서 사용
 			MemberCHG member = new MemberCHG();
 			member.setMemail(email);
-//			System.out.println("아이디가 엔티티에 담김 : " + member);
 			
 			// Confirm 엔티티의 Jno외래키에 참가번호를 담기 위해 Join 엔티티 사용 
 			JoinCHG join = new JoinCHG();
 			join.setJno(jno);
-//			System.out.println("참가번호가 엔티티에 담김 : " + join);
 			
 			// 회원이 첼린지에 참가한 사람이지 확인
 			// 참가 번호로 조회 후 참가한 아이디와 토큰의 아이디를 비교
 			JoinProjection join1 = jRepository.findByJno(jno);
-//			System.out.println("참가한 아이디 : " + join1.getMemberchgMemail());
 
 			// Confirm 엔티티에 담기
 			confirm.setMemberchg(member);
 			confirm.setJoinchg(join);
-//			System.out.println("인증 엔티티에 데이터 담김: " + confirm);
 			
 			// 인증은 하루에 한번으로 제한
 			// 오늘 날짜에 해당하는 Confirm 엔티티 조회
 			// 범위로 조회하기 -> 어제 00:00:00 부터 오늘 23:59:59 에 해당하는 날짜로 조회
 			LocalDateTime starttime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
-			System.out.println("어제 00:00:00 날짜 : " + starttime);
 			
 			LocalDateTime endtime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
-			System.out.println("오늘 23:59:59 날짜" + endtime);
 			
 			// LocalDateTime -> Timestamp 타입을 변환 
 			Timestamp starttstamp = Timestamp.valueOf(starttime);
 			Timestamp endtstamp = Timestamp.valueOf(endtime);
-//			System.out.println(starttstamp);
-//			System.out.println(endtstamp);
 			
 			// 아이디와 오늘 날짜로 인증글 조회
 			ConfirmCHG todayConfirm = cfService.todayConfirm(email, jno, starttstamp, endtstamp);
-//			System.out.println("오늘 등록한 인증 조회 : " + todayConfirm.toString());
 
 			// 유저가 등록한 인증글 중에 오늘날짜에 해당하는게 없을 경우에 인증 등록가능
 			if (todayConfirm == null) {
@@ -213,7 +197,6 @@ public class ConfirmRestController {
 						map.put("result", ret);
 						map.put("status", 200);
 					}
-
 				}
 			}
 			else {
@@ -348,26 +331,20 @@ public class ConfirmRestController {
 	// 인증글 전체 조회( 페이지네이션 )
 	// 127.0.0.1:9090/until15/api/confirm/provelist.json?page=&email=
 	@RequestMapping(value="/provelist.json", 
-			method = {RequestMethod.GET},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.GET},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> proveListGET(
 			@RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam(name = "email", defaultValue = "") String email){
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(page);
-			System.out.println(email);
-			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println("페이지네이션 : " + pageRequest);
 			
 			List<ProveCHGView> list =pRepository.findByMemailContainingOrderByCfnoDesc(email, pageRequest);
 			
 			long total = pRepository.countByMemailContaining(email);
-			System.out.println(total);
-			
 			
 			if (!list.isEmpty()) {
 				map.put("pages", total);
@@ -398,13 +375,9 @@ public class ConfirmRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(cfno);	// 인증 번호
-			
 			// 인증 번호로 항목 1개 조회
 			// Projection 으로 필요한 항목만 조회
 			ConfirmProjection cfProjection = cfService.findOneConfirm(cfno);
-			System.out.println(cfProjection);
-			
 			
 			// 조회할 값이 있을 때 결과 반환
 			if(cfProjection != null) {
@@ -425,27 +398,17 @@ public class ConfirmRestController {
 	// 첼린지 내에서 인증 리스트 전체 조회
 	// 127.0.0.1:9090/until15/api/confirm/chgcfmlist.json?chgno=&page=
 	@RequestMapping(value="/chgcfmlist.json", 
-			method = {RequestMethod.GET},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.GET},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> selectChgConfirmList(
-			@RequestParam(name = "chgno") long chgno,
-			@RequestParam(name = "page", defaultValue = "1") int page){
+			@RequestParam(name = "chgno") long chgno,	// 첼린지 번호
+			@RequestParam(name = "page", defaultValue = "1") int page){	// 페이지
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(chgno); 	// 첼린지 번호
-			System.out.println(page); 	// 페이지네이션
-			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println("페이지네이션 : " + pageRequest);
-			
-//			long total = cfRepository.countByJoinchg_challengechg_chgno(chgno);
-			
-			// 첼린지 번호에 해당하는 인증글 전체 조회
-//			List<ConfirmProjection> cfmFromChg = cfService.confirmFromChallenge(chgno ,pageRequest);
-//			System.out.println(cfmFromChg);
 			
 			// 게시글 전체 갯수
 			long total = cfmVRepository.countByChgno(chgno);
@@ -475,37 +438,26 @@ public class ConfirmRestController {
 	// 127.0.0.1:9090/until15/api/confirm/myselectlist.json?page=?&text=?
 	// Headers -> token :
 	@RequestMapping(value="/myselectlist.json", 
-			method = {RequestMethod.GET},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.GET},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> selectlistConfirm(
-			@RequestHeader(name = "token") String token,
-			@RequestParam(name = "page", defaultValue = "1") int page,
-			@RequestParam(name = "text", defaultValue = "") String text){
+			@RequestHeader(name = "token") String token, // 토큰
+			@RequestParam(name = "page", defaultValue = "1") int page, // 페이지
+			@RequestParam(name = "text", defaultValue = "") String text){	// 검색어
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-//			System.out.println(token);	// 토큰
-//			System.out.println(page); 	// 페이지네이션
-//			System.out.println(text); 	// 검색어
-			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
-	        
-//	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println("페이지네이션 : " + pageRequest);
-			
-			// 검색 + 페이지네이션으로 아이디에 해당하는 인증 리스트 조회하기
-//			List<ConfirmProjection> list = cfService.selectListConfirm(email, text, pageRequest);
-//			System.out.println(list);
+
 			List<ProveCHGView> list = pRepository.findByMemailAndCfcommentContainingOrderByCfnoDesc(email, text, pageRequest);
 			
 			long total = pRepository.countByMemailAndCfcommentContaining(email, text);
@@ -532,37 +484,28 @@ public class ConfirmRestController {
 	// 127.0.0.1:9090/until15/api/confirm/mycfmlist.json?chgno=&page=
 	// Headers -> token :
 	@RequestMapping(value="/mycfmlist.json", 
-			method = {RequestMethod.GET},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.GET},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> selectMyConfirmLIST(
-			@RequestHeader(name = "token") String token,
-			@RequestParam(name = "chgno") long chgno,
-			@RequestParam(name = "page", defaultValue = "1") int page){
+			@RequestHeader(name = "token") String token,	// 토큰
+			@RequestParam(name = "chgno") long chgno,	// 첼린지 번호
+			@RequestParam(name = "page", defaultValue = "1") int page){	// 페이지
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(token);	// 토큰
-			System.out.println(chgno); 	// 첼린지 번호
-			System.out.println(page); 	// 페이지
-
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-			System.out.println("토큰에 담긴 전보 : " + userSubject);
 
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");
-	        
-	        System.out.println(email);
 			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 첼린지 번호와 토큰의 아이디로 인증 리스트 조회
 			List<ConfirmProjection> list = cfService.myConfirmFromChallenge(chgno, email, pageRequest);
-			System.out.println(list);
 			
 			// 결과 값이 있을 때 list 반환
 			if(!list.isEmpty()) {
@@ -585,8 +528,8 @@ public class ConfirmRestController {
 	// 127.0.0.1:9090/until15/api/confirm/whethercfm.json?cfno=
 	// Body -> {"cfsuccess" : "1"}
 	@RequestMapping(value="/whethercfm.json", 
-			method = {RequestMethod.PUT},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.PUT},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> whethersuccessPUT(
 			@RequestParam(name = "cfno") long cfno,
@@ -594,29 +537,8 @@ public class ConfirmRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(cfno); 	// 인증글 번호
-			System.out.println("성공 여부 : " + confirm);	// 성공 여부
-			
-			// 토큰에서 정보 추출
-//			String userSubject = jwtUtil.extractUsername(token);
-//			System.out.println("토큰에 담긴 전보 : " + userSubject);
-	
-			// 추출된 결과값을 JSONObject 형태로 파싱
-//	        JSONObject jsonObject = new JSONObject(userSubject);
-//	        String email = jsonObject.getString("username");	// 로그인 한 아이디
-//	        
-//	        System.out.println("토큰에서 아이디 추출 : " + email);
-			
-	        // 번호로 해당 첼린지 조회
-//			ChallengeProjection chg = chgRepository.findByChgno(chgno);
-//			System.out.println("생성자 아이디 : " + chg.getMemberchgMemail());	// 첼린지 생성자
-//			
-//			// 생성자와 회원이 동일 할 때
-//			if (chg.getMemberchgMemail().equals(email)) {
-				
 				// 인증 번호로 조회
 				ConfirmCHG cfm = cfService.selectSuccessOne(cfno);
-//				System.out.println("인증글 조회 : " + cfm);
 				
 				cfm.setCfsuccess(confirm.getCfsuccess()); 	// 성공 여부
 				
@@ -640,35 +562,26 @@ public class ConfirmRestController {
 	// 127.0.0.1:9090/until15/api/confirm/selectsuccess.json?chgno=&cfsuccess=&page=
 	// Headers => token :
 	@RequestMapping(value="/selectsuccess.json", 
-			method = {RequestMethod.GET},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.GET},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> selectSuccessGET(
-			@RequestParam(name = "chgno") long chgno,
-			@RequestHeader(name = "token") String token,
-			@RequestParam(name = "cfsuccess") int cfsuccess,
+			@RequestParam(name = "chgno") long chgno,	// 첼린지 번호
+			@RequestHeader(name = "token") String token,	// 토큰
+			@RequestParam(name = "cfsuccess") int cfsuccess,	// 성공 유무
 			@RequestParam(name = "page", defaultValue = "1") int page){	// 페이지네이션
 		
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println(chgno);	// 첼린지 번호
-			System.out.println(token);	// 토큰
-			System.out.println(cfsuccess); 	// 성공 유무
-			System.out.println(page); 	// 페이지
-			
 			// 페이지네이션(시작페이지(0부터), 갯수)
 			PageRequest pageRequest = PageRequest.of(page-1, 5);
-			System.out.println("페이지네이션 : " + pageRequest);
 			
 			// 토큰에서 정보 추출
 			String userSubject = jwtUtil.extractUsername(token);
-//			System.out.println("토큰에 담긴 전보 : " + userSubject);
 	
 			// 추출된 결과값을 JSONObject 형태로 파싱
 	        JSONObject jsonObject = new JSONObject(userSubject);
 	        String email = jsonObject.getString("username");	// 로그인 한 아이디
-	        
-	        System.out.println("토큰에서 아이디 추출 : " + email);
 			
 	        // 번호로 해당 첼린지 조회
  			ChallengeProjection chg = chgRepository.findByChgno(chgno);
@@ -695,17 +608,14 @@ public class ConfirmRestController {
 	// 인증 이미지 일괄 추가하기
 	// 127.0.0.1:9090/until15/api/confirm/cfimage.insert?cfno=
 	@RequestMapping(value="/cfimage.insert", 
-			method = {RequestMethod.POST},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.POST},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public Map<String, Object> CFImagePOST(
-			@RequestParam(name = "cfno") long cfno,
-			@RequestParam(name = "file", required = false) MultipartFile[] file) throws IOException{
+			@RequestParam(name = "cfno") long cfno,	// 인증 번호
+			@RequestParam(name = "file", required = false) MultipartFile[] file) throws IOException{	// 이미지 데이터
 		Map<String, Object> map = new HashMap<>();
 		try {
-			// System.out.println("인증번호 : " + cfno);	// 인증 번호
-			// System.out.println("이미지 파일 : " + file);	// 이미지 데이터
-			
 			// 이미지가 여러개 들어가기 위한 List
 			List<CfImageCHG> list = new ArrayList<>();
 			
@@ -724,11 +634,10 @@ public class ConfirmRestController {
 				
 				list.add(cfImg);
 			}
-//			System.out.println("리스트에 담긴 데이터 : " + list);
 			
 			// 이미지 디비에 넣기
 			int ret = cfService.ConfirmImage(list);
-			// System.out.println("이미지 추가 성공적: " + ret);
+			
 			if (ret == 1) {
 				map.put("status", 200);				
 			} else {
@@ -745,8 +654,8 @@ public class ConfirmRestController {
 	// 인증 이미지 조회
 	// 127.0.0.1:9090/until15/api/confirm/cfimages.json?cfimgno=
 	@RequestMapping(value="/cfimages.json", 
-			method = {RequestMethod.GET},	// POST로 받음
-			consumes = {MediaType.ALL_VALUE},	// 모든 타입을 다 받음
+			method = {RequestMethod.GET},
+			consumes = {MediaType.ALL_VALUE},
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<byte[]> confirmImgGET(
 			@RequestParam(name = "cfimgno") long cfino){
@@ -754,7 +663,6 @@ public class ConfirmRestController {
     		// 이미지를 한개 조회
     		CfImageCHG cfImage = cfService.selectProveImage(cfino);
     		
-    		System.out.println("이미지 조회 : " + cfImage.getCfimgsize());
     		// 썸네일 이미지가 있을 때
     		if (cfImage.getCfimgsize() > 0) {
     			HttpHeaders header = new HttpHeaders();
