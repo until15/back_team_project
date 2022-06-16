@@ -699,10 +699,7 @@ public class ConfirmRestController {
 			@RequestParam(name = "cfno") long cfno){
 		Map<String, Object> map = new HashMap<>();
 		try {
-//			System.out.println("cfno : " + cfno);
-			
 			List<Long> list = cfService.selectCFImageNo(cfno);
-//			System.out.println("리스트 : " + list.get(1));
 			
 			// 이미지 URL
 			String[] imgs = new String[list.size()];
@@ -717,8 +714,6 @@ public class ConfirmRestController {
 			}
 			System.out.println("이미지 url : " + imgs.length);
 			
-			
-//			map.put("result", list);
 			map.put("status", 200);
 			map.put("images", imgs);
 			
