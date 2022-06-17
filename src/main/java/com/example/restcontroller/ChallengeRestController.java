@@ -113,11 +113,8 @@ public class ChallengeRestController {
     // 챌린지 등록
     // 127.0.0.1:9090/until15/api/challenge/insert
     // headers => token:토큰
-    // form-data : "chgtitle":"aaa", "chgintro" : "bbb", "chgcontent" : "ccc",
-    // "chglevel" : 1,
-    // "chgend1" : yyyy-mm-dd 00:00:00, "recruitend1" : yyyy-mm-dd 00:00:00, "chfee"
-    // :
-    // 10000
+    // form-data : "chgtitle":"aaa", "chgintro":"bbb", "chgcontent":"ccc", "chglevel":1,
+    // "chgend1":yyyy-mm-dd 00:00:00, "recruitend1":yyyy-mm-dd 00:00:00, "chfee":10000
     @RequestMapping(
         value    = "/insert", 
         method   = { RequestMethod.POST }, 
@@ -174,26 +171,26 @@ public class ChallengeRestController {
             chg.setChgend(ts2);
 
             // 챌린지 시작일 종료일 차이
-            String date = chg1.getChgend1(); // 날짜2
+            String date = chg1.getChgend1();
             System.out.println("날짜2 : " + date);
 
             Date start = new Date(ts1.getTime()); // timeStamp
             Date end = new SimpleDateFormat("yyyy-MM-dd").parse(date); // string
             long diffSec = (start.getTime() - end.getTime()) / 1000; // 초 차이
             long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
-            // System.out.println(diffSec + "초 차이");
-            // System.out.println(diffDays + "일 차이");
+            System.out.println(diffSec + "초 차이");
+            System.out.println(diffDays + "일 차이");
 
-            chg.setChgtitle(chg1.getChgtitle()); // 제목
-            chg.setChgintro(chg1.getChgintro()); // 소개글
+            // 기본 내용 추가
+            chg.setChgtitle(chg1.getChgtitle());     // 제목
+            chg.setChgintro(chg1.getChgintro());     // 소개글
             chg.setChgcontent(chg1.getChgcontent()); // 내용
-            chg.setChgfee(chg1.getChgfee()); // 참가비
-            chg.setChglevel(member1.getMrank());
-            // chg.setChglevel(chg1.getChglevel()); // 챌린지 레벨
-            chg.setMemberchg(member); // 첼린지 생성자
-            chg.setChgroutine(rtn.getRtnno()); // 루틴 번호
+            chg.setChgfee(chg1.getChgfee());         // 참가비
+            chg.setChglevel(member1.getMrank());     // 챌린지 레벨
+            chg.setMemberchg(member);                // 첼린지 생성자
+            chg.setChgroutine(rtn.getRtnno());       // 루틴 번호
 
-            // 썸네일
+            // 썸네일 추가
             chg.setChgimage(file.getBytes());
             chg.setChginame(file.getOriginalFilename());
             chg.setChgisize(file.getSize());
@@ -579,8 +576,8 @@ public class ChallengeRestController {
     // 챌린지 난이도 목록 내림차순 (9개표시)
     // 127.0.0.1:9090/until15/api/challenge/selectlevellist
     @RequestMapping(
-        value = "/selectlevellist", 
-        method = { RequestMethod.GET }, 
+        value    = "/selectlevellist", 
+        method   = { RequestMethod.GET }, 
         consumes = { MediaType.ALL_VALUE }, 
         produces = { MediaType.APPLICATION_JSON_VALUE })
     public Map<String, Object> selectLevelListGET(
