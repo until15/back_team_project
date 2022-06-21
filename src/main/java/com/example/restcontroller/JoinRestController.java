@@ -99,22 +99,25 @@ public class JoinRestController {
 //			System.out.println(endtstamp);
 			
 			List<Long> start = cvRepository.selectTodayCHG(starttstamp, endtstamp);
-//			System.out.println("시작시점 첼린지 : "+ start);
+//			System.out.println("오늘 날짜가 시작일인 첼린지 전체 조회: "+ start);
+
 			List<JoinCHG> join = new ArrayList<JoinCHG>();
+			System.out.println(join.toArray());
 			for(int i=0;i<start.size();i++) {
 //				System.out.println(start.get(i));
 				List<JoinCHG> list = jRepository.findByChallengechg_chgno(start.get(i));
 				for(int j=0;j<list.size();j++) {
+					System.out.println("조회된 첼린지의 상태 : " + list.get(j).getChgstate());
 					if(list.get(j).getChgstate() == 1) {
-						join.add(list.get(j));						
+						join.add(list.get(j));			
 					}
 				}
 			}
 			for(int h=0;h<join.size();h++) {
 				join.get(h).setChgstate(3);
 			}
-//			jRepository.saveAll(join);
-			jService.todayChallenge(join);
+			jRepository.saveAll(join);
+			// jService.todayChallenge(join);
 			
 			map.put("status", 200);
 			
@@ -164,8 +167,8 @@ public class JoinRestController {
 			for(int h=0;h<join.size();h++) {
 				join.get(h).setChgstate(4);
 			}
-//			jRepository.saveAll(join);
-			jService.todayChallenge(join);
+			jRepository.saveAll(join);
+			// jService.todayChallenge(join);
 			
 			map.put("status", 200);
 			

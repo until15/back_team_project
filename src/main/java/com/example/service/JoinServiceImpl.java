@@ -174,6 +174,7 @@ public class JoinServiceImpl implements JoinService{
 			for (JoinCHG join1 : join) {
 				
 				JoinCHG oldjoin = em.find(JoinCHG.class, join1.getJno());
+				System.out.println("변경된 진행 상태 : " + join1.getChgstate());
 				oldjoin.setChgstate(join1.getChgstate());
                 em.persist(oldjoin);
             }
